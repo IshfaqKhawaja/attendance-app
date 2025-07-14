@@ -1,0 +1,5 @@
+backend/env
+app/build
+app/linux
+app/macos
+
