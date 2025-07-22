@@ -7,6 +7,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../models/student_model.dart';
 import '../../constants/network_constants.dart';
@@ -159,6 +161,82 @@ class CourseController extends GetxController {
       Get.snackbar("ERROR", "$e", colorText: Colors.red);
     }
   }
+ void showDateRangeDialog(BuildContext context) async {
+  DateTime? startDate = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now().subtract(Duration(days: 7)),
+    firstDate: DateTime(2022),
+    lastDate: DateTime.now(),
+    helpText: "Start Date",
+  );
+
+  if (startDate == null) return;
+
+  DateTime? endDate = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: startDate,
+    lastDate: DateTime.now(),
+    helpText: "End Date",
+  );
+
+  if (endDate == null) return;
+
+  // Confirm dialog
+  Get.dialog(
+    AlertDialog(
+      title: Text("Generate Report"),
+      content: Text("Do you want to generate report from ${startDate.day}/${startDate.month}/${startDate.year} to ${endDate.day}/${endDate.month}/${endDate.year}?"),
+      actions: [
+        TextButton(
+          onPressed: () => Get.back(),
+          child: Text("Cancel"),
+        ),
+        TextButton(
+          onPressed: () {
+            Get.back(); // close the dialog
+            generateReport(startDate, endDate);
+          },
+          child: Text("Generate"),
+        ),
+      ],
+    ),
+  );
+}
+
+  Future<void> generateReport(DateTime startDate, DateTime endDate) async {
+  try {
+    var response = await http.post(
+      Uri.parse("$baseUrl/course_students/generate_report"),
+      body: jsonEncode({
+        "course_id": courseId,
+        "start_date": startDate.toIso8601String(),
+        "end_date": endDate.toIso8601String()
+      }),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      // 🔽 Save the PDF to device
+      final bytes = response.bodyBytes;
+
+      // 📁 Get download directory
+      final dir = await getApplicationDocumentsDirectory(); // For internal storage
+      final filePath = "${dir.path}/attendance_report_${DateTime.now().millisecondsSinceEpoch}.pdf";
+      final file = File(filePath);
+      await file.writeAsBytes(bytes);
+      await OpenFile.open(filePath);
+      // Get.snackbar("Success", "PDF saved to $filePath", colorText: Colors.green, snackPosition: SnackPosition.BOTTOM,
+      //   duration: Duration(seconds: 5));
+    } else {
+      Get.snackbar("Error", "Failed to generate report", colorText: Colors.red);
+    }
+  } catch (e) {
+    print(e);
+    Get.snackbar("Error", "Something went wrong: $e", colorText: Colors.red);
+  }
+}
+  
 
   @override
   void onInit() {

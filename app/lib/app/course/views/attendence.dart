@@ -71,6 +71,7 @@ class Attendence extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Obx(() {
+                // ignore: invalid_use_of_protected_member
                 courseController.attendenceMarked.value;
                 return ElevatedButton(
                   style: ElevatedButton.styleFrom(

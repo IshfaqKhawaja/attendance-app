@@ -4,13 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../controllers/course_controller.dart';
 import 'attendence.dart';
 import 'students.dart';
 
-class Course extends StatelessWidget {
+class Course extends StatefulWidget {
   Course({super.key});
+
+  @override
+  State<Course> createState() => _CourseState();
+}
+
+class _CourseState extends State<Course> {
   final TeacherCourseModel course = Get.arguments["course"];
 
+ late CourseController courseController;
+
+ void initState() {
+    super.initState();
+    courseController = Get.put(CourseController(courseId: course.courseId));
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,15 +40,27 @@ class Course extends StatelessWidget {
           ),
           Positioned(
             top: Get.size.height * 0.085,
-            child: Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Text(
-                "Course Info",
-                style: GoogleFonts.openSans(
-                  fontSize: 26,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+            child: Container(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              width: Get.size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Course Info",
+                    style: GoogleFonts.openSans(
+                      fontSize: 26,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: (){
+                      courseController.showDateRangeDialog(context);
+                      },                   
+                    child: Text("Report",),)
+                ],
               ),
             ),
           ),
@@ -49,6 +74,9 @@ class Course extends StatelessWidget {
               ),
             ),
           ),
+
+
+          
           Positioned(
             top: Get.size.height * 0.25,
             child: Container(
@@ -63,6 +91,7 @@ class Course extends StatelessWidget {
               ),
             ),
           ),
+
           Positioned(
             top: Get.size.height * 0.26,
             child: Container(

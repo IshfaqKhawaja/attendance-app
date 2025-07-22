@@ -1,11 +1,11 @@
-import 'package:app/app/constants/text_styles.dart';
-import 'package:app/app/dashboard/controllers/dashboard_controller.dart';
 import 'package:flutter/material.dart';
-// Local Imports:::
 import 'package:get/get.dart';
-import '../controllers/bottom_bar_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// Local Imports:::
+import '../controllers/bottom_bar_controller.dart';
+import '../controllers/dashboard_controller.dart';
+import '../../constants/text_styles.dart';
 import '../widgets/bottom_bar.dart';
 
 class Dashboard extends StatelessWidget {
@@ -38,7 +38,7 @@ class Dashboard extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  "What's Up\n${dashboardController.singInController.userData.value.teacherName}",
+                  "Hi\n${dashboardController.singInController.userData.value.teacherName}",
                   style: GoogleFonts.openSans(
                     fontSize: 30,
                     color: Colors.white,
@@ -87,22 +87,24 @@ class Dashboard extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: BottomBar(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: dashboardController.attendanceNotifier,
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Text(
-                "Send SMS",
-                style: textStyle.copyWith(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontStyle: FontStyle.normal,
+        floatingActionButton: bottomBarController.currentIndex.value == 0
+            ? FloatingActionButton(
+                onPressed: dashboardController.attendanceNotifier,
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      "Send SMS",
+                      style: textStyle.copyWith(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontStyle: FontStyle.normal,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ),
+              )
+            : null,
       );
     });
   }

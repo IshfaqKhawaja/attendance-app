@@ -1,4 +1,3 @@
-# app/utils/attendance_notifier.py
 from datetime import date
 from app.db.crud.daily_attendance import fetch_daily_attendance
 from app.api.sms import send_sms

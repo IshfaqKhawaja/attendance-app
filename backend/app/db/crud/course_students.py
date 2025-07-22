@@ -167,3 +167,27 @@ def display_all() -> list:
         }
         for row in rows
     ]
+
+
+
+
+
+def fetch_attendance_report(course_id, start_date, end_date):
+    conn = connection_to_db()
+    query = """
+        SELECT
+          s.studentid,
+          s.name,
+          COUNT(a.attendanceid) FILTER (WHERE a.present = true) AS present_days,
+          COUNT(a.attendanceid) AS total_days
+        FROM attendance a
+        JOIN students s ON a.studentid = s.studentid
+        WHERE a.courseid = %s
+          AND a.date BETWEEN %s AND %s
+        GROUP BY s.studentid, s.name
+        ORDER BY s.studentid;
+    """
+    with conn.cursor() as cur:
+        cur.execute(query, (course_id, start_date, end_date))
+        rows = cur.fetchall()
+    return rows

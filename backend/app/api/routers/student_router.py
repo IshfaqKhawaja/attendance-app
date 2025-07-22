@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body # type: ignore
 from app.db.crud.student import (
     add_student_to_db,
     add_students_in_bulk,
