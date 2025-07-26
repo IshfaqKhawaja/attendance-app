@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 // Local Imports::
-import '../../signin/models/user_model.dart';
+import '../../signin/models/teacher_model.dart';
 import '../../signin/controllers/signin_controller.dart';
 import '../../constants/network_constants.dart';
 import '../models/register_model.dart';
@@ -105,8 +105,8 @@ class RegisterController extends GetxController {
         var res = jsonDecode(response.body);
         if (res["success"]) {
           // Go to Dashboard:
-          signInController.userData.value = UserModel.fromJson(res);
-          Get.offAllNamed(Routes.DASHBOARD);
+          signInController.teacherData.value = TeacherModel.fromJson(res);
+          Get.offAllNamed(Routes.TEACHER_DASHBOARD);
         } else {
           Get.snackbar("Error", res["message"], colorText: Colors.red);
         }

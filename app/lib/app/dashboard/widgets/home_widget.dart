@@ -3,12 +3,12 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'card_widget.dart';
-import '../controllers/dashboard_controller.dart';
+import '../controllers/teacher_dashboard_controller.dart';
 
 class HomeWidget extends StatelessWidget {
   HomeWidget({super.key});
-  final DashboardController dashboardController =
-      Get.find<DashboardController>();
+  final TeacherDashboardController dashboardController =
+      Get.find<TeacherDashboardController>();
   @override
   Widget build(BuildContext context) {
     return Obx(() {

@@ -3,19 +3,19 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // Local Imports:::
-import '../controllers/bottom_bar_controller.dart';
-import '../controllers/dashboard_controller.dart';
+import '../controllers/teacher_bottom_bar_controller.dart';
+import '../controllers/teacher_dashboard_controller.dart';
 import '../../constants/text_styles.dart';
-import '../widgets/bottom_bar.dart';
+import '../widgets/teacher_bottom_bar.dart';
 
-class Dashboard extends StatelessWidget {
-  Dashboard({super.key});
-  final DashboardController dashboardController = Get.put(
-    DashboardController(),
+class TeacherDashboard extends StatelessWidget {
+  TeacherDashboard({super.key});
+  final TeacherDashboardController teacherDashboardController = Get.put(
+    TeacherDashboardController(),
     permanent: true,
   );
-  final BottomBarController bottomBarController = Get.put(
-    BottomBarController(),
+  final TeacherBottomBarController bottomBarController = Get.put(
+    TeacherBottomBarController(),
   );
 
   @override
@@ -38,7 +38,7 @@ class Dashboard extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  "Hi\n${dashboardController.singInController.userData.value.teacherName}",
+                  "Hi\n${teacherDashboardController.singInController.teacherData.value.teacherName}",
                   style: GoogleFonts.openSans(
                     fontSize: 30,
                     color: Colors.white,
@@ -52,7 +52,7 @@ class Dashboard extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  dashboardController.singInController.userData.value.teacherId,
+                  teacherDashboardController.singInController.teacherData.value.teacherId,
                   style: GoogleFonts.openSans(
                     fontSize: 16,
                     color: Colors.white,
@@ -86,10 +86,10 @@ class Dashboard extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: BottomBar(),
+        bottomNavigationBar: TeacherBottomBar(),
         floatingActionButton: bottomBarController.currentIndex.value == 0
             ? FloatingActionButton(
-                onPressed: dashboardController.attendanceNotifier,
+                onPressed: teacherDashboardController.attendanceNotifier,
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
                   child: Center(

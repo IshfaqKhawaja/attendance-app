@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../add_courses/views/add_courses.dart';
 import '../widgets/home_widget.dart';
 
-class BottomBarController extends GetxController {
+class TeacherBottomBarController extends GetxController {
   var currentIndex = 0.obs;
   var screens = [HomeWidget(), AddCourses(), SizedBox(), SizedBox()];
   void changeIndex(int index) {

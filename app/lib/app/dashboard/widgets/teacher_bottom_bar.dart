@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import '../controllers/bottom_bar_controller.dart';
+import '../controllers/teacher_bottom_bar_controller.dart';
 
-class BottomBar extends StatelessWidget {
-  BottomBar({super.key});
-  final BottomBarController controller = Get.put(BottomBarController());
+class TeacherBottomBar extends StatelessWidget {
+  TeacherBottomBar({super.key});
+  final TeacherBottomBarController controller = Get.put(TeacherBottomBarController());
   @override
   Widget build(BuildContext context) {
     final selectedColor = Get.theme.primaryColor.withOpacity(1);

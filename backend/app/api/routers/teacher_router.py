@@ -1,33 +1,36 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter  # type: ignore
 from app.db.crud.teacher import (
     add_teacher_to_db,
     display_teacher_by_id,
 )
-
-
-router = APIRouter(
-     prefix="/teacher",
-     tags=["teacher"]
+from app.models.teacher_model import (
+    AddTeacherRequest,
+    DisplayTeacherRequest,
 )
 
+router = APIRouter(
+    prefix="/teacher",
+    tags=["teacher"]
+)
+
+
+
 @router.post("/add", response_model=dict, summary="Insert a new Teacher")
-def add(
-    teacher_id : str = Body(..., embed=True,description="ID of the Teacher"),
-    teacher_name: str = Body(..., embed=True, description="Name of the new Teacher"),
-    type : str = Body(..., embed=True,description="Type of Teacher (GUEST, PERMENANT, CONTRACT)"),
-    dept_id : str  = Body(..., embed=True, description="Dept id to which Teacher belongs"),
-) -> dict:
+def add_teacher(request: AddTeacherRequest) -> dict:
     """
-    Expects JSON payload: { "name": "Department of Engineering"}
+    Add a new teacher to the database.
     """
     return add_teacher_to_db(
-       teacher_id=teacher_id,
-       name=teacher_name,
-       type=type,
-       dept_id=dept_id,
+        teacher_id=request.teacher_id,
+        name=request.teacher_name,
+        type=request.type,
+        dept_id=request.dept_id,
     )
 
 
 @router.post("/display", response_model=dict, summary="Display Teacher")
-def display(teacher_id: str = Body(..., embed=True, description="Teacher ID")) -> dict:
-    return display_teacher_by_id(teacher_id=teacher_id)
+def display_teacher(request: DisplayTeacherRequest) -> dict:
+    """
+    Fetch teacher details by ID.
+    """
+    return display_teacher_by_id(teacher_id=request.teacher_id)

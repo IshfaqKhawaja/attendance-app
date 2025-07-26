@@ -1,7 +1,8 @@
 import 'package:app/app/course/views/course.dart';
-import 'package:app/app/dashboard/views/dashboard.dart';
+import 'package:app/app/dashboard/views/teacher_dashboard.dart';
 import 'package:get/get.dart';
 // Local Imports
+import '../dashboard/views/hod_dashboard.dart';
 import '../loading/views/loading.dart';
 import '../signin/views/sign_in.dart';
 import '../add_courses/views/add_courses.dart';
@@ -15,7 +16,8 @@ class Pages {
     GetPage(name: Routes.LOADING, page: () => LoadingScreen()),
     GetPage(name: Routes.SIGN_IN, page: () => SignIn()),
     GetPage(name: Routes.REGISTER, page: () => RegisterTeacher()),
-    GetPage(name: Routes.DASHBOARD, page: () => Dashboard()),
+    GetPage(name: Routes.TEACHER_DASHBOARD, page: () => TeacherDashboard()),
+    GetPage(name: Routes.HOD_DASHBOARD, page: () => HodDashboard()), // Deprecated
     GetPage(name: Routes.ADD_COURSES, page: () => AddCourses()),
     GetPage(name: Routes.COURSE, page: () => Course()),
     GetPage(name: Routes.INDEX_PAGE, page: () => IndexPage()),

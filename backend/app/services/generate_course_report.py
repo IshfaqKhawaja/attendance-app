@@ -7,7 +7,8 @@ def generate_pdf_report(data, course_id, start_date, end_date, filename="attenda
 
     # Header
     pdf.cell(100, 10, txt=f"Attendance Report for Course: {course_id}", ln=True, align="C")  # type: ignore
-    pdf.cell(100, 10, txt=f"Date Range: {start_date} to {end_date}", ln=True, align="C")  # type: ignore
+    # Display date as dd/mm/yyyy
+    pdf.cell(100, 10, txt=f"From: {start_date[:10]} to {end_date[:10]}", ln=True, align="C")  # type: ignore
     pdf.ln(10)
 
     # Table Headers

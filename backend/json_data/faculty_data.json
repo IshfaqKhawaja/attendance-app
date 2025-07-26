@@ -1,0 +1,59 @@
+[
+    {
+      "factid": "F001",
+      "name": "Faculty of Humanities and Languages"
+    },
+    {
+      "factid": "F002",
+      "name": "Faculty of Social Sciences"
+    },
+    {
+      "factid": "F003",
+      "name": "Faculty of Sciences"
+    },
+    {
+      "factid": "F004",
+      "name": "Faculty of Life Sciences"
+    },
+    {
+      "factid": "F005",
+      "name": "Faculty of Education"
+    },
+    {
+      "factid": "F006",
+      "name": "Faculty of Engineering & Technology"
+    },
+    {
+      "factid": "F007",
+      "name": "Faculty of Law"
+    },
+    {
+      "factid": "F008",
+      "name": "Faculty of Architecture & Ekistics"
+    },
+    {
+      "factid": "F009",
+      "name": "Faculty of Fine Arts"
+    },
+    {
+      "factid": "F010",
+      "name": "Faculty of Dentistry"
+    },
+    {
+      "factid": "F011",
+      "name": "Faculty of Management Studies"
+    },
+    {
+        "factid": "F012",
+        "name": "Centres of Studies"
+    },
+    {
+        "factid": "F012",
+        "name": "Centres of Studies"
+    },
+    {
+        "factid": "F013",
+        "name":"Program Under Meta University Concept "
+    }
+  ]
+  

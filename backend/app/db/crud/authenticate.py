@@ -1,7 +1,7 @@
 from datetime import date
 from app.db.connection import connection_to_db
 
-def check_if_user_exists(email_id: str) -> dict:
+def check_if_teacher_exists(email_id: str) -> dict:
     """
     Returns a dict of all columns for the user with given email_id (userid),
     or None if no such user is found.
@@ -36,7 +36,7 @@ def check_if_user_exists(email_id: str) -> dict:
             "is_registered": False,
         }
 
-def add_user(email_id : str, name : str, type : str, dept_id : str) -> dict:
+def add_teacher(email_id : str, name : str, type : str, dept_id : str) -> dict:
     """
     Returns a dict of all columns for the user with given email_id (userid),
     or None if no such user is found.

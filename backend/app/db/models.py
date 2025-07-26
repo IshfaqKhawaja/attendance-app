@@ -84,6 +84,7 @@ def create_schema():
 
         # teachers (faculty members) with enum type
         """
+        
         CREATE TABLE IF NOT EXISTS teachers (
           teacherid   VARCHAR(255) PRIMARY KEY,
           name        VARCHAR(255) NOT NULL,
@@ -171,17 +172,22 @@ def create_schema():
                         ON DELETE CASCADE
           
         );
-        
-         CREATE TYPE user_type AS ENUM (
+        CREATE TYPE user_type AS ENUM (
           'NORMAL',
           'HOD',
           'SUPER_ADMIN'
         );
+         
         CREATE TABLE IF NOT EXISTS users (
           userid       VARCHAR(255) PRIMARY KEY,
           name         VARCHAR(255) NOT NULL,
           type         user_type     NOT NULL,
-          registeredon DATE          NOT NULL
+          deptid     VARCHAR(255) 
+                     REFERENCES department(deptid)
+                     ON DELETE CASCADE,
+          factid     VARCHAR(255)
+                     REFERENCES faculty(factid)
+                     ON DELETE CASCADE
         );
           
         CREATE TABLE IF NOT EXISTS course_students (

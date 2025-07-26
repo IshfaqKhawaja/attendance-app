@@ -241,7 +241,6 @@ class CourseController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print("Course Id $courseId");
     getStudentsList();
   }
 }

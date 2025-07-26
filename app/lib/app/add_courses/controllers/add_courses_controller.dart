@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:app/app/constants/network_constants.dart';
-import 'package:app/app/dashboard/controllers/dashboard_controller.dart';
+import 'package:app/app/dashboard/controllers/teacher_dashboard_controller.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -87,14 +87,14 @@ class AddCoursesController extends GetxController {
   }
 
   void add_courses() async {
-    final DashboardController dashboardController =
-        Get.find<DashboardController>();
+    final TeacherDashboardController dashboardController =
+        Get.find<TeacherDashboardController>();
     final courses = selectedCourses.map((e) => e.toJson()).toList();
     var coursesToAdd = [];
     for (var course in courses) {
       coursesToAdd.add({
         "teacher_id":
-            dashboardController.singInController.userData.value.teacherId,
+            dashboardController.singInController.teacherData.value.teacherId,
         ...course,
       });
     }

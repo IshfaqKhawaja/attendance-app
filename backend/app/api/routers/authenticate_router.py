@@ -1,14 +1,14 @@
-from fastapi import APIRouter, Body, HTTPException
-import datetime
-
-from app.db.crud import course
-from app.db.crud import teacher
+from app.db.crud import user
+from fastapi import APIRouter, Body, HTTPException # type: ignore
 from app.db.crud.authenticate import (
-    check_if_user_exists,
+    check_if_teacher_exists,
 )
 from app.core.mail import send_mail
 from app.utils.otp_verifier import *
 from app.db.crud.teacher import add_teacher_to_db
+from app.db.crud.user import (
+    check_if_user_exists,
+)
 from app.core.security import (
     create_access_token,
     create_refresh_token,
@@ -41,16 +41,29 @@ def verify_otp(
     print(stored)
     if otp != stored["otp"]:
         return {"success": False, "isRegistered" : False, "message": "Wrong OTP"}
-    # Check if User Exists:
-    # delete_otp(email_id)
     # Check in teachers relation:::
     access_token = create_access_token(email_id)
     refresh_token = create_refresh_token(email_id) 
+    
+    # Check if user exists in users table
+    user_check = check_if_user_exists(email_id=email_id)
+    if user_check["success"]:
+        print(user_check)
+        return {
+            **user_check,
+            "is_registered": True,
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "is_regular_user": False,
+            "message": "Login Success",
+        }
+
     return {
-        **check_if_user_exists(email_id=email_id),
+        **check_if_teacher_exists(email_id=email_id),
         "access_token": access_token,
         "refresh_token" : refresh_token,
         "message":"Login Success",
+        "is_regular_user": True,
     }
 
 @router.post("/register_teacher", response_model=dict, summary="Add a User")
@@ -58,8 +71,7 @@ def register_teacher(
     teacher_id : str = Body(..., embed=True,description="Teacher ID"),
     teacher_name : str = Body(...,embed=True, description="Teacher Name"),
     type : str = Body(..., embed=True, description="Type of Teacher"),
-    dept_id : str = Body(...,embed = True, description="Dept to which teacher belongs to")
-    
+    dept_id : str = Body(...,embed = True, description="Dept to which teacher belongs to") 
 ) -> dict:
     data = add_teacher_to_db(
                 teacher_id=teacher_id,
@@ -84,4 +96,4 @@ def register_teacher(
 
 @router.post("/check_user", response_model=dict, summary="Check If User Exists")
 def check(email_id: str = Body(..., embed=True, description="Email ID")) -> dict:
-    return check_if_user_exists(email_id=email_id)
+    return check_if_teacher_exists(email_id=email_id)

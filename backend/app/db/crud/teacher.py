@@ -1,13 +1,13 @@
 from app.db.connection import connection_to_db
 
 
-def add_teacher_to_db(teacher_id : str, name : str, type : str, dept_id: str):
+def add_teacher_to_db(teacher_id : str, name : str, type : str, dept_id: str)->dict:
     conn = connection_to_db()
     try:
         with conn.cursor() as cur:
             cur.execute(
                 "INSERT INTO teachers (teacherid, name , type, deptid) VALUES (%s, %s, %s, %s)",
-                (teacher_id, name , type,  dept_id)
+                (teacher_id, name , type, dept_id)
             )
         conn.commit()
         return {

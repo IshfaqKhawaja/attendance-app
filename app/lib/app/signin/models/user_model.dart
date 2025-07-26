@@ -1,29 +1,35 @@
-class UserModel {
-  final String teacherId;
-  final String teacherName;
-  final String type;
-  final String deptId;
-  UserModel({
-    required this.teacherId,
-    required this.teacherName,
-    required this.type,
-    required this.deptId,
-  });
 
+
+class UserModel {
+  final String userId;
+  final String userName;
+  final String type;
+  final String? deptId;
+  final String? factId;
+  UserModel({
+    required this.userId,
+    required this.userName,
+    required this.type,
+    this.deptId,
+    this.factId,
+  });
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      teacherId: json["teacher_id"],
-      teacherName: json["name"],
-      type: json["type"],
-      deptId: json["dept_id"],
+      userId: json['user_id'],
+      userName: json['user_name'],
+      type: json['type'],
+      deptId: json['dept_id'],
+      factId: json['fact_id'],
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
-      "teacher_id": teacherId,
-      "name": teacherName,
-      "type": type,
-      "dept_id": deptId,
+      'user_id': userId,
+      'user_name': userName,
+      'type': type,
+      'dept_id': deptId,
+      'fact_id': factId,
     };
   }
 }

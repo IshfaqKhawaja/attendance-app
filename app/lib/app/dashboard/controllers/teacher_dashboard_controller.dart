@@ -7,7 +7,7 @@ import 'package:app/app/signin/controllers/signin_controller.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-class DashboardController extends GetxController {
+class TeacherDashboardController extends GetxController {
   final singInController = Get.find<SignInController>();
   final loadingController = Get.find<LoadingController>();
   final isTeacherCoursesLoaded = false.obs;
@@ -17,7 +17,7 @@ class DashboardController extends GetxController {
     isTeacherCoursesLoaded.value = false;
     final url = Uri.parse("$baseUrl/teacher_course/display");
     final body = jsonEncode({
-      "teacher_id": singInController.userData.value.teacherId,
+      "teacher_id": singInController.teacherData.value.teacherId,
     });
     var response = await http.post(
       url,
