@@ -9,13 +9,13 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-
 import '../../models/student_model.dart';
 import '../../constants/network_constants.dart';
 import '../models/course_students_model.dart';
 import '../models/student_attendence.dart';
 
 class CourseController extends GetxController {
+  CourseController({required this.courseId});
   var studentsInThisCourse = <StudentModel>[].obs;
   final String courseId;
   // New Data
@@ -26,7 +26,6 @@ class CourseController extends GetxController {
   var countedAs = 1.obs;
   var attendenceMarked = <StudentAttendance>[].obs;
 
-  CourseController({required this.courseId});
 
   void getStudentsList() async {
     studentsInThisCourse.clear();
@@ -237,6 +236,7 @@ class CourseController extends GetxController {
   }
 }
   
+
 
   @override
   void onInit() {

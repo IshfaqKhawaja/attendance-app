@@ -42,3 +42,9 @@ def list_courses():
 @router.post("/bulk_add", response_model=BulkCourseCreateResponse)
 def bulk_add_courses(payload: BulkCourseCreate):
     return add_courses_bulk(payload)
+
+
+
+@router.get("/display_courses_by_semester_id/{sem_id}", response_model=CourseDetailResponse, summary="Get Course Details")
+def display_courses_by_semester_id(sem_id: str) -> CourseDetailResponse:
+    return fetch_courses_by_semester_id(sem_id)

@@ -42,3 +42,8 @@ def get_all():
 @router.post("/bulk_add", response_model=BulkProgramCreateResponse)
 def bulk_add_programs(payload: BulkProgramCreate):
     return add_programs_bulk(payload)
+
+
+@router.get('/display_programs_by_dept_id/{dept_id}', response_model=ProgramDetailResponse, summary="Get Program Details by Department ID")
+def get_program_details(dept_id: str):
+    return display_program_by_dept_id(dept_id)

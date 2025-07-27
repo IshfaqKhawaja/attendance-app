@@ -1,8 +1,10 @@
+import 'package:app/app/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // Local Imports:::
+import '../../routes/app_routes.dart';
 import '../controllers/hod_dashboard_controller.dart' show HodDashboardController;
 
 class HodDashboard extends StatelessWidget {
@@ -67,10 +69,57 @@ class HodDashboard extends StatelessWidget {
                 ),
               ),
             ),
-           
+
+            // Get All the Programs of the Department:::
+            Positioned(
+              top: Get.size.height * 0.26,              
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(10),
+                width: Get.size.width,
+                child: Text(
+                  "Programs",
+                  style: GoogleFonts.openSans(
+                    fontSize: 20,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: Get.size.height * 0.3, 
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(10),
+                width: Get.size.width,
+                height: Get.size.height * 0.7, 
+                child: ListView.builder(
+                    padding: EdgeInsets.all(2),
+                    itemCount: hodDashboardController.programs.length,
+                    itemBuilder: (context, index) {
+                      final program = hodDashboardController.programs[index];
+                      return Card(
+                        elevation: 5,
+                        child: ListTile(
+                          onTap: (){
+                            Get.toNamed(Routes.SEMESTER, arguments: {'programId': program.progId, "programName": program.progName});
+                          },
+                          title: Text(program.progName, style: textStyle.copyWith(fontSize: 16),),
+                          subtitle: Text("Program Code : ${program.progId}"),
+
+                        ),
+                      );  
+                    },
+                  ),
+              ),
+            ),
           ],
         ),
-             );
-    });
+        );
+    }
+        );
+
   }
-}
+  }
+  

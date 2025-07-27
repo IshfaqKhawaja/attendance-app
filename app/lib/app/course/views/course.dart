@@ -73,10 +73,7 @@ class _CourseState extends State<Course> {
                 style: GoogleFonts.openSans(fontSize: 14, color: Colors.white),
               ),
             ),
-          ),
-
-
-          
+          ),          
           Positioned(
             top: Get.size.height * 0.25,
             child: Container(

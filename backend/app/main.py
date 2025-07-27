@@ -26,7 +26,7 @@ def home():
     return {"message" : "Welcome to JMI Attendence Server"}
 
 
-# Initial Router:   p   r
+# Initial Router:
 app.include_router(initial_router)
 # Authenticate Routes:
 app.include_router(authenticate_router)

@@ -89,3 +89,23 @@ def add_programs_bulk(payload: BulkProgramCreate) -> BulkProgramCreateResponse:
             skipped_count=skipped,
             message=f"Bulk insert failed: {e}"
         )
+
+
+
+def display_program_by_dept_id(dept_id: str) -> ProgramDetailResponse:
+    conn = connection_to_db()
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT progid, name, deptid, factid FROM program WHERE deptid = %s",
+            (dept_id,)
+        )
+        row = cur.fetchone()
+    if row:
+        return ProgramDetailResponse(
+            success=True,
+            prog_id=row[0],
+            prog_name=row[1],
+            dept_id=row[2],
+            fact_id=row[3]
+        )
+    return ProgramDetailResponse(success=False)

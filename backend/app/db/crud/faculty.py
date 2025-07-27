@@ -24,7 +24,7 @@ def add_faculty_to_db(faculty: FacultyCreate) -> FacultyCreateResponse:
             message=f"Couldn't add faculty: {e}"
         )
 
-def display_faculty_by_id(factid: str) -> FacultyDetailResponse:
+def display_faculty_by_id(factid: str) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
@@ -33,12 +33,12 @@ def display_faculty_by_id(factid: str) -> FacultyDetailResponse:
         )
         row = cur.fetchone()
     if row:
-        return FacultyDetailResponse(
-            success=True,
-            factid=row[0],
-            fact_name=row[1]
-        )
-    return FacultyDetailResponse(success=False)
+        return {
+            "success": True,
+            "factid": row[0],
+            "fact_name": row[1]
+        }
+    return {"success": False, "factid": None, "fact_name": None}
 
 def display_all() -> List[FacultyListItem]:
     conn = connection_to_db()

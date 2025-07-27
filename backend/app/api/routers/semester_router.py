@@ -3,8 +3,6 @@ from fastapi import APIRouter, Body #type: ignore
 from app.db.crud.semester import *
 from app.models.semester_model import (
     SemesterCreate,
-    SemesterCreateResponse,
-    SemesterDetailResponse,
     SemesterListItem,
     BulkSemesterCreate,
     BulkSemesterCreateResponse,
@@ -41,3 +39,9 @@ def get_all():
 @router.post("/bulk_add", response_model=BulkSemesterCreateResponse)
 def bulk_add_semesters(payload: BulkSemesterCreate):
     return add_semesters_bulk(payload)
+
+
+
+@router.get("/display_semester_by_program_id/{program_id}", response_model=list[SemesterListItem], summary="List all Semesters by Program ID")
+def get_semesters_by_program_id(program_id: str):
+    return display_semesters_by_program_id(program_id)

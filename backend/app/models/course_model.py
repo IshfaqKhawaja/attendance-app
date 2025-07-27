@@ -14,14 +14,6 @@ class CourseCreateResponse(BaseModel):
     success: bool
     message: str
 
-class CourseDetailResponse(BaseModel):
-    success: bool
-    course_id: Optional[str] = None
-    course_name: Optional[str] = None
-    sem_id: Optional[str] = None
-    prog_id: Optional[str] = None
-    dept_id: Optional[str] = None
-    fact_id: Optional[str] = None
 
 class CourseListItem(BaseModel):
     course_id: str
@@ -30,6 +22,11 @@ class CourseListItem(BaseModel):
     prog_id: str
     dept_id: str
     fact_id: str
+    
+
+class CourseDetailResponse(BaseModel):
+    success: bool
+    courses: List[CourseListItem] = []
 
 class BulkCourseCreate(BaseModel):
     courses: List[CourseCreate]

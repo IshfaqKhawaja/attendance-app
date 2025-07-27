@@ -104,3 +104,31 @@ def add_courses_bulk(payload: BulkCourseCreate) -> BulkCourseCreateResponse:
             skipped_count=skipped,
             message=f"Bulk insert failed: {e}"
         )
+
+
+
+def fetch_courses_by_semester_id(sem_id: str) -> CourseDetailResponse:
+    conn = connection_to_db()
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT courseid, name, semid, progid, deptid, factid "
+            "FROM course WHERE semid = %s",
+            (sem_id,)
+        )
+        rows = cur.fetchall()
+    if not rows:
+        return CourseDetailResponse(success=False)
+    
+    courses = [
+        CourseListItem(
+            course_id=r[0],
+            course_name=r[1],
+            sem_id=r[2],
+            prog_id=r[3],
+            dept_id=r[4],
+            fact_id=r[5]
+        )
+        for r in rows
+    ]
+    
+    return CourseDetailResponse(success=True, courses=courses)

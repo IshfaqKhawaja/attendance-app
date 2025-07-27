@@ -96,3 +96,23 @@ def add_semesters_bulk(payload: BulkSemesterCreate) -> BulkSemesterCreateRespons
             skipped_count=skipped,
             message=f"Bulk insert failed: {e}"
         )
+
+
+def display_semesters_by_program_id(program_id: str) -> List[SemesterListItem]:
+    conn = connection_to_db()
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT semid, name, startdate, enddate FROM semester WHERE progid = %s",
+            (program_id,)
+        )
+        rows = cur.fetchall()
+    return [
+        SemesterListItem(
+            sem_id=r[0],
+            sem_name=r[1],
+            start_date=r[2],
+            end_date=r[3],
+            prog_id=program_id
+        )
+        for r in rows
+    ]
