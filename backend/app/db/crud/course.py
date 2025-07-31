@@ -41,12 +41,12 @@ def display_course_by_id(courseid: str) -> CourseDetailResponse:
     if row:
         return CourseDetailResponse(
             success=True,
-            course_id=row[0],
-            course_name=row[1],
-            sem_id=row[2],
-            prog_id=row[3],
-            dept_id=row[4],
-            fact_id=row[5]
+            courseid=row[0],
+            name=row[1],
+            semid=row[2],
+            progid=row[3],
+            deptid=row[4],
+            factid=row[5]
         )
     return CourseDetailResponse(success=False)
 

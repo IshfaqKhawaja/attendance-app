@@ -16,20 +16,18 @@ router = APIRouter(
      tags=["course"]
 )
 
-@router.post("/add", response_model=dict, summary="Insert a new Course")
+@router.post("/add", response_model=CourseCreateResponse, summary="Insert a new Course")
 def add(
     course : CourseCreate
-) -> dict:
+) -> CourseCreateResponse:
     """
     Expects JSON payload: { "name": "Department of Engineering"}
     """
-    return add_course_to_db(
-       course=course
-    )
+    return add_course_to_db(course)
 
 
-@router.post("/display", response_model=dict, summary="Display Course")
-def display(course_id: str = Body(..., embed=True, description="Course ID")) -> dict:
+@router.post("/display", response_model=CourseDetailResponse, summary="Display Course")
+def display(course_id: str = Body(..., embed=True, description="Course ID")) -> CourseDetailResponse:
     return display_course_by_id(course_id)
 
 

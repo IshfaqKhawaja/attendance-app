@@ -19,6 +19,14 @@ class SemesterDashboard extends StatelessWidget {
       appBar: AppBar(
           title: Text("Semester Dashboard"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

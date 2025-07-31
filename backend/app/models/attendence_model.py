@@ -20,7 +20,7 @@ class BulkAttendenceModel(BaseModel):
     student_id:     str
     student_name:  Optional[str] = None
     course_id:      str
-    date:           str
+    date:           datetime
     marked:         list[bool]
     prog_id:        str
     sem_id:         str

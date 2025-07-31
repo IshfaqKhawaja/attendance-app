@@ -13,6 +13,7 @@ from app.api.routers.teacher_course_router import router as teacher_course_route
 from app.api.routers.course_students_router import router as course_student_router
 from app.api.routers.attendance_notifier_router import router as attendance_notifier_router
 from app.api.routers.user_router import router as user_router
+from app.api.routers.report_router import router as report_router
 # from app.core.security import get_current_user
 
 from fastapi import FastAPI # type: ignore
@@ -54,3 +55,5 @@ app.include_router(attendence_router)
 app.include_router(attendance_notifier_router)
 # User Router:
 app.include_router(user_router)
+# Report Router:
+app.include_router(report_router)

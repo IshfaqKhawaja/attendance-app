@@ -1,0 +1,16 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi[standard]>=0.116.1",
+    "fpdf>=1.7.2",
+    "jwt>=1.4.0",
+    "openpyxl>=3.1.5",
+    "pandas>=2.3.1",
+    "psycopg>=3.2.9",
+    "twilio>=9.7.0",
+    "uvicorn>=0.35.0",
+]

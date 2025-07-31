@@ -4,7 +4,6 @@ from app.models.program_model import (
     ProgramCreate,
     ProgramCreateResponse,
     ProgramDetailResponse,
-    ProgramListItem,
     BulkProgramCreate,
     BulkProgramCreateResponse,
 )
@@ -15,10 +14,10 @@ router = APIRouter(
      tags=["program"]
 )
 
-@router.post("/add", response_model=dict, summary="Insert a new Program")
+@router.post("/add", response_model=ProgramCreateResponse, summary="Insert a new Program")
 def add(
     prog : ProgramCreate  
-) -> dict:
+) -> ProgramCreateResponse:
     """
     Expects JSON payload: { "name": "Department of Engineering"}
     """
@@ -27,8 +26,8 @@ def add(
     )
 
 
-@router.post("/display", response_model=dict, summary="Display Program")
-def display(prog_id: str = Body(..., embed=True, description="Program ID")) -> dict:
+@router.post("/display", response_model=ProgramDetailResponse, summary="Display Program")
+def display(prog_id: str = Body(..., embed=True, description="Program ID")) -> ProgramDetailResponse:
     return display_program_by_id(prog_id)
 
 

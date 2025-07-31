@@ -17,7 +17,7 @@ def add_attendence_to_db(model: AttendenceModel) -> dict:
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
-                    model.attendence_id,
+                    model.attendance_id,
                     model.student_id,
                     model.course_id,
                     model.date,
@@ -84,7 +84,7 @@ def display_attendence_by_id(attendence_id: AttendenceIdModel) -> dict:
         cur.execute(
             "SELECT attendanceid, studentid, courseid, date, present, progid, semid, deptid "
             "FROM attendance WHERE attendanceid = %s",
-            (attendence_id.attendence_id,),
+            (attendence_id.attendance_id,),
         )
         row = cur.fetchone()
 
@@ -93,7 +93,7 @@ def display_attendence_by_id(attendence_id: AttendenceIdModel) -> dict:
 
     # map row back into our model
     model = AttendenceModel(
-        attendence_id=row[0],
+        attendance_id=row[0],
         student_id=row[1],
         course_id=row[2],
         date=row[3],

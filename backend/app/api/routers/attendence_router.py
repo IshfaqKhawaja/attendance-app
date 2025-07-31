@@ -43,9 +43,9 @@ def add(attendance: AttendenceModel) -> dict:
 def display(payload: AttendenceIdModel) -> dict:
     """
     Expects JSON payload:
-    { "attendence_id": "att123" }
+    { "attendance_id": "att123" }
     """
-    return display_attendence_by_id(payload.attendence_id)
+    return display_attendence_by_id(payload)
 
 
 

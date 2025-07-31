@@ -103,11 +103,10 @@ class HodDashboard extends StatelessWidget {
                         elevation: 5,
                         child: ListTile(
                           onTap: (){
-                            Get.toNamed(Routes.SEMESTER, arguments: {'programId': program.progId, "programName": program.progName});
+                            Get.toNamed(Routes.SEMESTER, arguments: {'programId': program.progId, "programName": program.progName,},);
                           },
                           title: Text(program.progName, style: textStyle.copyWith(fontSize: 16),),
                           subtitle: Text("Program Code : ${program.progId}"),
-
                         ),
                       );  
                     },

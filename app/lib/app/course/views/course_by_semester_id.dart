@@ -29,6 +29,14 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
       appBar: AppBar(
         title: Text("Courses for Semester"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              // Add functionality to add a new course
+            },
+          ),
+        ],
       ),
       body: Obx(() {
         if (courseController.coursesBySemesterId.isEmpty) {
@@ -41,7 +49,9 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
             return ListTile(
               title: Text(course.courseName, style: textStyle.copyWith(fontSize: 16)),
               subtitle: Text("Course ID: ${course.courseId}", style: textStyle.copyWith(fontSize: 14)),
-              trailing: ElevatedButton(onPressed: (){}, child: Text("Generate Report", style: textStyle.copyWith(fontSize: 12,),), ),
+              trailing: ElevatedButton(onPressed: (){
+                courseController.showReportDatePicker(context, course.courseId);
+              }, child: Text("Generate Report", style: textStyle.copyWith(fontSize: 12,),), ),
             );
           },
         );
