@@ -2,6 +2,7 @@ import 'package:app/app/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/course_by_sem_id_controller.dart';
+import '../widgets/add_course.dart';
 
 class CourseBySemesterId extends StatefulWidget {
   const CourseBySemesterId({super.key});
@@ -33,7 +34,15 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              // Add functionality to add a new course
+              Get.dialog(
+                barrierDismissible: true,
+                Dialog(
+                  child: AddCourse(
+                    semesterId: semesterId,
+
+                  ),
+                ),
+              );
             },
           ),
         ],

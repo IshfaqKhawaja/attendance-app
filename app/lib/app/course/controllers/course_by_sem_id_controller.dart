@@ -16,6 +16,8 @@ import '../../models/course_model.dart';
 
 class CourseBySemesterIdController  extends GetxController{
   var coursesBySemesterId = <CourseModel>[].obs;
+  // Course Form Controller
+  final TextEditingController nameController = TextEditingController();
 
   void getCourseReport(String courseId, startDate, endDate) async  {
     try{
@@ -95,6 +97,39 @@ class CourseBySemesterIdController  extends GetxController{
   );
   }
 
+  // Add Course Function
+  void addCourse(String name, String semId) async {
+    try {
+      var response = await http.post(
+        Uri.parse("$baseUrl/course/add"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "name": name,
+          "sem_id": semId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print("Response: ${response.body}");
+        Get.snackbar("Success", "Course added successfully",
+          colorText: Colors.green,
+        );
+      } else {
+        Get.snackbar("Error", "Failed to add course",
+          colorText: Colors.red,
+        );
+      }
+    } catch (e) {
+      print(e);
+      Get.snackbar("Error", "Failed to add course",
+        colorText: Colors.red,
+      );
+    }
+  }
+
+
+
+
 
 
   void getCoursesBySemesterId(String semesterId) async {
@@ -113,3 +148,4 @@ class CourseBySemesterIdController  extends GetxController{
   }
 
 }
+
