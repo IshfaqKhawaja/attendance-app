@@ -32,4 +32,34 @@ class UserModel {
       'fact_id': factId,
     };
   }
+
+  UserModel copyWith({
+    String? userId,
+    String? userName,
+    String? type,
+    String? deptId,
+    String? factId,
+  }) {
+    return UserModel(
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      type: type ?? this.type,
+      deptId: deptId ?? this.deptId,
+      factId: factId ?? this.factId,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is UserModel &&
+        other.userId == userId &&
+        other.userName == userName &&
+        other.type == type &&
+        other.deptId == deptId &&
+        other.factId == factId;
+  }
+
+  @override
+  int get hashCode => Object.hash(userId, userName, type, deptId, factId);
 }

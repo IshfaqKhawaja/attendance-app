@@ -67,7 +67,7 @@ class _AddCoursesState extends State<AddCourses> {
             debugPrint("${addCoursesController.selectedFaculties.length}");
             return ElevatedButton(
               onPressed: () async {
-                addCoursesController.add_courses();
+                addCoursesController.addCourses();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Get.theme.primaryColor,

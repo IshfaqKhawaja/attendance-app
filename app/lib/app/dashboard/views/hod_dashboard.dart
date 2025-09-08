@@ -1,4 +1,4 @@
-import 'package:app/app/constants/text_styles.dart';
+import 'package:app/app/core/constants/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,7 +17,8 @@ class HodDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       return Scaffold(
-        body: Stack(
+        body: SafeArea(
+          child: Stack(
           children: [
             Container(
               decoration: BoxDecoration(
@@ -72,7 +73,7 @@ class HodDashboard extends StatelessWidget {
 
             // Get All the Programs of the Department:::
             Positioned(
-              top: Get.size.height * 0.26,              
+              top: Get.size.height * 0.26,
               child: Container(
                 color: Colors.white,
                 padding: EdgeInsets.all(10),
@@ -88,33 +89,71 @@ class HodDashboard extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: Get.size.height * 0.3, 
+              top: Get.size.height * 0.3,
               child: Container(
                 color: Colors.white,
-                padding: EdgeInsets.all(10),
                 width: Get.size.width,
-                height: Get.size.height * 0.7, 
-                child: ListView.builder(
-                    padding: EdgeInsets.all(2),
-                    itemCount: hodDashboardController.programs.length,
-                    itemBuilder: (context, index) {
-                      final program = hodDashboardController.programs[index];
-                      return Card(
-                        elevation: 5,
-                        child: ListTile(
-                          onTap: (){
-                            Get.toNamed(Routes.SEMESTER, arguments: {'programId': program.progId, "programName": program.progName,},);
+                height: Get.size.height * 0.7,
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    hodDashboardController.loadPrograms();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Builder(
+                      builder: (_) {
+                        if (hodDashboardController.isLoading.value) {
+                          return ListView(children: [
+                            SizedBox(height: 16),
+                            Center(child: CircularProgressIndicator()),
+                          ]);
+                        }
+                        if ((hodDashboardController.errorMessage?.value ?? '').isNotEmpty) {
+                          return ListView(children: [
+                            SizedBox(height: 16),
+                            Center(child: Text(hodDashboardController.errorMessage!.value)),
+                          ]);
+                        }
+                        final items = hodDashboardController.programs;
+                        if (items.isEmpty) {
+                          return ListView(children: const [
+                            SizedBox(height: 16),
+                            Center(child: Text('No programs found')),
+                          ]);
+                        }
+                        return ListView.builder(
+                          itemCount: items.length,
+                          itemBuilder: (context, index) {
+                            final program = items[index];
+                            return Card(
+                              elevation: 2,
+                              child: ListTile(
+                                onTap: () {
+                                  Get.toNamed(
+                                    Routes.SEMESTER,
+                                    arguments: {
+                                      'programId': program.progId,
+                                      'programName': program.progName,
+                                    },
+                                  );
+                                },
+                                title: Text(
+                                  program.progName,
+                                  style: textStyle.copyWith(fontSize: 16),
+                                ),
+                                subtitle: Text("Program Code : ${program.progId}"),
+                              ),
+                            );
                           },
-                          title: Text(program.progName, style: textStyle.copyWith(fontSize: 16),),
-                          subtitle: Text("Program Code : ${program.progId}"),
-                        ),
-                      );  
-                    },
+                        );
+                      },
+                    ),
                   ),
+                ),
               ),
             ),
           ],
-        ),
+        )),
         );
     }
         );

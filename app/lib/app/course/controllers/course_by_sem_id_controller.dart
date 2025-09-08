@@ -2,50 +2,40 @@
 
 
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+// http not needed after refactor
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../constants/network_constants.dart';
+import '../../core/network/endpoints.dart';
+import '../../core/network/api_client.dart';
+import '../../core/repositories/course_repository.dart';
 import '../../models/course_model.dart';
 
 class CourseBySemesterIdController  extends GetxController{
   var coursesBySemesterId = <CourseModel>[].obs;
   // Course Form Controller
   final TextEditingController nameController = TextEditingController();
+  late final ApiClient _apiClient;
+  late final CourseRepository _repo;
 
   void getCourseReport(String courseId, startDate, endDate) async  {
     try{
       final dir = await getApplicationDocumentsDirectory();
       String filePath = "${dir.path}/course_report_$courseId${DateTime.now().millisecondsSinceEpoch}.xlsx";
 
-     var response = await  http.post(
-      Uri.parse("$baseUrl/reports/generate_course_report"),
-      body: jsonEncode({
-        "course_id": courseId, 
-        "start_date": startDate, 
-        "end_date": endDate,
-        "file_path": filePath
-        }),
-      headers: {"Content-Type": "application/json"},
-    );
-      if (response.statusCode == 200) {
-          // 🔽 Save the Excel to device
-          final bytes = response.bodyBytes;
-          final file = File(filePath);
-          await file.writeAsBytes(bytes);
-          await OpenFile.open(filePath);
-      }
-      else {
-        Get.snackbar("Error", "Failed to generate report",
-          colorText: Colors.red,
-        );
-      }
+      final bytes = await _repo.generateCourseReportXlsx(
+        courseId,
+        startDate,
+        endDate,
+        filePath,
+      );
+      final file = File(filePath);
+      await file.writeAsBytes(bytes);
+      await OpenFile.open(filePath);
     } catch (e) {
       print(e);
       Get.snackbar("Error", "Failed to generate report",
@@ -100,24 +90,11 @@ class CourseBySemesterIdController  extends GetxController{
   // Add Course Function
   void addCourse(String name, String semId) async {
     try {
-      var response = await http.post(
-        Uri.parse("$baseUrl/course/add"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "name": name,
-          "sem_id": semId,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        print("Response: ${response.body}");
-        Get.snackbar("Success", "Course added successfully",
-          colorText: Colors.green,
-        );
+      final res = await _repo.addCourse(name, semId);
+      if (res['success'] == true) {
+        Get.snackbar('Success', 'Course added successfully', colorText: Colors.green);
       } else {
-        Get.snackbar("Error", "Failed to add course",
-          colorText: Colors.red,
-        );
+        Get.snackbar('Error', res['message']?.toString() ?? 'Failed to add course', colorText: Colors.red);
       }
     } catch (e) {
       print(e);
@@ -133,18 +110,32 @@ class CourseBySemesterIdController  extends GetxController{
 
 
   void getCoursesBySemesterId(String semesterId) async {
-    var response = await http.get(
-      Uri.parse("$baseUrl/course/display_courses_by_semester_id/$semesterId"),
-    );
-
-    if (response.statusCode == 200) {
-      var res = jsonDecode(response.body);
-      if (res["success"]) {
-        coursesBySemesterId.value = (res["courses"] as List)
+    try {
+      final res = await ApiClient().getJson(
+          "${Endpoints.baseUrl}/course/display_courses_by_semester_id/$semesterId");
+      if (res['success'] == true) {
+        coursesBySemesterId.value = (res['courses'] as List)
             .map((e) => CourseModel.fromJson(e))
             .toList();
+      } else {
+        Get.snackbar('Error', res['message']?.toString() ?? 'Failed to fetch courses');
       }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to fetch courses: $e');
     }
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    _apiClient = ApiClient();
+    _repo = CourseRepository(_apiClient);
+  }
+
+  @override
+  void onClose() {
+    nameController.dispose();
+    super.onClose();
   }
 
 }

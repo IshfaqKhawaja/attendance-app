@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:app/app/routes/app_routes.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
-import '../../constants/network_constants.dart';
+import '../../core/network/endpoints.dart';
+import '../../core/network/api_client.dart';
 import '../../models/program_model.dart';
 import '../../models/faculty_model.dart';
 import '../../models/department_model.dart';
@@ -25,11 +23,10 @@ class LoadingController extends GetxController {
 
   void loadData() async {
     try {
-      String url = "$baseUrl/initial/get_all_data";
-      var response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        var res = jsonDecode(response.body);
-        if (res["success"]) {
+      final client = ApiClient();
+      final res = await client.getJson(Endpoints.getAllData);
+      // HTTP validation already done in ApiClient
+      if (res["success"] == true) {
           // Set data:
           faculities.value = (res["faculties"] as List<dynamic>)
               .map((e) => FacultyModel.fromJson(e as Map<String, dynamic>))
@@ -47,11 +44,8 @@ class LoadingController extends GetxController {
               .map((e) => SemesterModel.fromJson(e as Map<String, dynamic>))
               .toList());
           route();
-        } else {
-          Get.snackbar("Error", "Couldn't Fetch Data from Server:");
-        }
       } else {
-        Get.snackbar("Error", "Server is Irresponsive");
+        Get.snackbar("Error", "Couldn't Fetch Data from Server:");
       }
     } catch (e) {
       print("$e");

@@ -1,7 +1,7 @@
 # app/db/semester_crud.py
 from typing import List
 from app.db.connection import connection_to_db
-from app.models.semester_model import (
+from app.db.models.semester_model import (
     SemesterCreate,
     SemesterCreateResponse,
     SemesterDetailResponse,
@@ -116,3 +116,40 @@ def display_semesters_by_program_id(program_id: str) -> List[SemesterListItem]:
         )
         for r in rows
     ]
+    
+def display_semester_with_details_by_id(semid: str) -> SemesterDetailResponse:
+    """
+    Fetch semester details along with program's deptid and factid for a given semid.
+    """
+    conn = connection_to_db()
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT 
+                s.semid,
+                s.name,
+                s.startdate,
+                s.enddate,
+                s.progid,
+                p.deptid,
+                p.factid
+            FROM semester s
+            JOIN program p ON s.progid = p.progid
+            WHERE s.semid = %s
+            """,
+            (semid,)
+        )
+        row = cur.fetchone()
+    
+    if row:
+        return SemesterDetailResponse(
+            success=True,
+            sem_id=row[0],
+            sem_name=row[1],
+            start_date=row[2],
+            end_date=row[3],
+            prog_id=row[4],
+            dept_id=row[5],
+            fact_id=row[6]
+        )
+    return SemesterDetailResponse(success=False, message="Semester not found")

@@ -9,3 +9,14 @@ class BulkStudentIn(BaseModel):
     prog_id:      str
     sem_id:       str
     dept_id:      str
+
+class StudentCreate(BaseModel):
+    studentid: str
+    name: str
+    phonenumber: int
+    progid: str
+    semid: str
+    deptid: str
+
+class StudentDetail(StudentCreate):
+    pass

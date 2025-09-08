@@ -2,7 +2,7 @@
 from datetime import date
 from typing import List
 from app.db.connection import connection_to_db
-from app.models.daily_attendence import DailyAttendance
+from app.db.models.daily_attendence import DailyAttendance
 
 def fetch_daily_attendance(att_date: date) -> List[DailyAttendance]:
     """

@@ -11,3 +11,8 @@ For Dropping this Database use this:
        WHERE datname='mydb' AND pid<>pg_backend_pid(); \
       DROP DATABASE IF EXISTS mydb;"
 '
+
+
+
+RUN project:
+`uv run uvicorn app.main:app --reload`

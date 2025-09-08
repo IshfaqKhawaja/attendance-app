@@ -1,6 +1,6 @@
 from typing import List
 from app.db.connection import connection_to_db
-from app.models.attendence_model import AttendenceModel, AttendenceIdModel
+from app.db.models.attendence_model import AttendenceModel, AttendenceIdModel
 
 def add_attendence_to_db(model: AttendenceModel) -> dict:
     """

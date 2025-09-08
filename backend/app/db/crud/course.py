@@ -1,8 +1,9 @@
 # app/db/course_crud.py
 from typing import List
 from app.db.connection import connection_to_db
-from app.models.course_model import (
+from app.db.models.course_model import (
     CourseCreate,
+    CourseCreateForDB,
     CourseCreateResponse,
     CourseDetailResponse,
     CourseListItem,
@@ -10,7 +11,7 @@ from app.models.course_model import (
     BulkCourseCreateResponse,
 )
 
-def add_course_to_db(course: CourseCreate) -> CourseCreateResponse:
+def add_course_to_db(course: CourseCreateForDB) -> CourseCreateResponse:
     conn = connection_to_db()
     try:
         with conn.cursor() as cur:
@@ -41,12 +42,14 @@ def display_course_by_id(courseid: str) -> CourseDetailResponse:
     if row:
         return CourseDetailResponse(
             success=True,
-            courseid=row[0],
-            name=row[1],
-            semid=row[2],
-            progid=row[3],
-            deptid=row[4],
-            factid=row[5]
+            courses=[CourseListItem(
+                course_id=row[0],
+                course_name=row[1],
+                sem_id=row[2],
+                prog_id=row[3],
+                dept_id=row[4],
+                fact_id=row[5]
+            )]
         )
     return CourseDetailResponse(success=False)
 

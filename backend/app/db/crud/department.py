@@ -1,6 +1,6 @@
 from typing import List
 from app.db.connection import connection_to_db
-from app.models.department_model import (
+from app.db.models.department_model import (
     DepartmentCreate,
     DepartmentCreateResponse,
     DepartmentDetailResponse,

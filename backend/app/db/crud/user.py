@@ -1,5 +1,5 @@
 from app.db.connection import connection_to_db
-from app.models.user_model import AddUser, DisplayUser
+from app.db.models.user_model import AddUser, DisplayUser
 
 def add_user_to_db(user: AddUser) -> dict:
     conn = connection_to_db()

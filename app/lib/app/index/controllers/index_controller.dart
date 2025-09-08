@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../routes/app_routes.dart';
 
 class IndexController extends GetxController {
   var index = 0.obs;
@@ -6,13 +7,14 @@ class IndexController extends GetxController {
   void tap(int i) {
     switch (i) {
       case 0:
-        Get.toNamed('/add_students');
+  Get.toNamed(Routes.ADD_STUDENTS);
         break;
       case 1:
-        Get.toNamed('/add_attendence');
+  // TODO: replace with actual route when attendance feature is added
+  Get.toNamed(Routes.INDEX_PAGE);
         break;
       default:
-        Get.toNamed('/index_page');
+  Get.toNamed(Routes.INDEX_PAGE);
     }
   }
 }

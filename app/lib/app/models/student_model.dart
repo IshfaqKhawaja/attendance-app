@@ -1,7 +1,7 @@
 class StudentModel {
   final String studentId;
   final String studentName;
-  final int phoneNumber;
+  final String phoneNumber; // keep as string to avoid locale/format issues
   final String progId;
   final String semId;
   final String deptId;
@@ -15,10 +15,11 @@ class StudentModel {
     required this.deptId,
   });
   factory StudentModel.fromJson(Map<String, dynamic> json) {
+    final phone = json["phone_number"];
     return StudentModel(
       studentId: json["student_id"],
       studentName: json["student_name"],
-      phoneNumber: json["phone_number"],
+      phoneNumber: phone is int ? phone.toString() : (phone?.toString() ?? ''),
       progId: json["prog_id"],
       semId: json["sem_id"],
       deptId: json["dept_id"],
@@ -35,4 +36,37 @@ class StudentModel {
       "dept_id": deptId,
     };
   }
+
+  StudentModel copyWith({
+    String? studentId,
+    String? studentName,
+    String? phoneNumber,
+    String? progId,
+    String? semId,
+    String? deptId,
+  }) {
+    return StudentModel(
+      studentId: studentId ?? this.studentId,
+      studentName: studentName ?? this.studentName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      progId: progId ?? this.progId,
+      semId: semId ?? this.semId,
+      deptId: deptId ?? this.deptId,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is StudentModel &&
+        other.studentId == studentId &&
+        other.studentName == studentName &&
+        other.phoneNumber == phoneNumber &&
+        other.progId == progId &&
+        other.semId == semId &&
+        other.deptId == deptId;
+  }
+
+  @override
+  int get hashCode => Object.hash(studentId, studentName, phoneNumber, progId, semId, deptId);
 }

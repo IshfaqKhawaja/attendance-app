@@ -1,10 +1,11 @@
-import 'dart:convert';
+// jsonEncode calls moved into ApiClient
 
-import 'package:app/app/constants/network_constants.dart';
+import 'package:app/app/core/network/endpoints.dart';
+import 'package:app/app/core/network/api_client.dart';
 import 'package:app/app/dashboard/controllers/teacher_dashboard_controller.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+// no direct http usage after refactor
 
 // Local Imports
 import '../../models/course_model.dart';
@@ -14,8 +15,10 @@ import '../../models/program_model.dart';
 import '../../models/faculty_model.dart';
 import '../../loading/controllers/loading_controller.dart';
 
+/// Controller for adding teacher courses based on selected faculty/department/program/semester.
 class AddCoursesController extends GetxController {
   late LoadingController controller;
+  late final ApiClient _apiClient;
   // 1. Faculty
   RxList<FacultyModel> faculities = <FacultyModel>[].obs;
   RxList<FacultyModel> selectedFaculties = <FacultyModel>[].obs;
@@ -86,7 +89,8 @@ class AddCoursesController extends GetxController {
     )).toList();
   }
 
-  void add_courses() async {
+  /// Adds the selected courses for the current teacher.
+  void addCourses() async {
     final TeacherDashboardController dashboardController =
         Get.find<TeacherDashboardController>();
     final courses = selectedCourses.map((e) => e.toJson()).toList();
@@ -100,29 +104,23 @@ class AddCoursesController extends GetxController {
     }
     var body = {"courses": coursesToAdd};
     try {
-      final url = Uri.parse("$baseUrl/teacher_course/add_all_teacher_courses");
-      var response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(body),
+      final res = await _apiClient.postJson(
+        "${Endpoints.baseUrl}/teacher_course/add_all_teacher_courses",
+        body,
       );
-      if (response.statusCode == 200) {
-        var res = jsonDecode(response.body);
-        if (res["success"]) {
+      if (res["success"] == true) {
           dashboardController.loadTeacherCourses();
           Get.snackbar(
             "SUCCESS",
             "Courses Added Successfully",
             colorText: Colors.green,
           );
-        } else {
-          Get.snackbar(
-            "ERROR",
-            "Something went wrong ${res["message"]}",
-            colorText: Colors.red,
-          );
-        }
-        // Go to dashboard:
+      } else {
+        Get.snackbar(
+          "ERROR",
+          "Something went wrong ${res["message"]}",
+          colorText: Colors.red,
+        );
       }
     } catch (e) {
       print(e);
@@ -158,5 +156,6 @@ class AddCoursesController extends GetxController {
     super.onInit();
     print("In init ${selectedFaculties}");
     start();
+  _apiClient = ApiClient();
   }
 }

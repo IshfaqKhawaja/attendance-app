@@ -21,12 +21,12 @@ class SemesterDashboard extends StatelessWidget {
         centerTitle: true,
         actions: [
           // Add button to create new semester
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
+          // IconButton(
+          //   icon: Icon(Icons.add),
+          //   // onPressed: () {
               
-            },
-          ),
+          //   // },
+          // ),
         ],
       ),
       body: Padding(

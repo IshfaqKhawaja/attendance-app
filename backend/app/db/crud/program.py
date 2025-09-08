@@ -1,7 +1,7 @@
 # app/db/program_crud.py
 from typing import List
 from app.db.connection import connection_to_db
-from app.models.program_model import (
+from app.db.models.program_model import (
     ProgramCreate,
     ProgramCreateResponse,
     ProgramDetailResponse,

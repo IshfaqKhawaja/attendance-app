@@ -1,11 +1,12 @@
 # app/db/faculty_crud.py
 from typing import List
 from app.db.connection import connection_to_db
-from app.models.faculty_model import (
-    FacultyCreate, FacultyCreateResponse,
+from app.schemas.faculty import (
+    FacultyCreate,
     FacultyDetailResponse, FacultyListItem,
     BulkFacultyCreate, BulkFacultyCreateResponse
 )
+from app.schemas.faculty import FacultyCreateResponse  # Adjust the import path if needed
 
 def add_faculty_to_db(faculty: FacultyCreate) -> FacultyCreateResponse:
     conn = connection_to_db()

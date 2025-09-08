@@ -10,7 +10,9 @@ import 'package:http/http.dart' as http;
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../models/student_model.dart';
-import '../../constants/network_constants.dart';
+import '../../core/network/endpoints.dart';
+import '../../core/network/api_client.dart';
+import '../../core/repositories/course_repository.dart';
 import '../models/course_students_model.dart';
 import '../models/student_attendence.dart';
 
@@ -26,42 +28,46 @@ class CourseController extends GetxController {
   var countedAs = 1.obs;
   var attendenceMarked = <StudentAttendance>[].obs;
 
+  late final ApiClient _apiClient;
+  late final CourseRepository _repo;
+
 
   void getStudentsList() async {
     studentsInThisCourse.clear();
-    var response = await http.post(
-      Uri.parse("$baseUrl/course_students/display_students_by_ids"),
-      body: jsonEncode({"course_id": courseId}),
-      headers: {"Content-Type": "application/json"},
-    );
-    var res = jsonDecode(response.body);
-    if (res["success"]) {
-      studentsInThisCourse.value = (res["students"] as List)
-          .map((e) => StudentModel.fromJson(e))
-          .toList();
+    try {
+      final res = await _repo.listStudentsByCourse(courseId);
+      if (res["success"] == true) {
+        studentsInThisCourse.value = (res["students"] as List)
+            .map((e) => StudentModel.fromJson(e))
+            .toList();
+      } else {
+        Get.snackbar('Error', res['message']?.toString() ?? 'Failed to load students');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to load students: $e');
     }
   }
 
   void addStudents() async {
-    var response = await http.post(
-      Uri.parse("$baseUrl/course_students/add_students_to_course"),
-      body: jsonEncode({
-        "students": newStudents.map((e) => e.toJson()).toList(),
-        "course_students": newCourseStudents.map((e) => e.toJson()).toList(),
-      }),
-      headers: {"Content-Type": "application/json"},
-    );
-    var res = jsonDecode(response.body);
-    if (res["success"]) {
-      Get.snackbar(
-        "SUCCESS",
-        "Students and Course Students Added",
-        colorText: Colors.green,
+    try {
+      final res = await _repo.addStudentsToCourse(
+        newStudents.map((e) => e.toJson()).toList(),
+        newCourseStudents.map((e) => e.toJson()).toList(),
       );
-    } else {
-      Get.snackbar("ERROR", res["message"], colorText: Colors.red);
+      if (res['success'] == true) {
+        Get.snackbar(
+          'SUCCESS',
+          'Students and Course Students Added',
+          colorText: Colors.green,
+        );
+      } else {
+        Get.snackbar('ERROR', res['message']?.toString() ?? 'Could not add students', colorText: Colors.red);
+      }
+    } catch (e) {
+      Get.snackbar('ERROR', 'Could not add students: $e', colorText: Colors.red);
+    } finally {
+      getStudentsList();
     }
-    getStudentsList();
   }
 
   Future<void> pickCsvFile(course) async {
@@ -143,7 +149,7 @@ class CourseController extends GetxController {
         attendenceMarked.map((e) => e.toJson()).toList(),
       );
       var response = await http.post(
-        Uri.parse("$baseUrl/attendance/add_attendence_bulk"),
+        Uri.parse("${Endpoints.baseUrl}/attendance/add_attendence_bulk"),
         body: attendence,
         headers: {'Content-Type': 'application/json'},
       );
@@ -205,19 +211,11 @@ class CourseController extends GetxController {
 
   Future<void> generateReport(DateTime startDate, DateTime endDate) async {
   try {
-    var response = await http.post(
-      Uri.parse("$baseUrl/course_students/generate_report"),
-      body: jsonEncode({
-        "course_id": courseId,
-        "start_date": startDate.toIso8601String(),
-        "end_date": endDate.toIso8601String()
-      }),
-      headers: {"Content-Type": "application/json"},
+    final bytes = await _repo.generateCourseReport(
+      courseId,
+      startDate.toIso8601String(),
+      endDate.toIso8601String(),
     );
-
-    if (response.statusCode == 200) {
-      // 🔽 Save the PDF to device
-      final bytes = response.bodyBytes;
 
       // 📁 Get download directory
       final dir = await getApplicationDocumentsDirectory(); // For internal storage
@@ -227,9 +225,6 @@ class CourseController extends GetxController {
       await OpenFile.open(filePath);
       // Get.snackbar("Success", "PDF saved to $filePath", colorText: Colors.green, snackPosition: SnackPosition.BOTTOM,
       //   duration: Duration(seconds: 5));
-    } else {
-      Get.snackbar("Error", "Failed to generate report", colorText: Colors.red);
-    }
   } catch (e) {
     print(e);
     Get.snackbar("Error", "Something went wrong: $e", colorText: Colors.red);
@@ -238,6 +233,8 @@ class CourseController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+  _apiClient = ApiClient();
+  _repo = CourseRepository(_apiClient);
     getStudentsList();
   }
 }
