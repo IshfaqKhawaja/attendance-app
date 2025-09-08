@@ -1,5 +1,5 @@
 """
-Create the following schema in PostgreSQL:
+Create the following schema in PostgreSQL (DDL strings only):
 
   FACULTY
   DEPARTMENT
@@ -9,33 +9,29 @@ Create the following schema in PostgreSQL:
   COURSE
   STUDENT
   ATTENDANCE
+
+Expose `statements` as a module-level list of SQL strings.
+This module does not perform any DB connections or execution on import.
 """
 
-from app.db.connection import connection_to_db
-cur = connection_to_db()
-def create_schema():
-    # 1) create enum for teacher type (if it doesn't already exist)
-    cur.execute("""
-    DO $$
-    BEGIN
-      IF NOT EXISTS (
-        SELECT 1 FROM pg_type WHERE typname = 'teacher_type'
-      ) THEN
-        CREATE TYPE teacher_type AS ENUM (
-          'PERMANENT',
-          'GUEST',
-          'CONTRACT'
-        );
-      END IF;
-    END
-    $$;
-    
-    
-    """)
-    
-  
-    # 2) create tables in dependency order
-    statements = [
+# 1) create tables in dependency order (and required enums where defined)
+statements = [
+        # ensure teacher_type enum exists
+        """
+        DO $$
+        BEGIN
+          IF NOT EXISTS (
+            SELECT 1 FROM pg_type WHERE typname = 'teacher_type'
+          ) THEN
+            CREATE TYPE teacher_type AS ENUM (
+              'PERMANENT',
+              'GUEST',
+              'CONTRACT'
+            );
+          END IF;
+        END
+        $$;
+        """,
         # faculty
         """
         CREATE TABLE IF NOT EXISTS faculty (
@@ -209,13 +205,5 @@ def create_schema():
           PRIMARY KEY(studentid,courseid )
         );
         
-        """
-    ]
-
-    for stmt in statements:
-        cur.execute(stmt)
-    cur.close()
-    print("All tables created successfully.")
-
-if __name__ == "__main__":
-    create_schema()
+  """
+]
