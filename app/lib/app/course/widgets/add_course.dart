@@ -16,6 +16,7 @@ class AddCourse extends StatelessWidget {
     return Container(
           padding: const EdgeInsets.all(16.0),
           height: Get.height * 0.2,
+          width: Get.width,
           child: Form(
             child: ListView(
               children: [

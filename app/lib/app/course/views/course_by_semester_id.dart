@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/course_by_sem_id_controller.dart';
 import '../widgets/add_course.dart';
+import '../widgets/file_picker_widget.dart';
 
 class CourseBySemesterId extends StatefulWidget {
   const CourseBySemesterId({super.key});
@@ -31,6 +32,24 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
         title: Text("Courses for Semester"),
         centerTitle: true,
         actions: [
+          // Button to add students in this sem
+          IconButton(
+            icon: Icon(Icons.person_add),
+            onPressed: () {
+              Get.dialog(
+                barrierDismissible: true,
+                Dialog(
+                  child: SizedBox(
+                    height : Get.height * 0.6,
+                    child: SingleChildScrollView(
+                      child: FilePickerWidget(),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          // Add button to create new course
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {

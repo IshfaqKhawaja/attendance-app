@@ -24,7 +24,7 @@ class FilePickerController extends GetxController {
 
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['csv', 'xlsx', 'xls'],
+      allowedExtensions: ['csv'],
       withData: true,
     );
 

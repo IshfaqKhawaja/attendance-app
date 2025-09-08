@@ -33,7 +33,7 @@ class HodDashboard extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  "Welcome HOD of\n${hodDashboardController.singInController.userData.value.userName}",
+                  "Welcome \n${hodDashboardController.singInController.userData.value.userName}",
                   style: GoogleFonts.openSans(
                     fontSize: 30,
                     color: Colors.white,

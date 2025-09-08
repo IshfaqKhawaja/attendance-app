@@ -235,9 +235,6 @@ class CourseController extends GetxController {
     Get.snackbar("Error", "Something went wrong: $e", colorText: Colors.red);
   }
 }
-  
-
-
   @override
   void onInit() {
     super.onInit();

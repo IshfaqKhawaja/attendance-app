@@ -10,7 +10,7 @@ class FilePickerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Get.size.height * 0.3,
+      // height: Get.size.height * 0.3,
       child: Column(
         children: [
           Obx(
@@ -29,35 +29,33 @@ class FilePickerWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Expanded(
-            child: Obx(() {
-              final data = controller.parsedData.value;
-              if (data == null) {
-                return const Center(child: Text('No file loaded'));
-              }
-              if (data is List<List<dynamic>>) {
-                return _buildTable(data);
-              }
-
-              // Excel: Map<String, List<List<Data?>>>
-              final sheets = data as Map<String, List<List<Data?>>>;
-              return DefaultTabController(
-                length: sheets.length,
-                child: Column(
-                  children: [
-                    TabBar(
-                      tabs: sheets.keys.map((name) => Tab(text: name)).toList(),
+          Obx(() {
+            final data = controller.parsedData.value;
+            if (data == null) {
+              return const Center(child: Text('No file loaded'));
+            }
+            if (data is List<List<dynamic>>) {
+              return _buildTable(data);
+            }
+          
+            // Excel: Map<String, List<List<Data?>>>
+            final sheets = data as Map<String, List<List<Data?>>>;
+            return DefaultTabController(
+              length: sheets.length,
+              child: Column(
+                children: [
+                  TabBar(
+                    tabs: sheets.keys.map((name) => Tab(text: name)).toList(),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: sheets.values.map(_buildTable).toList(),
                     ),
-                    Expanded(
-                      child: TabBarView(
-                        children: sheets.values.map(_buildTable).toList(),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
-          ),
+                  ),
+                ],
+              ),
+            );
+          }),
         ],
       ),
     );
@@ -71,7 +69,7 @@ class FilePickerWidget extends StatelessWidget {
     final preview = rows.take(20).toList();
     final headers = preview.first;
     return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
+      scrollDirection: Axis.horizontal,
       child: DataTable(
         columns: headers
             .map((c) => DataColumn(label: Text(c.toString())))

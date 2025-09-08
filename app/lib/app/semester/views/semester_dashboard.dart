@@ -20,6 +20,7 @@ class SemesterDashboard extends StatelessWidget {
           title: Text("Semester Dashboard"),
         centerTitle: true,
         actions: [
+          // Add button to create new semester
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
