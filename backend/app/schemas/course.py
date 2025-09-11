@@ -1,12 +1,7 @@
 from pydantic import BaseModel
 
 class CourseCreate(BaseModel):
-    courseid: str
-    name: str
-    semid: str
-    progid: str
-    deptid: str
-    factid: str
-
-class CourseDetail(CourseCreate):
-    pass
+    __tablename__ = "course"
+    course_id: str
+    course_name: str
+    sem_id: str

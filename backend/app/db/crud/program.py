@@ -15,8 +15,8 @@ def add_program_to_db(program: ProgramCreate) -> ProgramCreateResponse:
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO program (progid, name, deptid, factid) VALUES (%s, %s, %s, %s)",
-                (program.progid, program.name, program.dept_id, program.fact_id),
+                "INSERT INTO program (prog_id, prog_name, dept_id) VALUES (%s, %s, %s)",
+                (program.prog_id, program.prog_name, program.dept_id),
             )
         conn.commit()
         return ProgramCreateResponse(success=True, message="Program added to DB")
@@ -31,7 +31,7 @@ def display_program_by_id(progid: str) -> ProgramDetailResponse:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT progid, name, deptid, factid FROM program WHERE progid = %s",
+            "SELECT prog_id, prog_name, dept_id FROM program WHERE prog_id = %s",
             (progid,)
         )
         row = cur.fetchone()
@@ -41,17 +41,16 @@ def display_program_by_id(progid: str) -> ProgramDetailResponse:
             prog_id=row[0],
             prog_name=row[1],
             dept_id=row[2],
-            fact_id=row[3]
         )
     return ProgramDetailResponse(success=False)
 
 def display_all_programs() -> List[ProgramListItem]:
     conn = connection_to_db()
     with conn.cursor() as cur:
-        cur.execute("SELECT progid, name, deptid, factid FROM program")
+        cur.execute("SELECT prog_id, prog_name, dept_id FROM program")
         rows = cur.fetchall()
     return [
-        ProgramListItem(prog_id=r[0], prog_name=r[1], dept_id=r[2], fact_id=r[3])
+        ProgramListItem(prog_id=r[0], prog_name=r[1], dept_id=r[2])
         for r in rows
     ]
 
@@ -64,11 +63,11 @@ def add_programs_bulk(payload: BulkProgramCreate) -> BulkProgramCreateResponse:
             for prog in payload.programs:
                 cur.execute(
                     """
-                    INSERT INTO program (progid, name, deptid, factid)
-                    VALUES (%s, %s, %s, %s)
-                    ON CONFLICT (progid) DO NOTHING
+                    INSERT INTO program (prog_id, prog_name, dept_id)
+                    VALUES (%s, %s, %s)
+                    ON CONFLICT (prog_id) DO NOTHING
                     """,
-                    (prog.progid, prog.name, prog.dept_id, prog.fact_id)
+                    (prog.prog_id, prog.prog_name, prog.dept_id)
                 )
                 if cur.rowcount:
                     inserted += 1
@@ -96,7 +95,7 @@ def display_program_by_dept_id(dept_id: str) -> ProgramDetailResponse:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT progid, name, deptid, factid FROM program WHERE deptid = %s",
+            "SELECT prog_id, prog_name, dept_id FROM program WHERE dept_id = %s",
             (dept_id,)
         )
         row = cur.fetchone()
@@ -106,6 +105,5 @@ def display_program_by_dept_id(dept_id: str) -> ProgramDetailResponse:
             prog_id=row[0],
             prog_name=row[1],
             dept_id=row[2],
-            fact_id=row[3]
         )
     return ProgramDetailResponse(success=False)

@@ -1,8 +1,9 @@
 from app.db.connection import connection_to_db
-from typing import  List, Dict
+
+from app.db.models.teacher_course_model import BulkTeacherCourseIn, TeacherCourseIn
 
 
-def add_teacher_course_to_db(teacher_id: str, course_id: str, sem_id: str, dept_id: str, prog_id: str, fact_id: str) -> dict:
+def add_teacher_course_to_db(teacher_course: TeacherCourseIn) -> dict:
     """
     Insert a single teacher-course relationship into the database.
     """
@@ -11,10 +12,10 @@ def add_teacher_course_to_db(teacher_id: str, course_id: str, sem_id: str, dept_
         with conn.cursor() as cur:
             cur.execute(
                 """
-                INSERT INTO teacher_course (teacherid, courseid, semid, progid, deptid, factid)
-                VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO teacher_course (teacher_id, course_id)
+                VALUES (%s, %s)
                 """,
-                (teacher_id, course_id, sem_id, prog_id, dept_id, fact_id)
+                (teacher_course.teacher_id, teacher_course.course_id)
             )
         conn.commit()
         return {"success": True, "message": "Teacher Course added to DB"}
@@ -25,36 +26,27 @@ def add_teacher_course_to_db(teacher_id: str, course_id: str, sem_id: str, dept_
 
 
 def add_bulk_teacher_courses_to_db(
-    courses: List[Dict[str, str]]
+    teacher_courses: BulkTeacherCourseIn
 ) -> dict:
     """
     Bulk insert multiple teacher-course relationships into the database.
     Expects `courses` to be a list of dicts, each with keys:
       - teacher_id (str)
       - course_id  (str)
-      - sem_id     (str)
-      - prog_id    (str)
-      - dept_id    (str)
-      - fact_id    (str)
-
     Uses `executemany` instead of `execute_batch` for portability.
     """
     # 1. Validate input
-    if not isinstance(courses, list):
+    if not isinstance(teacher_courses, list):
         return {"success": False, "message": "Payload must be a list of course dicts"}
 
     records = []
-    for idx, cr in enumerate(courses, start=1):
+    for idx, cr in enumerate(teacher_courses.teacher_courses, start=1):
         if not isinstance(cr, dict):
             return {"success": False, "message": f"Item #{idx} is not a dict"}
         try:
             records.append((
                 cr["teacher_id"],
                 cr["course_id"],
-                cr["sem_id"],
-                cr["prog_id"],
-                cr["dept_id"],
-                cr["fact_id"],
             ))
         except KeyError as missing:
             return {"success": False, "message": f"Item #{idx} missing field '{missing.args[0]}'"}
@@ -68,8 +60,8 @@ def add_bulk_teacher_courses_to_db(
         with conn.cursor() as cur:
             cur.executemany(
                 """
-                INSERT INTO teacher_course (teacherid, courseid, semid, progid, deptid, factid)
-                VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO teacher_course (teacher_id, course_id)
+                VALUES (%s, %s)
                 """,
                 records
             )
@@ -89,8 +81,8 @@ def display_teacher_course_by_teacher_id(teacher_id: str) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT teacherid, courseid, semid, progid, deptid, factid"
-            " FROM teacher_course WHERE teacherid = %s",
+            "SELECT teacher_id, course_id"
+            " FROM teacher_course WHERE teacher_id = %s",
             (teacher_id,)
         )
         rows = cur.fetchall()
@@ -99,11 +91,7 @@ def display_teacher_course_by_teacher_id(teacher_id: str) -> dict:
         for row in rows:
             data.append({
                 "teacher_id": row[0],
-                "course_id": row[1],
-                "sem_id": row[2],
-                "prog_id": row[3],
-                "dept_id": row[4],
-                "fact_id": row[5]
+                "course_id": row[1]
             })
         return {
             "success": True,
@@ -121,7 +109,7 @@ def display_all() -> list:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT teacherid, courseid, semid, progid, deptid, factid"
+            "SELECT teacher_id, course_id"
             " FROM teacher_course"
         )
         rows = cur.fetchall()
@@ -130,10 +118,6 @@ def display_all() -> list:
         {
             "teacher_id": row[0],
             "course_id": row[1],
-            "sem_id": row[2],
-            "prog_id": row[3],
-            "dept_id": row[4],
-            "fact_id": row[5]
         }
         for row in rows
     ]

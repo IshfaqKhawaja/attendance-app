@@ -140,3 +140,27 @@ Project dependencies and metadata.
 ## Contributing
 
 Please follow the structure and naming conventions described above. Add documentation for any new modules or features in this README.
+
+
+
+## ER Diagram of Whole Project
+erDiagram
+    FACULTY ||--o{ DEPARTMENT : "has"
+    DEPARTMENT ||--o{ PROGRAM : "offers"
+    DEPARTMENT ||--o{ TEACHER : "employs"
+    DEPARTMENT ||--o{ STUDENT : "admits"
+    DEPARTMENT ||--o{ USERS : "manages"
+    PROGRAM ||--o{ SEMESTER : "contains"
+    SEMESTER ||--o{ COURSE : "offers"
+
+    STUDENT ||--o{ STUDENT_ENROLLMENT : "enrolls in"
+    SEMESTER ||--o{ STUDENT_ENROLLMENT : "is enrolled in"
+
+    TEACHER ||--o{ TEACHER_COURSE : "teaches"
+    COURSE ||--o{ TEACHER_COURSE : "is taught by"
+
+    STUDENT ||--o{ COURSE_STUDENT : "takes"
+    COURSE ||--o{ COURSE_STUDENT : "is taken by"
+
+    STUDENT ||--o{ ATTENDANCE : "record for"
+    COURSE ||--o{ ATTENDANCE : "record in"

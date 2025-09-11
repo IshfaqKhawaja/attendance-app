@@ -1,13 +1,14 @@
 from app.db.connection import connection_to_db
+from app.db.models.teacher_model import TeacherCreate
 
 
-def add_teacher_to_db(teacher_id : str, name : str, type : str, dept_id: str)->dict:
+def add_teacher_to_db(teacher : TeacherCreate)->dict:
     conn = connection_to_db()
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO teachers (teacherid, name , type, deptid) VALUES (%s, %s, %s, %s)",
-                (teacher_id, name , type, dept_id)
+                "INSERT INTO teachers (teacher_id, teacher_name, type, dept_id) VALUES (%s, %s, %s, %s)",
+                (teacher.teacher_id, teacher.teacher_name, teacher.type, teacher.dept_id)
             )
         conn.commit()
         return {
@@ -31,7 +32,7 @@ def display_teacher_by_id(teacher_id: str) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT * FROM teachers WHERE teacherid = %s",
+            "SELECT * FROM teachers WHERE teacher_id = %s",
             (teacher_id,)
         )
         row = cur.fetchone()
@@ -53,7 +54,7 @@ def delete_teacher_by_teacher_id(teacher_id: str):
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "DELETE FROM teachers WHERE teacherid = %s",
+            "DELETE FROM teachers WHERE teacher_id = %s",
             (teacher_id,)
         )
         row = cur.fetchone()

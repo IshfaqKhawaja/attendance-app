@@ -1,14 +1,32 @@
+
+
+
+
+
 from typing import Optional
-from pydantic import BaseModel, Field # type: ignore
+from pydantic import BaseModel
+from sqlalchemy import Enum
 
-class AddUser(BaseModel):
-    user_id: str = Field(..., description="ID of the User")
-    user_name: str = Field(..., description="Name of the new User")
-    type: str = Field(..., description="Type of User (GUEST, PERMANENT, CONTRACT)")
-    dept_id: Optional[str] = Field(..., description="Dept id to which User belongs")
-    fact_id: Optional[str] = Field(..., description="Faculty ID to which User belongs")
-
-
-# Request model for displaying a user
+class TeacherType(str, Enum):
+    HOD = "HOD"
+    ADMIN = "ADMIN"
+    SUPERADMIN = "SUPERADMIN"
+    
+    
+class UserIn(BaseModel):
+    user_id: str
+    user_name: str
+    type: TeacherType
+    dept_id: Optional[str] = None
+    fact_id: Optional[str] = None
+    class Config:
+        orm_mode = True
+        
 class DisplayUser(BaseModel):
-    user_id: str = Field(..., description="User ID")
+    user_id: str
+    user_name: str
+    type: TeacherType
+    dept_id: Optional[str] = None
+    fact_id: Optional[str] = None
+    class Config:
+        orm_mode = True

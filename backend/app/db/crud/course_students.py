@@ -1,8 +1,10 @@
 from app.db.connection import connection_to_db
-from typing import  List, Dict
+from app.db.models.course_student_model import BulkCourseStudentInput, CourseIdInput, CourseStudent, ReportInput
+from typing import  List
 
 
-def add_course_students_to_db(student_id: str, course_id: str, sem_id: str, dept_id: str, prog_id: str) -> dict:
+
+def add_course_students_to_db(course_std : CourseStudent) -> dict:
     """
     Insert a single course-students relationship into the database.
     """
@@ -11,10 +13,10 @@ def add_course_students_to_db(student_id: str, course_id: str, sem_id: str, dept
         with conn.cursor() as cur:
             cur.execute(
                 """
-                INSERT INTO course_students (studentid, courseid, semid, progid, deptid)
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO course_students (student_id, course_id)
+                VALUES (%s, %s)
                 """,
-                (student_id, course_id, sem_id, prog_id, dept_id)
+                (course_std.student_id, course_std.course_id)
             )
         conn.commit()
         return {"success": True, "message": "Course Student Added added to DB"}
@@ -25,7 +27,7 @@ def add_course_students_to_db(student_id: str, course_id: str, sem_id: str, dept
 
 
 def add_bulk_course_students_to_db(
-    course_students: List[Dict[str, str]]
+    course_students: BulkCourseStudentInput
 ) -> dict:
     """
     Bulk insert multiple course-student relationships into the database.
@@ -34,24 +36,18 @@ def add_bulk_course_students_to_db(
     Expects each dict to include:
       - student_id (str)
       - course_id  (str)
-      - sem_id     (str)
-      - prog_id    (str)
-      - dept_id    (str)
     """
     if not isinstance(course_students, list):
         return {"success": False, "message": "Payload must be a list of course students dicts"}
 
     records = []
-    for idx, cr in enumerate(course_students, start=1):
+    for idx, cr in enumerate(course_students.course_students, start=1):
         if not isinstance(cr, dict):
             return {"success": False, "message": f"Item #{idx} is not a dict"}
         try:
             records.append((
-                cr["student_id"],
-                cr["course_id"],
-                cr["sem_id"],
-                cr["prog_id"],
-                cr["dept_id"],
+                cr.student_id,
+                cr.course_id,
             ))
         except KeyError as missing:
             return {"success": False, "message": f"Item #{idx} missing field '{missing.args[0]}'"}
@@ -64,9 +60,9 @@ def add_bulk_course_students_to_db(
         with conn.cursor() as cur:
             cur.executemany(
                 """
-                INSERT INTO course_students (studentid, courseid, semid, progid, deptid)
-                VALUES (%s, %s, %s, %s, %s)
-                ON CONFLICT (studentid, courseid) DO NOTHING
+                INSERT INTO course_students (student_id, course_id)
+                VALUES (%s, %s)
+                ON CONFLICT (student_id, course_id) DO NOTHING
                 """,
                 records
             )
@@ -82,7 +78,7 @@ def add_bulk_course_students_to_db(
 
 
 
-def display_course_student_by_id(students_id: str, course_id : str) -> dict:
+def display_course_student_by_id(course_std: CourseStudent) -> dict:
     """
     Fetches the course students row(s) with the given course_id and returns it as a dict,
     or returns success=False if not found.
@@ -90,9 +86,9 @@ def display_course_student_by_id(students_id: str, course_id : str) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT studentid, courseid, semid, progid, deptid, factid"
-            " FROM course_students WHERE studentid = %s and courseid=%s",
-            (students_id,course_id)
+            "SELECT student_id, course_id"
+            " FROM course_students WHERE student_id = %s and course_id=%s",
+            (course_std.student_id, course_std.course_id)
         )
         rows = cur.fetchall()
     data = []
@@ -100,10 +96,7 @@ def display_course_student_by_id(students_id: str, course_id : str) -> dict:
         for row in rows:
             data.append({
                 "student_id": row[0],
-                "course_id": row[1],
-                "sem_id": row[2],
-                "prog_id": row[3],
-                "dept_id": row[4],
+                "course_id": row[1]
             })
         return {
             "success": True,
@@ -112,9 +105,9 @@ def display_course_student_by_id(students_id: str, course_id : str) -> dict:
         }
     else:
         return {"success": False}
-    
-    
-def display_course_student_by_course_id(course_id : str) -> dict:
+
+
+def display_course_student_by_course_id(course_input: CourseIdInput) -> dict:
     """
     Fetches the course students row(s) with the given course_id and returns it as a dict,
     or returns success=False if not found.
@@ -122,9 +115,9 @@ def display_course_student_by_course_id(course_id : str) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT studentid, courseid, semid, progid, deptid"
-            " FROM course_students WHERE  courseid=%s",
-            (course_id,)
+            "SELECT student_id, course_id"
+            " FROM course_students WHERE course_id=%s",
+            (course_input.course_id,)
         )
         rows = cur.fetchall()
     data = []
@@ -132,15 +125,11 @@ def display_course_student_by_course_id(course_id : str) -> dict:
         for row in rows:
             data.append({
                 "student_id": row[0],
-                "course_id": row[1],
-                "sem_id": row[2],
-                "prog_id": row[3],
-                "dept_id": row[4],
+                "course_id": row[1]
             })
     return {
         "success": True,
         "course_students" : data,
-        
     }
     
 
@@ -152,7 +141,7 @@ def display_all() -> list:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT studentid, courseid, semid, progid, deptid, factid"
+            "SELECT student_id, course_id"
             " FROM course_students"
         )
         rows = cur.fetchall()
@@ -161,9 +150,6 @@ def display_all() -> list:
         {
             "student_id": row[0],
             "course_id": row[1],
-            "sem_id": row[2],
-            "prog_id": row[3],
-            "dept_id": row[4],
         }
         for row in rows
     ]
@@ -172,22 +158,22 @@ def display_all() -> list:
 
 
 
-def fetch_attendance_report(course_id, start_date, end_date):
+def fetch_attendance_report(report : ReportInput) -> List:
     conn = connection_to_db()
     query = """
         SELECT
-          s.studentid,
-          s.name,
-          COUNT(a.attendanceid) FILTER (WHERE a.present = true) AS present_days,
-          COUNT(a.attendanceid) AS total_days
+          s.student_id,
+          s.student_name,
+          COUNT(a.attendance_id) FILTER (WHERE a.present = true) AS present_days,
+          COUNT(a.attendance_id) AS total_days
         FROM attendance a
-        JOIN students s ON a.studentid = s.studentid
-        WHERE a.courseid = %s
+        JOIN students s ON a.student_id = s.student_id
+        WHERE a.course_id = %s
           AND a.date BETWEEN %s AND %s
-        GROUP BY s.studentid, s.name
-        ORDER BY s.studentid;
+        GROUP BY s.student_id, s.student_name
+        ORDER BY s.student_id;
     """
     with conn.cursor() as cur:
-        cur.execute(query, (course_id, start_date, end_date))
+        cur.execute(query, (report.course_id, report.start_date, report.end_date))
         rows = cur.fetchall()
     return rows

@@ -15,8 +15,8 @@ def add_semester_to_db(sem: SemesterCreate) -> SemesterCreateResponse:
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO semester (semid, name, startdate, enddate, progid) VALUES (%s, %s, %s, %s, %s)",
-                (sem.semid, sem.name, sem.start_date, sem.end_date, sem.prog_id),
+                "INSERT INTO semester (sem_id, sem_name, start_date, end_date, prog_id) VALUES (%s, %s, %s, %s, %s)",
+                (sem.sem_id, sem.sem_name, sem.start_date, sem.end_date, sem.prog_id),
             )
         conn.commit()
         return SemesterCreateResponse(success=True, message="Semester added to DB")
@@ -31,7 +31,7 @@ def display_semester_by_id(semid: str) -> SemesterDetailResponse:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT semid, name, startdate, enddate, progid FROM semester WHERE semid = %s",
+            "SELECT sem_id, sem_name, start_date, end_date, prog_id FROM semester WHERE sem_id = %s",
             (semid,)
         )
         row = cur.fetchone()
@@ -49,7 +49,7 @@ def display_semester_by_id(semid: str) -> SemesterDetailResponse:
 def display_all_semesters() -> List[SemesterListItem]:
     conn = connection_to_db()
     with conn.cursor() as cur:
-        cur.execute("SELECT semid, name, startdate, enddate, progid FROM semester")
+        cur.execute("SELECT sem_id, sem_name, start_date, end_date, prog_id FROM semester")
         rows = cur.fetchall()
     return [
         SemesterListItem(
@@ -71,11 +71,11 @@ def add_semesters_bulk(payload: BulkSemesterCreate) -> BulkSemesterCreateRespons
             for sem in payload.semesters:
                 cur.execute(
                     """
-                    INSERT INTO semester (semid, name, startdate, enddate, progid)
+                    INSERT INTO semester (sem_id, sem_name, start_date, end_date, prog_id)
                     VALUES (%s, %s, %s, %s, %s)
-                    ON CONFLICT (semid) DO NOTHING
+                    ON CONFLICT (sem_id) DO NOTHING
                     """,
-                    (sem.semid, sem.name, sem.start_date, sem.end_date, sem.prog_id)
+                    (sem.sem_id, sem.sem_name, sem.start_date, sem.end_date, sem.prog_id)
                 )
                 if cur.rowcount:
                     inserted += 1
@@ -98,12 +98,12 @@ def add_semesters_bulk(payload: BulkSemesterCreate) -> BulkSemesterCreateRespons
         )
 
 
-def display_semesters_by_program_id(program_id: str) -> List[SemesterListItem]:
+def display_semesters_by_program_id(prog_id: str) -> List[SemesterListItem]:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT semid, name, startdate, enddate FROM semester WHERE progid = %s",
-            (program_id,)
+            "SELECT sem_id, sem_name, start_date, end_date FROM semester WHERE prog_id = %s",
+            (prog_id,)
         )
         rows = cur.fetchall()
     return [
@@ -112,12 +112,12 @@ def display_semesters_by_program_id(program_id: str) -> List[SemesterListItem]:
             sem_name=r[1],
             start_date=r[2],
             end_date=r[3],
-            prog_id=program_id
+            prog_id=prog_id
         )
         for r in rows
     ]
-    
-def display_semester_with_details_by_id(semid: str) -> SemesterDetailResponse:
+
+def display_semester_with_details_by_id(sem_id: str) -> SemesterDetailResponse:
     """
     Fetch semester details along with program's deptid and factid for a given semid.
     """
@@ -126,18 +126,18 @@ def display_semester_with_details_by_id(semid: str) -> SemesterDetailResponse:
         cur.execute(
             """
             SELECT 
-                s.semid,
-                s.name,
-                s.startdate,
-                s.enddate,
-                s.progid,
-                p.deptid,
-                p.factid
+                s.sem_id,
+                s.sem_name,
+                s.start_date,
+                s.end_date,
+                s.prog_id,
+                p.dept_id,
+                p.fact_id
             FROM semester s
-            JOIN program p ON s.progid = p.progid
-            WHERE s.semid = %s
+            JOIN program p ON s.prog_id = p.prog_id
+            WHERE s.sem_id = %s
             """,
-            (semid,)
+            (sem_id,)
         )
         row = cur.fetchone()
     
@@ -149,7 +149,5 @@ def display_semester_with_details_by_id(semid: str) -> SemesterDetailResponse:
             start_date=row[2],
             end_date=row[3],
             prog_id=row[4],
-            dept_id=row[5],
-            fact_id=row[6]
         )
     return SemesterDetailResponse(success=False, message="Semester not found")

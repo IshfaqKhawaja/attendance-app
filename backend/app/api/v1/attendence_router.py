@@ -74,14 +74,10 @@ def add_attendence_bulk_endpoint(bulk_attendance: List[BulkAttendenceModel]) -> 
     for att in bulk_attendance:
         for mark in att.marked:
             a = AttendenceModel(
-                        attendance_id = make_attendance_id(),
                         student_id = att.student_id,
                         course_id = att.course_id,
                         date =  att.date,
                         present = mark,
-                        prog_id = att.prog_id,
-                        sem_id = att.sem_id,
-                        dept_id = att.dept_id
                         )
             attendance.append(a)
             

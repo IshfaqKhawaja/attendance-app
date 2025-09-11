@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field # type: ignore
 
-class AddTeacherRequest(BaseModel):
+class TeacherCreate(BaseModel):
     teacher_id: str = Field(..., description="ID of the Teacher")
     teacher_name: str = Field(..., description="Name of the new Teacher")
     type: str = Field(..., description="Type of Teacher (GUEST, PERMANENT, CONTRACT)")

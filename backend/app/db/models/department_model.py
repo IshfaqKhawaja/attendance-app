@@ -3,8 +3,8 @@ from pydantic import BaseModel # type: ignore
 from typing import List, Optional
 
 class DepartmentCreate(BaseModel):
-    deptid: str
-    name: str
+    dept_id: str
+    dept_name: str
     fact_id: str
 
 class DepartmentCreateResponse(BaseModel):

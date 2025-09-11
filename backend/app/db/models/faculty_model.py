@@ -1,9 +1,32 @@
+from pydantic import BaseModel
+from typing import Optional, List
 
-# SQLAlchemy model for faculty table
-from sqlalchemy import Column, String
-from app.db.base import Base
+class FacultyCreate(BaseModel):
+    fact_id: str
+    fact_name: str
 
-class Faculty(Base):
-    __tablename__ = "faculty"
-    factid = Column(String(255), primary_key=True)
-    name = Column(String(255), nullable=False)
+class FacultyDetail(FacultyCreate):
+    pass
+
+
+class FacultyCreateResponse(BaseModel):
+    success: bool
+    message: str
+
+class FacultyDetailResponse(BaseModel):
+    success: bool
+    fact_id: Optional[str] = None
+    fact_name: Optional[str] = None
+
+class FacultyListItem(BaseModel):
+    fact_id: str
+    fact_name: str
+
+class BulkFacultyCreate(BaseModel):
+    faculties: List[FacultyCreate]
+
+class BulkFacultyCreateResponse(BaseModel):
+    success: bool
+    inserted_count: int
+    skipped_count: int
+    message: Optional[str] = None

@@ -17,14 +17,10 @@ def add_attendence_to_db(model: AttendenceModel) -> dict:
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
-                    model.attendance_id,
                     model.student_id,
                     model.course_id,
                     model.date,
                     model.present,
-                    model.prog_id,
-                    model.sem_id,
-                    model.dept_id,
                 ),
             )
         conn.commit()
@@ -51,14 +47,10 @@ def add_attendence_bulk(models: List[AttendenceModel]) -> dict:
                 """,
                 [
                     (
-                        m.attendance_id,
                         m.student_id,
                         m.course_id,
                         m.date,
-                        m.present,
-                        m.prog_id,
-                        m.sem_id,
-                        m.dept_id,
+                        m.present
                     )
                     for m in models
                 ],
@@ -82,8 +74,8 @@ def display_attendence_by_id(attendence_id: AttendenceIdModel) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT attendanceid, studentid, courseid, date, present, progid, semid, deptid "
-            "FROM attendance WHERE attendanceid = %s",
+            "SELECT student_id, course_id, date, present "
+            "FROM attendance WHERE attendance_id = %s",
             (attendence_id.attendance_id,),
         )
         row = cur.fetchone()
@@ -93,13 +85,9 @@ def display_attendence_by_id(attendence_id: AttendenceIdModel) -> dict:
 
     # map row back into our model
     model = AttendenceModel(
-        attendance_id=row[0],
-        student_id=row[1],
-        course_id=row[2],
-        date=row[3],
-        present=row[4],
-        prog_id=row[5],
-        sem_id=row[6],
-        dept_id=row[7],
+        student_id=row[0],
+        course_id=row[1],
+        date=row[2],
+        present=row[3],
     )
     return {"success": True, **model.dict()}

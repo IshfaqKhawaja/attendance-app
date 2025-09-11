@@ -1,20 +1,19 @@
-# app/db/faculty_crud.py
 from typing import List
 from app.db.connection import connection_to_db
-from app.schemas.faculty import (
+from app.db.models.faculty_model import (
     FacultyCreate,
-    FacultyDetailResponse, FacultyListItem,
+    FacultyListItem,
     BulkFacultyCreate, BulkFacultyCreateResponse
 )
-from app.schemas.faculty import FacultyCreateResponse  # Adjust the import path if needed
+from app.db.models.faculty_model import FacultyCreateResponse  # Adjust the import path if needed
 
 def add_faculty_to_db(faculty: FacultyCreate) -> FacultyCreateResponse:
     conn = connection_to_db()
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO faculty (factid, name) VALUES (%s, %s)",
-                (faculty.factid, faculty.name)
+                "INSERT INTO faculty (fact_id, fact_name) VALUES (%s, %s)",
+                (faculty.fact_id, faculty.fact_name)
             )
         conn.commit()
         return FacultyCreateResponse(success=True, message="Added to DB")
@@ -25,33 +24,33 @@ def add_faculty_to_db(faculty: FacultyCreate) -> FacultyCreateResponse:
             message=f"Couldn't add faculty: {e}"
         )
 
-def display_faculty_by_id(factid: str) -> dict:
+def display_faculty_by_id(fact_id: str) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT factid, name FROM faculty WHERE factid = %s",
-            (factid,)
+            "SELECT fact_id, fact_name FROM faculty WHERE fact_id = %s",
+            (fact_id,)
         )
         row = cur.fetchone()
     if row:
         return {
             "success": True,
-            "factid": row[0],
+            "fact_id": row[0],
             "fact_name": row[1]
         }
-    return {"success": False, "factid": None, "fact_name": None}
+    return {"success": False, "fact_id": None, "fact_name": None}
 
 def display_all() -> List[FacultyListItem]:
     conn = connection_to_db()
     with conn.cursor() as cur:
-        cur.execute("SELECT factid, name FROM faculty")
+        cur.execute("SELECT fact_id, fact_name FROM faculty")
         rows = cur.fetchall()
     return [FacultyListItem(fact_id=r[0], fact_name=r[1]) for r in rows]
 
 def add_faculties_bulk(payload: BulkFacultyCreate) -> BulkFacultyCreateResponse:
     """
     Inserts each FacultyCreate in payload.faculties.
-    Skips any factid that already exists (using PostgreSQL ON CONFLICT).
+    Skips any fact_id that already exists (using PostgreSQL ON CONFLICT).
     """
     conn = connection_to_db()
     inserted = 0
@@ -62,11 +61,11 @@ def add_faculties_bulk(payload: BulkFacultyCreate) -> BulkFacultyCreateResponse:
                 # uses Postgres ON CONFLICT; adjust if you’re on MySQL (e.g. INSERT IGNORE)
                 cur.execute(
                     """
-                    INSERT INTO faculty (factid, name)
+                    INSERT INTO faculty (fact_id, fact_name)
                     VALUES (%s, %s)
-                    ON CONFLICT (factid) DO NOTHING
+                    ON CONFLICT (fact_id) DO NOTHING
                     """,
-                    (fac.factid, fac.name)
+                    (fac.fact_id, fac.fact_name)
                 )
                 # rowcount == 1 if inserted, 0 if conflict
                 if cur.rowcount:

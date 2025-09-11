@@ -1,20 +1,16 @@
-from typing import Union
 from app.db.connection import connection_to_db
+from app.db.models.student_model import BulkStudentIn, StudentIn
 
 
 def add_student_to_db(
-    student_id : str,
-    name : str,
-    phone_number : int,
-    prog_id: str,
-    sem_id:str,
-    dept_id : str ):
+    student : StudentIn
+) -> dict:
     conn = connection_to_db()
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO students (studentid, name , phonenumber, progid, semid, deptid) VALUES (%s, %s, %s, %s, %s, %s)",
-                (student_id, name , phone_number,  prog_id, sem_id, dept_id)
+                "INSERT INTO students (student_id, student_name , phone_number, dept_id) VALUES (%s, %s, %s, %s)",
+                (student.student_id, student.student_name, student.phone_number, student.dept_id)
             )
         conn.commit()
         return {
@@ -38,7 +34,7 @@ def display_student_by_id(student_id: str) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT * FROM students WHERE studentid = %s",
+            "SELECT * FROM students WHERE student_id = %s",
             (student_id,)
         )
         row = cur.fetchone()
@@ -49,9 +45,7 @@ def display_student_by_id(student_id: str) -> dict:
             "student_id": row[0],
             "student_name": row[1],
             "phone_number": row[2],
-            "prog_id" : row[3],
-            "sem_id": row[4],
-            "dept_id": row[5]
+            "dept_id": row[3]
             }
     else:
         return {
@@ -60,7 +54,7 @@ def display_student_by_id(student_id: str) -> dict:
         
 
 def add_students_in_bulk(
-    students: list[dict[str, Union[str, int]]]
+    students: BulkStudentIn
 ) -> dict:
     """
     Inserts multiple students in one transaction.
@@ -69,25 +63,21 @@ def add_students_in_bulk(
       - student_id (str)
       - student_name (str)
       - phone_number (int)
-      - prog_id    (str)
-      - sem_id     (str)
       - dept_id    (str)
     """
     if not isinstance(students, list):
         return {"success": False, "message": "Payload must be a list of student dicts"}
 
     records = []
-    for idx, st in enumerate(students, start=1):
-        if not isinstance(st, dict):
-            return {"success": False, "message": f"Item #{idx} is not a dict"}
+    for idx, st in enumerate(students.students, start=1):
+        if not isinstance(st, StudentIn):
+            return {"success": False, "message": f"Item #{idx} is not a StudentIn"}
         try:
             records.append((
-                st["student_id"],
-                st["student_name"],
-                st["phone_number"],
-                st["prog_id"],
-                st["sem_id"],
-                st["dept_id"],
+                st.student_id,
+                st.student_name,
+                st.phone_number,
+                st.dept_id,
             ))
         except KeyError as missing:
             return {
@@ -101,9 +91,9 @@ def add_students_in_bulk(
             cur.executemany(
                 """
                 INSERT INTO students
-                  (studentid, name, phonenumber, progid, semid, deptid)
-                VALUES (%s, %s, %s, %s, %s, %s)
-                ON CONFLICT (studentid) DO NOTHING
+                  (student_id, student_name, phone_number, dept_id)
+                VALUES (%s, %s, %s, %s)
+                ON CONFLICT (student_id) DO NOTHING
                 """,
                 records
             )
@@ -120,36 +110,6 @@ def add_students_in_bulk(
             "message": f"Couldn't add students in bulk: {e}"
         }
 
-        
-def display_student_by__sem_id(sem_id: str) -> dict:
-    """
-    Fetches the Semester row with the given ID and returns it as a dict,
-    or returns None if not found.
-    """
-    conn = connection_to_db()
-    with conn.cursor() as cur:
-        cur.execute(
-            "SELECT * FROM students WHERE semid = %s",
-            (sem_id,)
-        )
-        rows = cur.fetchall()
-    data = []
-    if rows:
-        for row in rows:
-            data.append({
-                "student_id": row[0],
-                "student_name": row[1],
-                "phone_number": row[2],
-                "prog_id" : row[3],
-                "sem_id": row[4],
-                "dept_id": row[5]
-                }
-            )
-   
-    return {
-        "success" : True,
-        "students" : data
-    }
     
     
 def fetch_students_by_student_ids(student_ids: list) -> dict:
@@ -162,7 +122,7 @@ def fetch_students_by_student_ids(student_ids: list) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         placeholders = ','.join(['%s'] * len(student_ids))
-        query = f"SELECT * FROM students WHERE studentid IN ({placeholders})"
+        query = f"SELECT * FROM students WHERE student_id IN ({placeholders})"
         cur.execute(query, student_ids) # type: ignore
         rows = cur.fetchall()
 
@@ -172,8 +132,6 @@ def fetch_students_by_student_ids(student_ids: list) -> dict:
             "student_id": row[0],
             "student_name": row[1],
             "phone_number": row[2],
-            "prog_id": row[3],
-            "sem_id": row[4],
             "dept_id": row[5]
         })
 

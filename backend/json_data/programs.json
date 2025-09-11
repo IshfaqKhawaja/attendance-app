@@ -1,1804 +1,1804 @@
 [
     {
-      "progid": "P001",
-      "name": "Ph.D. (Arabic)",
-      "deptid": "D001",
-      "factid": "F001"
+      "prog_id": "P001",
+      "prog_name": "Ph.D. (Arabic)",
+      "dept_id": "D001",
+      "fact_id": "F001"
     },
     {
-      "progid": "P002",
-      "name": "M.A. (Arabic)",
-      "deptid": "D001",
-      "factid": "F001"
+      "prog_id": "P002",
+      "prog_name": "M.A. (Arabic)",
+      "dept_id": "D001",
+      "fact_id": "F001"
     },
     {
-      "progid": "P003",
-      "name": "B.A. (Hons) Arabic",
-      "deptid": "D001",
-      "factid": "F001"
+      "prog_id": "P003",
+      "prog_name": "B.A. (Hons) Arabic",
+      "dept_id": "D001",
+      "fact_id": "F001"
     },
     {
-      "progid": "P004",
-      "name": "Advanced Diploma in Modern Arabic Language & Translation (Part-Time)",
-      "deptid": "D001",
-      "factid": "F001"
+      "prog_id": "P004",
+      "prog_name": "Advanced Diploma in Modern Arabic Language & Translation (Part-Time)",
+      "dept_id": "D001",
+      "fact_id": "F001"
     },
     {
-      "progid": "P005",
-      "name": "Diploma in Modern Arabic Language & Translation (Part-Time)",
-      "deptid": "D001",
-      "factid": "F001"
+      "prog_id": "P005",
+      "prog_name": "Diploma in Modern Arabic Language & Translation (Part-Time)",
+      "dept_id": "D001",
+      "fact_id": "F001"
     },
     {
-      "progid": "P006",
-      "name": "Certificate in Modern Arabic Language & Translation (Part-Time)",
-      "deptid": "D001",
-      "factid": "F001"
+      "prog_id": "P006",
+      "prog_name": "Certificate in Modern Arabic Language & Translation (Part-Time)",
+      "dept_id": "D001",
+      "fact_id": "F001"
     },
     {
-        "progid": "P007",
-        "name": "Ph.D. (English)",
-        "deptid": "D002",
-        "factid": "F001"
+        "prog_id": "P007",
+        "prog_name": "Ph.D. (English)",
+        "dept_id": "D002",
+        "fact_id": "F001"
     },
     {
-        "progid": "P008",
-        "name": "M.A. (English)",
-        "deptid": "D002",
-        "factid": "F001"
+        "prog_id": "P008",
+        "prog_name": "M.A. (English)",
+        "dept_id": "D002",
+        "fact_id": "F001"
     },
     {
-        "progid": "P009",
-        "name": "B.A. (Hons) English",
-        "deptid": "D002",
-        "factid": "F001"
+        "prog_id": "P009",
+        "prog_name": "B.A. (Hons) English",
+        "dept_id": "D002",
+        "fact_id": "F001"
     },
     {
-        "progid": "P010",
-        "name": "P.G. Diploma in Translation Proficiency in English (Self-Financed, Part-Time)",
-        "deptid": "D002",
-        "factid": "F001"
+        "prog_id": "P010",
+        "prog_name": "P.G. Diploma in Translation Proficiency in English (Self-Financed, Part-Time)",
+        "dept_id": "D002",
+        "fact_id": "F001"
     },
     {
-        "progid": "P011",
-        "name": "Diploma in Translation Proficiency in English (Self-Financed, Part-Time)",
-        "deptid": "D002",
-        "factid": "F001"
+        "prog_id": "P011",
+        "prog_name": "Diploma in Translation Proficiency in English (Self-Financed, Part-Time)",
+        "dept_id": "D002",
+        "fact_id": "F001"
     },
     {
-        "progid": "P012",
-        "name": "Certificate in Translation Proficiency in English (Self-Financed, Part-Time)",
-        "deptid": "D002",
-        "factid": "F001"
+        "prog_id": "P012",
+        "prog_name": "Certificate in Translation Proficiency in English (Self-Financed, Part-Time)",
+        "dept_id": "D002",
+        "fact_id": "F001"
     },
     {
-        "progid": "P013",
-        "name": "Ph.D. (Hindi)",
-        "deptid": "D003",
-        "factid": "F001"
+        "prog_id": "P013",
+        "prog_name": "Ph.D. (Hindi)",
+        "dept_id": "D003",
+        "fact_id": "F001"
       },
     {
-    "progid": "P014",
-    "name": "M.A. (Hindi)",
-    "deptid": "D003",
-    "factid": "F001"
+    "prog_id": "P014",
+    "prog_name": "M.A. (Hindi)",
+    "dept_id": "D003",
+    "fact_id": "F001"
     },
     {
-    "progid": "P015",
-    "name": "P.G. Diploma in T.V. Journalism (Hindi Medium) (Self-Financed)",
-    "deptid": "D003",
-    "factid": "F001"
+    "prog_id": "P015",
+    "prog_name": "P.G. Diploma in T.V. Journalism (Hindi Medium) (Self-Financed)",
+    "dept_id": "D003",
+    "fact_id": "F001"
     },
     {
-    "progid": "P016",
-    "name": "M.A. (Mass Media Hindi) (Self-Financed)",
-    "deptid": "D003",
-    "factid": "F001"
+    "prog_id": "P016",
+    "prog_name": "M.A. (Mass Media Hindi) (Self-Financed)",
+    "dept_id": "D003",
+    "fact_id": "F001"
     },
     {
-    "progid": "P017",
-    "name": "B.A. (Hons) Hindi",
-    "deptid": "D003",
-    "factid": "F001"
+    "prog_id": "P017",
+    "prog_name": "B.A. (Hons) Hindi",
+    "dept_id": "D003",
+    "fact_id": "F001"
     },
     {
-    "progid": "P018",
-    "name": "B.A. (Hons) Mass Media Hindi",
-    "deptid": "D003",
-    "factid": "F001"
+    "prog_id": "P018",
+    "prog_name": "B.A. (Hons) Mass Media Hindi",
+    "dept_id": "D003",
+    "fact_id": "F001"
     },
     {
-        "progid": "P019",
-        "name": "Ph.D. (History)",
-        "deptid": "D004",
-        "factid": "F001"
+        "prog_id": "P019",
+        "prog_name": "Ph.D. (History)",
+        "dept_id": "D004",
+        "fact_id": "F001"
     },
     {
-        "progid": "P020",
-        "name": "M.A. (History)",
-        "deptid": "D004",
-        "factid": "F001"
+        "prog_id": "P020",
+        "prog_name": "M.A. (History)",
+        "dept_id": "D004",
+        "fact_id": "F001"
     },
     {
-        "progid": "P021",
-        "name": "B.A. (Hons) History",
-        "deptid": "D004",
-        "factid": "F001"
+        "prog_id": "P021",
+        "prog_name": "B.A. (Hons) History",
+        "dept_id": "D004",
+        "fact_id": "F001"
     },
     {
-        "progid": "P022",
-        "name": "Ph.D. (Islamic Studies)",
-        "deptid": "D005",
-        "factid": "F001"
+        "prog_id": "P022",
+        "prog_name": "Ph.D. (Islamic Studies)",
+        "dept_id": "D005",
+        "fact_id": "F001"
       },
       {
-        "progid": "P023",
-        "name": "M.A. (Islamic Studies)",
-        "deptid": "D005",
-        "factid": "F001"
+        "prog_id": "P023",
+        "prog_name": "M.A. (Islamic Studies)",
+        "dept_id": "D005",
+        "fact_id": "F001"
       },
       {
-        "progid": "P024",
-        "name": "B.A. (Hons) Islamic Studies",
-        "deptid": "D005",
-        "factid": "F001"
+        "prog_id": "P024",
+        "prog_name": "B.A. (Hons) Islamic Studies",
+        "dept_id": "D005",
+        "fact_id": "F001"
       },
       {
-        "progid": "P025",
-        "name": "Ph.D. (Persian)",
-        "deptid": "D006",
-        "factid": "F001"
+        "prog_id": "P025",
+        "prog_name": "Ph.D. (Persian)",
+        "dept_id": "D006",
+        "fact_id": "F001"
       },
       {
-        "progid": "P026",
-        "name": "M.A. (Persian)",
-        "deptid": "D006",
-        "factid": "F001"
+        "prog_id": "P026",
+        "prog_name": "M.A. (Persian)",
+        "dept_id": "D006",
+        "fact_id": "F001"
       },
       {
-        "progid": "P027",
-        "name": "B.A. (Hons) Persian",
-        "deptid": "D006",
-        "factid": "F001"
+        "prog_id": "P027",
+        "prog_name": "B.A. (Hons) Persian",
+        "dept_id": "D006",
+        "fact_id": "F001"
       },
       {
-        "progid": "P028",
-        "name": "P.G. Diploma in Iranology (Part-Time)",
-        "deptid": "D006",
-        "factid": "F001"
+        "prog_id": "P028",
+        "prog_name": "P.G. Diploma in Iranology (Part-Time)",
+        "dept_id": "D006",
+        "fact_id": "F001"
       },
       {
-        "progid": "P029",
-        "name": "Advanced Diploma in Modern Persian (Part-Time)",
-        "deptid": "D006",
-        "factid": "F001"
+        "prog_id": "P029",
+        "prog_name": "Advanced Diploma in Modern Persian (Part-Time)",
+        "dept_id": "D006",
+        "fact_id": "F001"
       },
       {
-        "progid": "P030",
-        "name": "Advanced Diploma in Pashto Language (Part-Time)",
-        "deptid": "D006",
-        "factid": "F001"
+        "prog_id": "P030",
+        "prog_name": "Advanced Diploma in Pashto Language (Part-Time)",
+        "dept_id": "D006",
+        "fact_id": "F001"
       },
       {
-        "progid": "P031",
-        "name": "Diploma in Modern Persian (Part-Time)",
-        "deptid": "D006",
-        "factid": "F001"
+        "prog_id": "P031",
+        "prog_name": "Diploma in Modern Persian (Part-Time)",
+        "dept_id": "D006",
+        "fact_id": "F001"
       },
       {
-        "progid": "P032",
-        "name": "Diploma in Pashto Language (Part-Time)",
-        "deptid": "D006",
-        "factid": "F001"
+        "prog_id": "P032",
+        "prog_name": "Diploma in Pashto Language (Part-Time)",
+        "dept_id": "D006",
+        "fact_id": "F001"
       },
       {
-        "progid": "P033",
-        "name": "Certificate in Modern Persian (Part-Time)",
-        "deptid": "D006",
-        "factid": "F001"
+        "prog_id": "P033",
+        "prog_name": "Certificate in Modern Persian (Part-Time)",
+        "dept_id": "D006",
+        "fact_id": "F001"
       },
       {
-        "progid": "P034",
-        "name": "Certificate in Pashto Language (Part-Time)",
-        "deptid": "D006",
-        "factid": "F001"
+        "prog_id": "P034",
+        "prog_name": "Certificate in Pashto Language (Part-Time)",
+        "dept_id": "D006",
+        "fact_id": "F001"
       },
       {
-        "progid": "P035",
-        "name": "Ph.D. (Urdu)",
-        "deptid": "D007",
-        "factid": "F001"
+        "prog_id": "P035",
+        "prog_name": "Ph.D. (Urdu)",
+        "dept_id": "D007",
+        "fact_id": "F001"
       },
       {
-        "progid": "P036",
-        "name": "M.A. (Urdu)",
-        "deptid": "D007",
-        "factid": "F001"
+        "prog_id": "P036",
+        "prog_name": "M.A. (Urdu)",
+        "dept_id": "D007",
+        "fact_id": "F001"
       },
       {
-        "progid": "P037",
-        "name": "B.A. (Hons) Urdu",
-        "deptid": "D007",
-        "factid": "F001"
+        "prog_id": "P037",
+        "prog_name": "B.A. (Hons) Urdu",
+        "dept_id": "D007",
+        "fact_id": "F001"
       },
       {
-        "progid": "P038",
-        "name": "P.G. Diploma in Urdu Mass Media",
-        "deptid": "D007",
-        "factid": "F001"
+        "prog_id": "P038",
+        "prog_name": "P.G. Diploma in Urdu Mass Media",
+        "dept_id": "D007",
+        "fact_id": "F001"
       },
       {
-        "progid": "P039",
-        "name": "Ph.D. (Sanskrit)",
-        "deptid": "D008",
-        "factid": "F001"
+        "prog_id": "P039",
+        "prog_name": "Ph.D. (Sanskrit)",
+        "dept_id": "D008",
+        "fact_id": "F001"
       },
       {
-        "progid": "P040",
-        "name": "M.A. (Sanskrit)",
-        "deptid": "D008",
-        "factid": "F001"
+        "prog_id": "P040",
+        "prog_name": "M.A. (Sanskrit)",
+        "dept_id": "D008",
+        "fact_id": "F001"
       },
       {
-        "progid": "P041",
-        "name": "B.A. (Hons) Sanskrit",
-        "deptid": "D008",
-        "factid": "F001"
+        "prog_id": "P041",
+        "prog_name": "B.A. (Hons) Sanskrit",
+        "dept_id": "D008",
+        "fact_id": "F001"
       },
       {
-        "progid": "P042",
-        "name": "Certificate in Sanskrit (Part-Time)",
-        "deptid": "D008",
-        "factid": "F001"
+        "prog_id": "P042",
+        "prog_name": "Certificate in Sanskrit (Part-Time)",
+        "dept_id": "D008",
+        "fact_id": "F001"
       },
       {
-        "progid": "P043",
-        "name": "Certificate in Yoga (Self-Financed, Part-Time)",
-        "deptid": "D008",
-        "factid": "F001"
+        "prog_id": "P043",
+        "prog_name": "Certificate in Yoga (Self-Financed, Part-Time)",
+        "dept_id": "D008",
+        "fact_id": "F001"
       },
       {
-        "progid": "P044",
-        "name": "Ph.D. (Foreign Languages)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P044",
+        "prog_name": "Ph.D. (Foreign Languages)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P045",
-        "name": "M.A. Korean Language & Literature",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P045",
+        "prog_name": "M.A. Korean Language & Literature",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P046",
-        "name": "B.A. (Hons) Korean Language",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P046",
+        "prog_name": "B.A. (Hons) Korean Language",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P047",
-        "name": "B.A. (Hons) Turkish Language & Literature",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P047",
+        "prog_name": "B.A. (Hons) Turkish Language & Literature",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P048",
-        "name": "B.A. (Hons) French & Francophone Studies",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P048",
+        "prog_name": "B.A. (Hons) French & Francophone Studies",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P049",
-        "name": "B.A. (Hons) Spanish & Latin American Studies",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P049",
+        "prog_name": "B.A. (Hons) Spanish & Latin American Studies",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P050",
-        "name": "Advanced Diploma in Turkish (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P050",
+        "prog_name": "Advanced Diploma in Turkish (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P051",
-        "name": "Advanced Diploma in French (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P051",
+        "prog_name": "Advanced Diploma in French (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P052",
-        "name": "Advanced Diploma in Italian (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P052",
+        "prog_name": "Advanced Diploma in Italian (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P053",
-        "name": "Advanced Diploma in Spanish (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P053",
+        "prog_name": "Advanced Diploma in Spanish (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P054",
-        "name": "Advanced Diploma in Russian (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P054",
+        "prog_name": "Advanced Diploma in Russian (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P055",
-        "name": "Advanced Diploma in Portuguese (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P055",
+        "prog_name": "Advanced Diploma in Portuguese (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P056",
-        "name": "Diploma in Turkish (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P056",
+        "prog_name": "Diploma in Turkish (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P057",
-        "name": "Diploma in French (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P057",
+        "prog_name": "Diploma in French (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P058",
-        "name": "Diploma in Italian (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P058",
+        "prog_name": "Diploma in Italian (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P059",
-        "name": "Diploma in Spanish (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P059",
+        "prog_name": "Diploma in Spanish (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P060",
-        "name": "Diploma in Russian (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P060",
+        "prog_name": "Diploma in Russian (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P061",
-        "name": "Diploma in Chinese Language (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P061",
+        "prog_name": "Diploma in Chinese Language (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P062",
-        "name": "Diploma in Portuguese (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P062",
+        "prog_name": "Diploma in Portuguese (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P063",
-        "name": "Diploma in Korean Language (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P063",
+        "prog_name": "Diploma in Korean Language (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P064",
-        "name": "Diploma in Uzbek (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P064",
+        "prog_name": "Diploma in Uzbek (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P065",
-        "name": "Intensive Diploma in Chinese Language",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P065",
+        "prog_name": "Intensive Diploma in Chinese Language",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P066",
-        "name": "Certificate in Turkish (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P066",
+        "prog_name": "Certificate in Turkish (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P067",
-        "name": "Certificate in French (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P067",
+        "prog_name": "Certificate in French (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P068",
-        "name": "Certificate in Italian (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P068",
+        "prog_name": "Certificate in Italian (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P069",
-        "name": "Certificate in Spanish (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P069",
+        "prog_name": "Certificate in Spanish (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P070",
-        "name": "Certificate in Russian (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P070",
+        "prog_name": "Certificate in Russian (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P071",
-        "name": "Certificate in Chinese Language (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P071",
+        "prog_name": "Certificate in Chinese Language (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P072",
-        "name": "Certificate in Portuguese (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P072",
+        "prog_name": "Certificate in Portuguese (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P073",
-        "name": "Certificate in Korean Language (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P073",
+        "prog_name": "Certificate in Korean Language (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "P074",
-        "name": "Certificate in Uzbek (Part-Time)",
-        "deptid": "D009",
-        "factid": "F001"
+        "prog_id": "P074",
+        "prog_name": "Certificate in Uzbek (Part-Time)",
+        "dept_id": "D009",
+        "fact_id": "F001"
       },
       {
-        "progid": "PB05",
-        "name": "Four Year B.A.(Multidisciplinary)",
-        "deptid": "D0100",
-        "factid": "F002"
+        "prog_id": "PB05",
+        "prog_name": "Four Year B.A.(Multidisciplinary)",
+        "dept_id": "D0100",
+        "fact_id": "F002"
       },
       {
-        "progid": "P075",
-        "name": "Ph.D. (Economics)",
-        "deptid": "D010",
-        "factid": "F002"
+        "prog_id": "P075",
+        "prog_name": "Ph.D. (Economics)",
+        "dept_id": "D010",
+        "fact_id": "F002"
       },
       {
-        "progid": "P076",
-        "name": "M.A. (Economics)",
-        "deptid": "D010",
-        "factid": "F002"
+        "prog_id": "P076",
+        "prog_name": "M.A. (Economics)",
+        "dept_id": "D010",
+        "fact_id": "F002"
       },
       {
-        "progid": "P077",
-        "name": "M.Sc. (Banking and Financial Analytics) (Self-Financed)",
-        "deptid": "D010",
-        "factid": "F002"
+        "prog_id": "P077",
+        "prog_name": "M.Sc. (Banking and Financial Analytics) (Self-Financed)",
+        "dept_id": "D010",
+        "fact_id": "F002"
       },
       {
-        "progid": "P078",
-        "name": "B.A. (Hons) Economics",
-        "deptid": "D010",
-        "factid": "F002"
+        "prog_id": "P078",
+        "prog_name": "B.A. (Hons) Economics",
+        "dept_id": "D010",
+        "fact_id": "F002"
       },
       {
-        "progid": "P079",
-        "name": "Ph.D. (Social Work)",
-        "deptid": "D011",
-        "factid": "F002"
+        "prog_id": "P079",
+        "prog_name": "Ph.D. (Social Work)",
+        "dept_id": "D011",
+        "fact_id": "F002"
       },
       {
-        "progid": "P080",
-        "name": "M.A. (Social Work)",
-        "deptid": "D011",
-        "factid": "F002"
+        "prog_id": "P080",
+        "prog_name": "M.A. (Social Work)",
+        "dept_id": "D011",
+        "fact_id": "F002"
       },
       {
-        "progid": "P081",
-        "name": "M.A. (Human Resource Management)",
-        "deptid": "D011",
-        "factid": "F002"
+        "prog_id": "P081",
+        "prog_name": "M.A. (Human Resource Management)",
+        "dept_id": "D011",
+        "fact_id": "F002"
       },
       {
-        "progid": "P082",
-        "name": "Advanced Diploma in Public Health",
-        "deptid": "D011",
-        "factid": "F002"
+        "prog_id": "P082",
+        "prog_name": "Advanced Diploma in Public Health",
+        "dept_id": "D011",
+        "fact_id": "F002"
       },
       {
-        "progid": "P083",
-        "name": "B.A. (Hons) Social Work",
-        "deptid": "D011",
-        "factid": "F002"
+        "prog_id": "P083",
+        "prog_name": "B.A. (Hons) Social Work",
+        "dept_id": "D011",
+        "fact_id": "F002"
       },
       {
-        "progid": "P084",
-        "name": "Ph.D. (Sociology)",
-        "deptid": "D012",
-        "factid": "F002"
+        "prog_id": "P084",
+        "prog_name": "Ph.D. (Sociology)",
+        "dept_id": "D012",
+        "fact_id": "F002"
       },
       {
-        "progid": "P085",
-        "name": "M.A. (Sociology)",
-        "deptid": "D012",
-        "factid": "F002"
+        "prog_id": "P085",
+        "prog_name": "M.A. (Sociology)",
+        "dept_id": "D012",
+        "fact_id": "F002"
       },
       {
-        "progid": "P086",
-        "name": "B.A. (Hons) Sociology",
-        "deptid": "D012",
-        "factid": "F002"
+        "prog_id": "P086",
+        "prog_name": "B.A. (Hons) Sociology",
+        "dept_id": "D012",
+        "fact_id": "F002"
       },
       {
-        "progid": "P087",
-        "name": "Ph.D. (Political Science)",
-        "deptid": "D013",
-        "factid": "F002"
+        "prog_id": "P087",
+        "prog_name": "Ph.D. (Political Science)",
+        "dept_id": "D013",
+        "fact_id": "F002"
       },
       {
-        "progid": "P088",
-        "name": "M.A. (Political Science)",
-        "deptid": "D013",
-        "factid": "F002"
+        "prog_id": "P088",
+        "prog_name": "M.A. (Political Science)",
+        "dept_id": "D013",
+        "fact_id": "F002"
       },
       {
-        "progid": "P089",
-        "name": "M.A. (Human Rights & Duties Education)",
-        "deptid": "D013",
-        "factid": "F002"
+        "prog_id": "P089",
+        "prog_name": "M.A. (Human Rights & Duties Education)",
+        "dept_id": "D013",
+        "fact_id": "F002"
       },
       {
-        "progid": "P090",
-        "name": "M.A. (Public Administration)",
-        "deptid": "D013",
-        "factid": "F002"
+        "prog_id": "P090",
+        "prog_name": "M.A. (Public Administration)",
+        "dept_id": "D013",
+        "fact_id": "F002"
       },
       {
-        "progid": "P091",
-        "name": "B.A. (Hons) Political Science",
-        "deptid": "D013",
-        "factid": "F002"
+        "prog_id": "P091",
+        "prog_name": "B.A. (Hons) Political Science",
+        "dept_id": "D013",
+        "fact_id": "F002"
       },
       {
-        "progid": "P092",
-        "name": "Ph.D. (Psychology)",
-        "deptid": "D014",
-        "factid": "F002"
+        "prog_id": "P092",
+        "prog_name": "Ph.D. (Psychology)",
+        "dept_id": "D014",
+        "fact_id": "F002"
       },
       {
-        "progid": "P093",
-        "name": "M.A. (Psychology)",
-        "deptid": "D014",
-        "factid": "F002"
+        "prog_id": "P093",
+        "prog_name": "M.A. (Psychology)",
+        "dept_id": "D014",
+        "fact_id": "F002"
       },
       {
-        "progid": "P094",
-        "name": "Advanced Diploma in Counselling Psychology (Self-Financed)",
-        "deptid": "D014",
-        "factid": "F002"
+        "prog_id": "P094",
+        "prog_name": "Advanced Diploma in Counselling Psychology (Self-Financed)",
+        "dept_id": "D014",
+        "fact_id": "F002"
       },
       {
-        "progid": "P095",
-        "name": "B.A. (Hons) Psychology",
-        "deptid": "D014",
-        "factid": "F002"
+        "prog_id": "P095",
+        "prog_name": "B.A. (Hons) Psychology",
+        "dept_id": "D014",
+        "fact_id": "F002"
       },
       {
-        "progid": "P096",
-        "name": "Ph.D. (Adult and Continuing Education & Extension)",
-        "deptid": "D015",
-        "factid": "F002"
+        "prog_id": "P096",
+        "prog_name": "Ph.D. (Adult and Continuing Education & Extension)",
+        "dept_id": "D015",
+        "fact_id": "F002"
       },
       {
-        "progid": "P097",
-        "name": "M.A./M.Sc. (Development Extension)",
-        "deptid": "D015",
-        "factid": "F002"
+        "prog_id": "P097",
+        "prog_name": "M.A./M.Sc. (Development Extension)",
+        "dept_id": "D015",
+        "fact_id": "F002"
       },
       {
-        "progid": "P098",
-        "name": "Ph.D. (Commerce)",
-        "deptid": "D016",
-        "factid": "F002"
+        "prog_id": "P098",
+        "prog_name": "Ph.D. (Commerce)",
+        "dept_id": "D016",
+        "fact_id": "F002"
       },
       {
-        "progid": "P099",
-        "name": "M.Com. (Business Management)",
-        "deptid": "D016",
-        "factid": "F002"
+        "prog_id": "P099",
+        "prog_name": "M.Com. (Business Management)",
+        "dept_id": "D016",
+        "fact_id": "F002"
       },
       {
-        "progid": "P100",
-        "name": "B.B.A. (Bachelor of Business Administration)",
-        "deptid": "D016",
-        "factid": "F002"
+        "prog_id": "P100",
+        "prog_name": "B.B.A. (Bachelor of Business Administration)",
+        "dept_id": "D016",
+        "fact_id": "F002"
       },
       {
-        "progid": "P101",
-        "name": "B.Com. (Hons)",
-        "deptid": "D016",
-        "factid": "F002"
+        "prog_id": "P101",
+        "prog_name": "B.Com. (Hons)",
+        "dept_id": "D016",
+        "fact_id": "F002"
       },
       {
-        "progid": "P102",
-        "name": "B.Com. (Hons) (Self-Financed)",
-        "deptid": "D016",
-        "factid": "F002"
+        "prog_id": "P102",
+        "prog_name": "B.Com. (Hons) (Self-Financed)",
+        "dept_id": "D016",
+        "fact_id": "F002"
       },
       {
-        "progid": "PB64",
-        "name": "Four Year B.A.(Multidisciplinary)",
-        "deptid": "D0170",
-        "factid": "F003"
+        "prog_id": "PB64",
+        "prog_name": "Four Year B.A.(Multidisciplinary)",
+        "dept_id": "D0170",
+        "fact_id": "F003"
       },
       {
-        "progid": "P103",
-        "name": "Ph.D. (Chemistry)",
-        "deptid": "D017",
-        "factid": "F003"
+        "prog_id": "P103",
+        "prog_name": "Ph.D. (Chemistry)",
+        "dept_id": "D017",
+        "fact_id": "F003"
       },
       {
-        "progid": "P104",
-        "name": "M.Sc. (Chemistry: Materials / Inorganic / Organic / Physical)",
-        "deptid": "D017",
-        "factid": "F003"
+        "prog_id": "P104",
+        "prog_name": "M.Sc. (Chemistry: Materials / Inorganic / Organic / Physical)",
+        "dept_id": "D017",
+        "fact_id": "F003"
       },
       {
-        "progid": "P105",
-        "name": "B.Sc. (Hons) Chemistry",
-        "deptid": "D017",
-        "factid": "F003"
+        "prog_id": "P105",
+        "prog_name": "B.Sc. (Hons) Chemistry",
+        "dept_id": "D017",
+        "fact_id": "F003"
       },
       {
-        "progid": "P106",
-        "name": "Ph.D. (Computer Science)",
-        "deptid": "D018",
-        "factid": "F003"
+        "prog_id": "P106",
+        "prog_name": "Ph.D. (Computer Science)",
+        "dept_id": "D018",
+        "fact_id": "F003"
       },
       {
-        "progid": "P107",
-        "name": "M.Sc. (Bioinformatics) (Self-Financed, Evening)",
-        "deptid": "D018",
-        "factid": "F003"
+        "prog_id": "P107",
+        "prog_name": "M.Sc. (Bioinformatics) (Self-Financed, Evening)",
+        "dept_id": "D018",
+        "fact_id": "F003"
       },
       {
-        "progid": "P108",
-        "name": "M.C.A.",
-        "deptid": "D018",
-        "factid": "F003"
+        "prog_id": "P108",
+        "prog_name": "M.C.A.",
+        "dept_id": "D018",
+        "fact_id": "F003"
       },
       {
-        "progid": "P109",
-        "name": "M.Sc. (AI and ML) (Self-Financed)",
-        "deptid": "D018",
-        "factid": "F003"
+        "prog_id": "P109",
+        "prog_name": "M.Sc. (AI and ML) (Self-Financed)",
+        "dept_id": "D018",
+        "fact_id": "F003"
       },
       {
-        "progid": "P110",
-        "name": "B.Sc. (Hons) Computer Science",
-        "deptid": "D018",
-        "factid": "F003"
+        "prog_id": "P110",
+        "prog_name": "B.Sc. (Hons) Computer Science",
+        "dept_id": "D018",
+        "fact_id": "F003"
       },
       {
-        "progid": "P111",
-        "name": "P.G. Diploma in Computer Applications",
-        "deptid": "D018",
-        "factid": "F003"
+        "prog_id": "P111",
+        "prog_name": "P.G. Diploma in Computer Applications",
+        "dept_id": "D018",
+        "fact_id": "F003"
       },
       {
-        "progid": "P112",
-        "name": "Ph.D. (Geography)",
-        "deptid": "D019",
-        "factid": "F003"
+        "prog_id": "P112",
+        "prog_name": "Ph.D. (Geography)",
+        "dept_id": "D019",
+        "fact_id": "F003"
       },
       {
-        "progid": "P113",
-        "name": "M.A./M.Sc. (Geography)",
-        "deptid": "D019",
-        "factid": "F003"
+        "prog_id": "P113",
+        "prog_name": "M.A./M.Sc. (Geography)",
+        "dept_id": "D019",
+        "fact_id": "F003"
       },
       {
-        "progid": "P114",
-        "name": "M.Sc. (Disaster Management & Climate Sustainability Studies) (Self-Financed)",
-        "deptid": "D019",
-        "factid": "F003"
+        "prog_id": "P114",
+        "prog_name": "M.Sc. (Disaster Management & Climate Sustainability Studies) (Self-Financed)",
+        "dept_id": "D019",
+        "fact_id": "F003"
       },
       {
-        "progid": "P115",
-        "name": "P.G. Diploma in Remote Sensing & GIS Application",
-        "deptid": "D019",
-        "factid": "F003"
+        "prog_id": "P115",
+        "prog_name": "P.G. Diploma in Remote Sensing & GIS Application",
+        "dept_id": "D019",
+        "fact_id": "F003"
       },
       {
-        "progid": "P116",
-        "name": "B.A./B.Sc. (Hons) Geography",
-        "deptid": "D019",
-        "factid": "F003"
+        "prog_id": "P116",
+        "prog_name": "B.A./B.Sc. (Hons) Geography",
+        "dept_id": "D019",
+        "fact_id": "F003"
       },
       {
-        "progid": "P117",
-        "name": "P.G. Diploma in Disaster Management (Self-Financed, Evening)",
-        "deptid": "D019",
-        "factid": "F003"
+        "prog_id": "P117",
+        "prog_name": "P.G. Diploma in Disaster Management (Self-Financed, Evening)",
+        "dept_id": "D019",
+        "fact_id": "F003"
       },
       {
-        "progid": "P118",
-        "name": "Ph.D. (Mathematics)",
-        "deptid": "D020",
-        "factid": "F003"
+        "prog_id": "P118",
+        "prog_name": "Ph.D. (Mathematics)",
+        "dept_id": "D020",
+        "fact_id": "F003"
       },
       {
-        "progid": "P119",
-        "name": "M.Sc. (Mathematics with Computer Science)",
-        "deptid": "D020",
-        "factid": "F003"
+        "prog_id": "P119",
+        "prog_name": "M.Sc. (Mathematics with Computer Science)",
+        "dept_id": "D020",
+        "fact_id": "F003"
       },
       {
-        "progid": "P120",
-        "name": "M.A./M.Sc. (Mathematics) (Self-Financed)",
-        "deptid": "D020",
-        "factid": "F003"
+        "prog_id": "P120",
+        "prog_name": "M.A./M.Sc. (Mathematics) (Self-Financed)",
+        "dept_id": "D020",
+        "fact_id": "F003"
       },
       {
-        "progid": "P121",
-        "name": "B.Sc. (Hons) Mathematics",
-        "deptid": "D020",
-        "factid": "F003"
+        "prog_id": "P121",
+        "prog_name": "B.Sc. (Hons) Mathematics",
+        "dept_id": "D020",
+        "fact_id": "F003"
       },
       {
-        "progid": "P122",
-        "name": "B.Sc. (Hons) Applied Mathematics",
-        "deptid": "D020",
-        "factid": "F003"
+        "prog_id": "P122",
+        "prog_name": "B.Sc. (Hons) Applied Mathematics",
+        "dept_id": "D020",
+        "fact_id": "F003"
       },
       {
-        "progid": "P123",
-        "name": "Ph.D. (Physics)",
-        "deptid": "D021",
-        "factid": "F003"
+        "prog_id": "P123",
+        "prog_name": "Ph.D. (Physics)",
+        "dept_id": "D021",
+        "fact_id": "F003"
       },
       {
-        "progid": "P124",
-        "name": "M.Sc. (Physics)",
-        "deptid": "D021",
-        "factid": "F003"
+        "prog_id": "P124",
+        "prog_name": "M.Sc. (Physics)",
+        "dept_id": "D021",
+        "fact_id": "F003"
       },
       {
-        "progid": "P125",
-        "name": "B.Sc. (Hons) Physics",
-        "deptid": "D021",
-        "factid": "F003"
+        "prog_id": "P125",
+        "prog_name": "B.Sc. (Hons) Physics",
+        "dept_id": "D021",
+        "fact_id": "F003"
       },
       {
-        "progid": "P126",
-        "name": "B.Voc. (Solar Energy) (Self-Financed)",
-        "deptid": "D021",
-        "factid": "F003"
+        "prog_id": "P126",
+        "prog_name": "B.Voc. (Solar Energy) (Self-Financed)",
+        "dept_id": "D021",
+        "fact_id": "F003"
       },
       
       {
-        "progid": "PD21",
-        "name": "Diploma in Unani Pharmacy (Self-Financed)",
-        "deptid": "D0220",
-        "factid": "F004"
+        "prog_id": "PD21",
+        "prog_name": "Diploma in Unani Pharmacy (Self-Financed)",
+        "dept_id": "D0220",
+        "fact_id": "F004"
       },
       {
-        "progid": "P127",
-        "name": "Ph.D. (Biosciences)",
-        "deptid": "D022",
-        "factid": "F004"
+        "prog_id": "P127",
+        "prog_name": "Ph.D. (Biosciences)",
+        "dept_id": "D022",
+        "fact_id": "F004"
       },
       {
-        "progid": "P128",
-        "name": "M.Sc. (Biosciences)",
-        "deptid": "D022",
-        "factid": "F004"
+        "prog_id": "P128",
+        "prog_name": "M.Sc. (Biosciences)",
+        "dept_id": "D022",
+        "fact_id": "F004"
       },
       {
-        "progid": "P129",
-        "name": "M.Sc. (Biochemistry) (Self-Financed)",
-        "deptid": "D022",
-        "factid": "F004"
+        "prog_id": "P129",
+        "prog_name": "M.Sc. (Biochemistry) (Self-Financed)",
+        "dept_id": "D022",
+        "fact_id": "F004"
       },
       {
-        "progid": "P130",
-        "name": "M.Sc. (Microbiology) (Self-Financed, Evening)",
-        "deptid": "D022",
-        "factid": "F004"
+        "prog_id": "P130",
+        "prog_name": "M.Sc. (Microbiology) (Self-Financed, Evening)",
+        "dept_id": "D022",
+        "fact_id": "F004"
       },
       {
-        "progid": "P131",
-        "name": "B.Sc. (Biosciences)",
-        "deptid": "D022",
-        "factid": "F004"
+        "prog_id": "P131",
+        "prog_name": "B.Sc. (Biosciences)",
+        "dept_id": "D022",
+        "fact_id": "F004"
       },
       {
-        "progid": "P132",
-        "name": "Ph.D. (Biotechnology)",
-        "deptid": "D023",
-        "factid": "F004"
+        "prog_id": "P132",
+        "prog_name": "Ph.D. (Biotechnology)",
+        "dept_id": "D023",
+        "fact_id": "F004"
       },
       {
-        "progid": "P133",
-        "name": "Ph.D. (Unani Medicine – Ilmul Advia / Moalajat)",
-        "deptid": "D023",
-        "factid": "F004"
+        "prog_id": "P133",
+        "prog_name": "Ph.D. (Unani Medicine – Ilmul Advia / Moalajat)",
+        "dept_id": "D023",
+        "fact_id": "F004"
       },
       {
-        "progid": "P134",
-        "name": "M.Sc. (Biotechnology)",
-        "deptid": "D023",
-        "factid": "F004"
+        "prog_id": "P134",
+        "prog_name": "M.Sc. (Biotechnology)",
+        "dept_id": "D023",
+        "fact_id": "F004"
       },
       {
-        "progid": "P135",
-        "name": "B.Sc. (Biotechnology)",
-        "deptid": "D023",
-        "factid": "F004"
+        "prog_id": "P135",
+        "prog_name": "B.Sc. (Biotechnology)",
+        "dept_id": "D023",
+        "fact_id": "F004"
       },
       {
-        "progid": "P136",
-        "name": "Ph.D. (Educational Studies)",
-        "deptid": "D024",
-        "factid": "F005"
+        "prog_id": "P136",
+        "prog_name": "Ph.D. (Educational Studies)",
+        "dept_id": "D024",
+        "fact_id": "F005"
       },
       {
-        "progid": "P137",
-        "name": "M.A. (Educational Planning and Administration)",
-        "deptid": "D024",
-        "factid": "F005"
+        "prog_id": "P137",
+        "prog_name": "M.A. (Educational Planning and Administration)",
+        "dept_id": "D024",
+        "fact_id": "F005"
       },
       {
-        "progid": "P138",
-        "name": "M.Ed.",
-        "deptid": "D024",
-        "factid": "F005"
+        "prog_id": "P138",
+        "prog_name": "M.Ed.",
+        "dept_id": "D024",
+        "fact_id": "F005"
       },
       {
-        "progid": "P139",
-        "name": "M.A. (Early Childhood Development)",
-        "deptid": "D024",
-        "factid": "F005"
+        "prog_id": "P139",
+        "prog_name": "M.A. (Early Childhood Development)",
+        "dept_id": "D024",
+        "fact_id": "F005"
       },
       {
-        "progid": "P140",
-        "name": "P.G. Diploma in Educational Management (Self-Financed)",
-        "deptid": "D024",
-        "factid": "F005"
+        "prog_id": "P140",
+        "prog_name": "P.G. Diploma in Educational Management (Self-Financed)",
+        "dept_id": "D024",
+        "fact_id": "F005"
       },
       {
-        "progid": "P141",
-        "name": "Ph.D. (Education – IASE)",
-        "deptid": "D025",
-        "factid": "F005"
+        "prog_id": "P141",
+        "prog_name": "Ph.D. (Education – IASE)",
+        "dept_id": "D025",
+        "fact_id": "F005"
       },
       {
-        "progid": "P142",
-        "name": "M.A. (Education)",
-        "deptid": "D025",
-        "factid": "F005"
+        "prog_id": "P142",
+        "prog_name": "M.A. (Education)",
+        "dept_id": "D025",
+        "fact_id": "F005"
       },
       {
-        "progid": "P143",
-        "name": "M.Ed. Special Education (Visual Impairment)",
-        "deptid": "D025",
-        "factid": "F005"
+        "prog_id": "P143",
+        "prog_name": "M.Ed. Special Education (Visual Impairment)",
+        "dept_id": "D025",
+        "fact_id": "F005"
       },
       {
-        "progid": "P144",
-        "name": "M.Ed. Special Education (Specific Learning Disability)",
-        "deptid": "D025",
-        "factid": "F005"
+        "prog_id": "P144",
+        "prog_name": "M.Ed. Special Education (Specific Learning Disability)",
+        "dept_id": "D025",
+        "fact_id": "F005"
       },
       {
-        "progid": "P145",
-        "name": "B.Ed.",
-        "deptid": "D025",
-        "factid": "F005"
+        "prog_id": "P145",
+        "prog_name": "B.Ed.",
+        "dept_id": "D025",
+        "fact_id": "F005"
       },
       {
-        "progid": "P146",
-        "name": "B.Ed. Special Education (Visual Impairment)",
-        "deptid": "D025",
-        "factid": "F005"
+        "prog_id": "P146",
+        "prog_name": "B.Ed. Special Education (Visual Impairment)",
+        "dept_id": "D025",
+        "fact_id": "F005"
       },
       {
-        "progid": "P147",
-        "name": "B.Ed. Special Education (Specific Learning Disability)",
-        "deptid": "D025",
-        "factid": "F005"
+        "prog_id": "P147",
+        "prog_name": "B.Ed. Special Education (Specific Learning Disability)",
+        "dept_id": "D025",
+        "fact_id": "F005"
       },
       {
-        "progid": "P148",
-        "name": "B.Ed. (Nursery Education)",
-        "deptid": "D025",
-        "factid": "F005"
+        "prog_id": "P148",
+        "prog_name": "B.Ed. (Nursery Education)",
+        "dept_id": "D025",
+        "fact_id": "F005"
       },
       {
-        "progid": "P149",
-        "name": "Diploma in Elementary Education (D.El.Ed.)",
-        "deptid": "D025",
-        "factid": "F005"
+        "prog_id": "P149",
+        "prog_name": "Diploma in Elementary Education (D.El.Ed.)",
+        "dept_id": "D025",
+        "fact_id": "F005"
       },
       {
-        "progid": "P150",
-        "name": "Ph.D. (Applied Sciences & Humanities)",
-        "deptid": "D026",
-        "factid": "F006"
+        "prog_id": "P150",
+        "prog_name": "Ph.D. (Applied Sciences & Humanities)",
+        "dept_id": "D026",
+        "fact_id": "F006"
       },
       {
-        "progid": "P151",
-        "name": "M.Sc. (Electronics)",
-        "deptid": "D026",
-        "factid": "F006"
+        "prog_id": "P151",
+        "prog_name": "M.Sc. (Electronics)",
+        "dept_id": "D026",
+        "fact_id": "F006"
       },
       {
-        "progid": "P152",
-        "name": "M.Tech. (Energy Science and Technology) (Self-Financed)",
-        "deptid": "D026",
-        "factid": "F006"
+        "prog_id": "P152",
+        "prog_name": "M.Tech. (Energy Science and Technology) (Self-Financed)",
+        "dept_id": "D026",
+        "fact_id": "F006"
       },
       {
-        "progid": "P153",
-        "name": "M.Tech. (Computational Mathematics) (Self-Financed)",
-        "deptid": "D026",
-        "factid": "F006"
+        "prog_id": "P153",
+        "prog_name": "M.Tech. (Computational Mathematics) (Self-Financed)",
+        "dept_id": "D026",
+        "fact_id": "F006"
       },
       {
-        "progid": "P154",
-        "name": "Ph.D. (Civil Engineering)",
-        "deptid": "D027",
-        "factid": "F006"
+        "prog_id": "P154",
+        "prog_name": "Ph.D. (Civil Engineering)",
+        "dept_id": "D027",
+        "fact_id": "F006"
       },
       {
-        "progid": "P155",
-        "name": "M.Tech. (Environmental Science & Engineering)",
-        "deptid": "D027",
-        "factid": "F006"
+        "prog_id": "P155",
+        "prog_name": "M.Tech. (Environmental Science & Engineering)",
+        "dept_id": "D027",
+        "fact_id": "F006"
       },
       {
-        "progid": "P156",
-        "name": "M.Tech. (Earthquake Engineering)",
-        "deptid": "D027",
-        "factid": "F006"
+        "prog_id": "P156",
+        "prog_name": "M.Tech. (Earthquake Engineering)",
+        "dept_id": "D027",
+        "fact_id": "F006"
       },
       {
-        "progid": "P157",
-        "name": "B.Tech. (Civil Engineering)",
-        "deptid": "D027",
-        "factid": "F006"
+        "prog_id": "P157",
+        "prog_name": "B.Tech. (Civil Engineering)",
+        "dept_id": "D027",
+        "fact_id": "F006"
       },
       {
-        "progid": "P158",
-        "name": "Ph.D. (Computer Engineering)",
-        "deptid": "D028",
-        "factid": "F006"
+        "prog_id": "P158",
+        "prog_name": "Ph.D. (Computer Engineering)",
+        "dept_id": "D028",
+        "fact_id": "F006"
       },
       {
-        "progid": "P159",
-        "name": "M.Tech. (Computer Engineering – AI & ML)",
-        "deptid": "D028",
-        "factid": "F006"
+        "prog_id": "P159",
+        "prog_name": "M.Tech. (Computer Engineering – AI & ML)",
+        "dept_id": "D028",
+        "fact_id": "F006"
       },
       {
-        "progid": "P160",
-        "name": "M.Tech. (Data Sciences) (Self-Financed)",
-        "deptid": "D028",
-        "factid": "F006"
+        "prog_id": "P160",
+        "prog_name": "M.Tech. (Data Sciences) (Self-Financed)",
+        "dept_id": "D028",
+        "fact_id": "F006"
       },
       {
-        "progid": "P161",
-        "name": "B.Tech. (Computer Engineering)",
-        "deptid": "D028",
-        "factid": "F006"
+        "prog_id": "P161",
+        "prog_name": "B.Tech. (Computer Engineering)",
+        "dept_id": "D028",
+        "fact_id": "F006"
       },
       {
-        "progid": "P162",
-        "name": "B.Tech. (Computer Science & Engineering – Data Sciences) (Self-Financed)",
-        "deptid": "D028",
-        "factid": "F006"
+        "prog_id": "P162",
+        "prog_name": "B.Tech. (Computer Science & Engineering – Data Sciences) (Self-Financed)",
+        "dept_id": "D028",
+        "fact_id": "F006"
       },
       {
-        "progid": "P163",
-        "name": "Ph.D. (Electrical Engineering)",
-        "deptid": "D029",
-        "factid": "F006"
+        "prog_id": "P163",
+        "prog_name": "Ph.D. (Electrical Engineering)",
+        "dept_id": "D029",
+        "fact_id": "F006"
       },
       {
-        "progid": "P164",
-        "name": "M.Tech. (Electrical Power System Management)",
-        "deptid": "D029",
-        "factid": "F006"
+        "prog_id": "P164",
+        "prog_name": "M.Tech. (Electrical Power System Management)",
+        "dept_id": "D029",
+        "fact_id": "F006"
       },
       {
-        "progid": "P165",
-        "name": "M.Tech. (Control & Instrumentation System)",
-        "deptid": "D029",
-        "factid": "F006"
+        "prog_id": "P165",
+        "prog_name": "M.Tech. (Control & Instrumentation System)",
+        "dept_id": "D029",
+        "fact_id": "F006"
       },
       {
-        "progid": "P166",
-        "name": "B.Tech. (Electrical Engineering)",
-        "deptid": "D029",
-        "factid": "F006"
+        "prog_id": "P166",
+        "prog_name": "B.Tech. (Electrical Engineering)",
+        "dept_id": "D029",
+        "fact_id": "F006"
       },
       {
-        "progid": "P167",
-        "name": "B.Tech. (Electrical & Computer Engineering) (Self-Financed)",
-        "deptid": "D029",
-        "factid": "F006"
+        "prog_id": "P167",
+        "prog_name": "B.Tech. (Electrical & Computer Engineering) (Self-Financed)",
+        "dept_id": "D029",
+        "fact_id": "F006"
       },
       {
-        "progid": "P168",
-        "name": "Ph.D. (Electronics & Communication Engineering)",
-        "deptid": "D030",
-        "factid": "F006"
+        "prog_id": "P168",
+        "prog_name": "Ph.D. (Electronics & Communication Engineering)",
+        "dept_id": "D030",
+        "fact_id": "F006"
       },
       {
-        "progid": "P169",
-        "name": "M.Tech. (Electronics & Communication Engineering)",
-        "deptid": "D030",
-        "factid": "F006"
+        "prog_id": "P169",
+        "prog_name": "M.Tech. (Electronics & Communication Engineering)",
+        "dept_id": "D030",
+        "fact_id": "F006"
       },
       {
-        "progid": "P170",
-        "name": "B.Tech. (Electronics & Communication Engineering)",
-        "deptid": "D030",
-        "factid": "F006"
+        "prog_id": "P170",
+        "prog_name": "B.Tech. (Electronics & Communication Engineering)",
+        "dept_id": "D030",
+        "fact_id": "F006"
       },
       {
-        "progid": "P171",
-        "name": "B.Tech. Electronics (VLSI Design & Technology) (Self-Financed)",
-        "deptid": "D030",
-        "factid": "F006"
+        "prog_id": "P171",
+        "prog_name": "B.Tech. Electronics (VLSI Design & Technology) (Self-Financed)",
+        "dept_id": "D030",
+        "fact_id": "F006"
       },
       {
-        "progid": "P172",
-        "name": "Ph.D. (Mechanical Engineering)",
-        "deptid": "D031",
-        "factid": "F006"
+        "prog_id": "P172",
+        "prog_name": "Ph.D. (Mechanical Engineering)",
+        "dept_id": "D031",
+        "fact_id": "F006"
       },
       {
-        "progid": "P173",
-        "name": "M.Tech. (Mechanical Engineering – Thermal Engineering)",
-        "deptid": "D031",
-        "factid": "F006"
+        "prog_id": "P173",
+        "prog_name": "M.Tech. (Mechanical Engineering – Thermal Engineering)",
+        "dept_id": "D031",
+        "fact_id": "F006"
       },
       {
-        "progid": "P174",
-        "name": "M.Tech. (Mechanical Engineering – Machine Design)",
-        "deptid": "D031",
-        "factid": "F006"
+        "prog_id": "P174",
+        "prog_name": "M.Tech. (Mechanical Engineering – Machine Design)",
+        "dept_id": "D031",
+        "fact_id": "F006"
       },
       {
-        "progid": "P175",
-        "name": "M.Tech. (Mechanical Engineering – Production & Industrial Engineering)",
-        "deptid": "D031",
-        "factid": "F006"
+        "prog_id": "P175",
+        "prog_name": "M.Tech. (Mechanical Engineering – Production & Industrial Engineering)",
+        "dept_id": "D031",
+        "fact_id": "F006"
       },
       {
-        "progid": "P176",
-        "name": "B.Tech. (Mechanical Engineering)",
-        "deptid": "D031",
-        "factid": "F006"
+        "prog_id": "P176",
+        "prog_name": "B.Tech. (Mechanical Engineering)",
+        "dept_id": "D031",
+        "fact_id": "F006"
       },
       {
-        "progid": "P177",
-        "name": "Ph.D. (Environmental Science)",
-        "deptid": "D032",
-        "factid": "F006"
+        "prog_id": "P177",
+        "prog_name": "Ph.D. (Environmental Science)",
+        "dept_id": "D032",
+        "fact_id": "F006"
       },
       {
-        "progid": "P178",
-        "name": "M.Sc. (Environmental Science & Management)",
-        "deptid": "D032",
-        "factid": "F006"
+        "prog_id": "P178",
+        "prog_name": "M.Sc. (Environmental Science & Management)",
+        "dept_id": "D032",
+        "fact_id": "F006"
       },
       {
-        "progid": "P179",
-        "name": "M.Sc. (Environmental Science & Management) (Self-Financed)",
-        "deptid": "D032",
-        "factid": "F006"
+        "prog_id": "P179",
+        "prog_name": "M.Sc. (Environmental Science & Management) (Self-Financed)",
+        "dept_id": "D032",
+        "fact_id": "F006"
       },
       {
-        "progid": "P180",
-        "name": "M.Tech. (Environmental Health Risk & Safety Management) (Self-Financed)",
-        "deptid": "D032",
-        "factid": "F006"
+        "prog_id": "P180",
+        "prog_name": "M.Tech. (Environmental Health Risk & Safety Management) (Self-Financed)",
+        "dept_id": "D032",
+        "fact_id": "F006"
       },
       {
-        "progid": "P181",
-        "name": "Diploma in Engineering (Civil / Computer / Electrical / Electronics / Mechanical)",
-        "deptid": "D033",
-        "factid": "F006"
+        "prog_id": "P181",
+        "prog_name": "Diploma in Engineering (Civil / Computer / Electrical / Electronics / Mechanical)",
+        "dept_id": "D033",
+        "fact_id": "F006"
       },
       {
-        "progid": "P182",
-        "name": "Diploma in Engineering (Self-Financed) (Civil / Computer / Electrical / Electronics / Mechanical)",
-        "deptid": "D033",
-        "factid": "F006"
+        "prog_id": "P182",
+        "prog_name": "Diploma in Engineering (Self-Financed) (Civil / Computer / Electrical / Electronics / Mechanical)",
+        "dept_id": "D033",
+        "fact_id": "F006"
       },
       {
-        "progid": "P183",
-        "name": "Ph.D. (Law)",
-        "deptid": "D034",
-        "factid": "F007"
+        "prog_id": "P183",
+        "prog_name": "Ph.D. (Law)",
+        "dept_id": "D034",
+        "fact_id": "F007"
       },
       {
-        "progid": "P184",
-        "name": "LL.M. (Regular)",
-        "deptid": "D034",
-        "factid": "F007"
+        "prog_id": "P184",
+        "prog_name": "LL.M. (Regular)",
+        "dept_id": "D034",
+        "fact_id": "F007"
       },
       {
-        "progid": "P185",
-        "name": "LL.M. (Self-Financed)",
-        "deptid": "D034",
-        "factid": "F007"
+        "prog_id": "P185",
+        "prog_name": "LL.M. (Self-Financed)",
+        "dept_id": "D034",
+        "fact_id": "F007"
       },
       {
-        "progid": "P186",
-        "name": "B.A. LL.B. (Hons)",
-        "deptid": "D034",
-        "factid": "F007"
+        "prog_id": "P186",
+        "prog_name": "B.A. LL.B. (Hons)",
+        "dept_id": "D034",
+        "fact_id": "F007"
       },
       {
-        "progid": "P187",
-        "name": "B.A. LL.B. (Hons) (Self-Financed)",
-        "deptid": "D034",
-        "factid": "F007"
+        "prog_id": "P187",
+        "prog_name": "B.A. LL.B. (Hons) (Self-Financed)",
+        "dept_id": "D034",
+        "fact_id": "F007"
       },
       {
-        "progid": "P188",
-        "name": "P.G. Diploma in Labour Laws (Self-Financed)",
-        "deptid": "D034",
-        "factid": "F007"
+        "prog_id": "P188",
+        "prog_name": "P.G. Diploma in Labour Laws (Self-Financed)",
+        "dept_id": "D034",
+        "fact_id": "F007"
       },
       {
-        "progid": "P189",
-        "name": "P.G. Diploma in Air and Space Laws (Self-Financed)",
-        "deptid": "D034",
-        "factid": "F007"
+        "prog_id": "P189",
+        "prog_name": "P.G. Diploma in Air and Space Laws (Self-Financed)",
+        "dept_id": "D034",
+        "fact_id": "F007"
       },
       {
-        "progid": "P190",
-        "name": "Ph.D. (Architecture)",
-        "deptid": "D035",
-        "factid": "F008"
+        "prog_id": "P190",
+        "prog_name": "Ph.D. (Architecture)",
+        "dept_id": "D035",
+        "fact_id": "F008"
       },
       {
-        "progid": "P191",
-        "name": "M.Arch. (Architecture Pedagogy)",
-        "deptid": "D035",
-        "factid": "F008"
+        "prog_id": "P191",
+        "prog_name": "M.Arch. (Architecture Pedagogy)",
+        "dept_id": "D035",
+        "fact_id": "F008"
       },
       {
-        "progid": "P192",
-        "name": "M.Arch. (Healthcare Architecture)",
-        "deptid": "D035",
-        "factid": "F008"
+        "prog_id": "P192",
+        "prog_name": "M.Arch. (Healthcare Architecture)",
+        "dept_id": "D035",
+        "fact_id": "F008"
       },
       {
-        "progid": "P193",
-        "name": "M.Arch. (Building Services)",
-        "deptid": "D035",
-        "factid": "F008"
+        "prog_id": "P193",
+        "prog_name": "M.Arch. (Building Services)",
+        "dept_id": "D035",
+        "fact_id": "F008"
       },
       {
-        "progid": "P194",
-        "name": "M.Arch. (Recreational Architecture)",
-        "deptid": "D035",
-        "factid": "F008"
+        "prog_id": "P194",
+        "prog_name": "M.Arch. (Recreational Architecture)",
+        "dept_id": "D035",
+        "fact_id": "F008"
       },
       {
-        "progid": "P195",
-        "name": "M.Arch. (Urban Regeneration)",
-        "deptid": "D035",
-        "factid": "F008"
+        "prog_id": "P195",
+        "prog_name": "M.Arch. (Urban Regeneration)",
+        "dept_id": "D035",
+        "fact_id": "F008"
       },
       {
-        "progid": "P196",
-        "name": "M.Arch. (Ekistics)",
-        "deptid": "D035",
-        "factid": "F008"
+        "prog_id": "P196",
+        "prog_name": "M.Arch. (Ekistics)",
+        "dept_id": "D035",
+        "fact_id": "F008"
       },
       {
-        "progid": "P197",
-        "name": "B.Arch.",
-        "deptid": "D035",
-        "factid": "F008"
+        "prog_id": "P197",
+        "prog_name": "B.Arch.",
+        "dept_id": "D035",
+        "fact_id": "F008"
       },
       {
-        "progid": "P198",
-        "name": "B.Arch. (Self-Financed)",
-        "deptid": "D035",
-        "factid": "F008"
+        "prog_id": "P198",
+        "prog_name": "B.Arch. (Self-Financed)",
+        "dept_id": "D035",
+        "fact_id": "F008"
       },
       {
-        "progid": "P199",
-        "name": "P.G. Diploma in Fire Safety, Lifts and Plumbing Services (Self-Financed)",
-        "deptid": "D035",
-        "factid": "F008"
+        "prog_id": "P199",
+        "prog_name": "P.G. Diploma in Fire Safety, Lifts and Plumbing Services (Self-Financed)",
+        "dept_id": "D035",
+        "fact_id": "F008"
       },
       {
-        "progid": "P200",
-        "name": "Master of Planning (Urban & Regional Planning)",
-        "deptid": "D036",
-        "factid": "F008"
+        "prog_id": "P200",
+        "prog_name": "Master of Planning (Urban & Regional Planning)",
+        "dept_id": "D036",
+        "fact_id": "F008"
       },
       {
-        "progid": "P201",
-        "name": "Ph.D. (Design and Innovation)",
-        "deptid": "D037",
-        "factid": "F008"
+        "prog_id": "P201",
+        "prog_name": "Ph.D. (Design and Innovation)",
+        "dept_id": "D037",
+        "fact_id": "F008"
       },
       {
-        "progid": "P202",
-        "name": "Bachelor of Design (B.Des)",
-        "deptid": "D037",
-        "factid": "F008"
+        "prog_id": "P202",
+        "prog_name": "Bachelor of Design (B.Des)",
+        "dept_id": "D037",
+        "fact_id": "F008"
       },
       {
-        "progid": "P203",
-        "name": "Master of Design (M.Des)",
-        "deptid": "D037",
-        "factid": "F008"
+        "prog_id": "P203",
+        "prog_name": "Master of Design (M.Des)",
+        "dept_id": "D037",
+        "fact_id": "F008"
       },
       {
-        "progid": "P204",
-        "name": "Master of Design (M.Des) (Self-Financed)",
-        "deptid": "D037",
-        "factid": "F008"
+        "prog_id": "P204",
+        "prog_name": "Master of Design (M.Des) (Self-Financed)",
+        "dept_id": "D037",
+        "fact_id": "F008"
       },
       {
-        "progid": "P205",
-        "name": "Ph.D. (Applied Art)",
-        "deptid": "D038",
-        "factid": "F009"
+        "prog_id": "P205",
+        "prog_name": "Ph.D. (Applied Art)",
+        "dept_id": "D038",
+        "fact_id": "F009"
       },
       {
-        "progid": "P206",
-        "name": "M.F.A. (Applied Art)",
-        "deptid": "D038",
-        "factid": "F009"
+        "prog_id": "P206",
+        "prog_name": "M.F.A. (Applied Art)",
+        "dept_id": "D038",
+        "fact_id": "F009"
       },
       {
-        "progid": "P207",
-        "name": "M.F.A. (Applied Art) (Self-Financed)",
-        "deptid": "D038",
-        "factid": "F009"
+        "prog_id": "P207",
+        "prog_name": "M.F.A. (Applied Art) (Self-Financed)",
+        "dept_id": "D038",
+        "fact_id": "F009"
       },
       {
-        "progid": "P208",
-        "name": "M.F.A. (Applied Art) Self-Financed (Evening)",
-        "deptid": "D038",
-        "factid": "F009"
+        "prog_id": "P208",
+        "prog_name": "M.F.A. (Applied Art) Self-Financed (Evening)",
+        "dept_id": "D038",
+        "fact_id": "F009"
       },
       {
-        "progid": "P209",
-        "name": "B.F.A. (Applied Art)",
-        "deptid": "D038",
-        "factid": "F009"
+        "prog_id": "P209",
+        "prog_name": "B.F.A. (Applied Art)",
+        "dept_id": "D038",
+        "fact_id": "F009"
       },
       {
-        "progid": "P210",
-        "name": "B.F.A. (Applied Art) (Self-Financed)",
-        "deptid": "D038",
-        "factid": "F009"
+        "prog_id": "P210",
+        "prog_name": "B.F.A. (Applied Art) (Self-Financed)",
+        "dept_id": "D038",
+        "fact_id": "F009"
       },
       {
-        "progid": "P211",
-        "name": "Certificate in Design and Innovation (Self-Financed, Evening)",
-        "deptid": "D038",
-        "factid": "F009"
+        "prog_id": "P211",
+        "prog_name": "Certificate in Design and Innovation (Self-Financed, Evening)",
+        "dept_id": "D038",
+        "fact_id": "F009"
       },
       {
-        "progid": "P212",
-        "name": "Certificate in Textile Design (Self-Financed, Evening)",
-        "deptid": "D038",
-        "factid": "F009"
+        "prog_id": "P212",
+        "prog_name": "Certificate in Textile Design (Self-Financed, Evening)",
+        "dept_id": "D038",
+        "fact_id": "F009"
       },
       {
-        "progid": "P213",
-        "name": "Certificate in Creative Photography (Self-Financed, Evening)",
-        "deptid": "D038",
-        "factid": "F009"
+        "prog_id": "P213",
+        "prog_name": "Certificate in Creative Photography (Self-Financed, Evening)",
+        "dept_id": "D038",
+        "fact_id": "F009"
       },
       {
-        "progid": "P214",
-        "name": "Certificate in Calligraphy (Self-Financed, Evening)",
-        "deptid": "D038",
-        "factid": "F009"
+        "prog_id": "P214",
+        "prog_name": "Certificate in Calligraphy (Self-Financed, Evening)",
+        "dept_id": "D038",
+        "fact_id": "F009"
       },
       {
-        "progid": "P215",
-        "name": "Ph.D. (Art Education)",
-        "deptid": "D039",
-        "factid": "F009"
+        "prog_id": "P215",
+        "prog_name": "Ph.D. (Art Education)",
+        "dept_id": "D039",
+        "fact_id": "F009"
       },
       {
-        "progid": "P216",
-        "name": "M.F.A. (Art Education)",
-        "deptid": "D039",
-        "factid": "F009"
+        "prog_id": "P216",
+        "prog_name": "M.F.A. (Art Education)",
+        "dept_id": "D039",
+        "fact_id": "F009"
       },
       {
-        "progid": "P217",
-        "name": "M.F.A. (Art Education) (Self-Financed)",
-        "deptid": "D039",
-        "factid": "F009"
+        "prog_id": "P217",
+        "prog_name": "M.F.A. (Art Education) (Self-Financed)",
+        "dept_id": "D039",
+        "fact_id": "F009"
       },
       {
-        "progid": "P218",
-        "name": "B.F.A. (Art Education)",
-        "deptid": "D039",
-        "factid": "F009"
+        "prog_id": "P218",
+        "prog_name": "B.F.A. (Art Education)",
+        "dept_id": "D039",
+        "fact_id": "F009"
       },
       {
-        "progid": "P219",
-        "name": "B.F.A. (Art Education) (Self-Financed)",
-        "deptid": "D039",
-        "factid": "F009"
+        "prog_id": "P219",
+        "prog_name": "B.F.A. (Art Education) (Self-Financed)",
+        "dept_id": "D039",
+        "fact_id": "F009"
       },
       {
-        "progid": "P220",
-        "name": "Ph.D. (Art History & Art Appreciation)",
-        "deptid": "D040",
-        "factid": "F009"
+        "prog_id": "P220",
+        "prog_name": "Ph.D. (Art History & Art Appreciation)",
+        "dept_id": "D040",
+        "fact_id": "F009"
       },
       {
-        "progid": "P221",
-        "name": "M.F.A. (Art History & Art Appreciation)",
-        "deptid": "D040",
-        "factid": "F009"
+        "prog_id": "P221",
+        "prog_name": "M.F.A. (Art History & Art Appreciation)",
+        "dept_id": "D040",
+        "fact_id": "F009"
       },
       {
-        "progid": "P222",
-        "name": "M.F.A. (Curatorial Practices) (Self-Financed)",
-        "deptid": "D040",
-        "factid": "F009"
+        "prog_id": "P222",
+        "prog_name": "M.F.A. (Curatorial Practices) (Self-Financed)",
+        "dept_id": "D040",
+        "fact_id": "F009"
       },
       {
-        "progid": "P223",
-        "name": "M.F.A. (Art Management) (Self-Financed)",
-        "deptid": "D040",
-        "factid": "F009"
+        "prog_id": "P223",
+        "prog_name": "M.F.A. (Art Management) (Self-Financed)",
+        "dept_id": "D040",
+        "fact_id": "F009"
       },
       {
-        "progid": "P224",
-        "name": "Certificate in Art Appreciation & Art Writing (Self-Financed, Evening)",
-        "deptid": "D040",
-        "factid": "F009"
+        "prog_id": "P224",
+        "prog_name": "Certificate in Art Appreciation & Art Writing (Self-Financed, Evening)",
+        "dept_id": "D040",
+        "fact_id": "F009"
       },
       {
-        "progid": "P225",
-        "name": "Certificate in Art & Aesthetics (Self-Financed, Evening)",
-        "deptid": "D040",
-        "factid": "F009"
+        "prog_id": "P225",
+        "prog_name": "Certificate in Art & Aesthetics (Self-Financed, Evening)",
+        "dept_id": "D040",
+        "fact_id": "F009"
       },
       {
-        "progid": "P226",
-        "name": "Ph.D. (Graphic Arts)",
-        "deptid": "D041",
-        "factid": "F009"
+        "prog_id": "P226",
+        "prog_name": "Ph.D. (Graphic Arts)",
+        "dept_id": "D041",
+        "fact_id": "F009"
       },
       {
-        "progid": "P227",
-        "name": "M.F.A. (Graphic Art – Print Making)",
-        "deptid": "D041",
-        "factid": "F009"
+        "prog_id": "P227",
+        "prog_name": "M.F.A. (Graphic Art – Print Making)",
+        "dept_id": "D041",
+        "fact_id": "F009"
       },
       {
-        "progid": "P228",
-        "name": "M.F.A. (Graphic Art – Print Making) (Self-Financed, Evening)",
-        "deptid": "D041",
-        "factid": "F009"
+        "prog_id": "P228",
+        "prog_name": "M.F.A. (Graphic Art – Print Making) (Self-Financed, Evening)",
+        "dept_id": "D041",
+        "fact_id": "F009"
       },
       {
-        "progid": "P229",
-        "name": "Certificate in Graphic Art (Print Making) (Self-Financed, Evening)",
-        "deptid": "D041",
-        "factid": "F009"
+        "prog_id": "P229",
+        "prog_name": "Certificate in Graphic Art (Print Making) (Self-Financed, Evening)",
+        "dept_id": "D041",
+        "fact_id": "F009"
       },
       {
-        "progid": "P230",
-        "name": "Ph.D. (Painting)",
-        "deptid": "D042",
-        "factid": "F009"
+        "prog_id": "P230",
+        "prog_name": "Ph.D. (Painting)",
+        "dept_id": "D042",
+        "fact_id": "F009"
       },
       {
-        "progid": "P231",
-        "name": "M.F.A. (Painting)",
-        "deptid": "D042",
-        "factid": "F009"
+        "prog_id": "P231",
+        "prog_name": "M.F.A. (Painting)",
+        "dept_id": "D042",
+        "fact_id": "F009"
       },
       {
-        "progid": "P232",
-        "name": "M.F.A. (Conceptual Art Practice) (Self-Financed)",
-        "deptid": "D042",
-        "factid": "F009"
+        "prog_id": "P232",
+        "prog_name": "M.F.A. (Conceptual Art Practice) (Self-Financed)",
+        "dept_id": "D042",
+        "fact_id": "F009"
       },
       {
-        "progid": "P233",
-        "name": "B.F.A. (Painting)",
-        "deptid": "D042",
-        "factid": "F009"
+        "prog_id": "P233",
+        "prog_name": "B.F.A. (Painting)",
+        "dept_id": "D042",
+        "fact_id": "F009"
       },
       {
-        "progid": "P234",
-        "name": "Ph.D. (Sculpture)",
-        "deptid": "D043",
-        "factid": "F009"
+        "prog_id": "P234",
+        "prog_name": "Ph.D. (Sculpture)",
+        "dept_id": "D043",
+        "fact_id": "F009"
       },
       {
-        "progid": "P235",
-        "name": "M.F.A. (Sculpture)",
-        "deptid": "D043",
-        "factid": "F009"
+        "prog_id": "P235",
+        "prog_name": "M.F.A. (Sculpture)",
+        "dept_id": "D043",
+        "fact_id": "F009"
       },
       {
-        "progid": "P236",
-        "name": "M.F.A. (Sculpture) (Self-Financed, Evening)",
-        "deptid": "D043",
-        "factid": "F009"
+        "prog_id": "P236",
+        "prog_name": "M.F.A. (Sculpture) (Self-Financed, Evening)",
+        "dept_id": "D043",
+        "fact_id": "F009"
       },
       {
-        "progid": "P237",
-        "name": "B.F.A. (Sculpture)",
-        "deptid": "D043",
-        "factid": "F009"
+        "prog_id": "P237",
+        "prog_name": "B.F.A. (Sculpture)",
+        "dept_id": "D043",
+        "fact_id": "F009"
       },
       {
-        "progid": "P238",
-        "name": "Ph.D. (Dentistry)",
-        "deptid": "D044",
-        "factid": "F010"
+        "prog_id": "P238",
+        "prog_name": "Ph.D. (Dentistry)",
+        "dept_id": "D044",
+        "fact_id": "F010"
       },
       {
-        "progid": "P239",
-        "name": "B.D.S. (Bachelor of Dental Surgery)",
-        "deptid": "D044",
-        "factid": "F010"
+        "prog_id": "P239",
+        "prog_name": "B.D.S. (Bachelor of Dental Surgery)",
+        "dept_id": "D044",
+        "fact_id": "F010"
       },
       {
-        "progid": "P240",
-        "name": "Ph.D. (Tourism & Hospitality Management)",
-        "deptid": "D045",
-        "factid": "F011"
+        "prog_id": "P240",
+        "prog_name": "Ph.D. (Tourism & Hospitality Management)",
+        "dept_id": "D045",
+        "fact_id": "F011"
       },
       {
-        "progid": "P241",
-        "name": "Master of Tourism and Travel Management (MTTM)",
-        "deptid": "D045",
-        "factid": "F011"
+        "prog_id": "P241",
+        "prog_name": "Master of Tourism and Travel Management (MTTM)",
+        "dept_id": "D045",
+        "fact_id": "F011"
       },
       {
-        "progid": "P242",
-        "name": "Bachelor of Hotel Management (BHM) (Self-Financed)",
-        "deptid": "D045",
-        "factid": "F011"
+        "prog_id": "P242",
+        "prog_name": "Bachelor of Hotel Management (BHM) (Self-Financed)",
+        "dept_id": "D045",
+        "fact_id": "F011"
       },
       {
-        "progid": "P243",
-        "name": "Bachelor of Tourism and Travel Management (Self-Financed)",
-        "deptid": "D045",
-        "factid": "F011"
+        "prog_id": "P243",
+        "prog_name": "Bachelor of Tourism and Travel Management (Self-Financed)",
+        "dept_id": "D045",
+        "fact_id": "F011"
       },
       {
-        "progid": "P244",
-        "name": "B.Voc. (Food Production) (Self-Financed)",
-        "deptid": "D045",
-        "factid": "F011"
+        "prog_id": "P244",
+        "prog_name": "B.Voc. (Food Production) (Self-Financed)",
+        "dept_id": "D045",
+        "fact_id": "F011"
       },
       {
-        "progid": "P245",
-        "name": "MBA (Healthcare and Hospital Management)",
-        "deptid": "D046",
-        "factid": "F011"
+        "prog_id": "P245",
+        "prog_name": "MBA (Healthcare and Hospital Management)",
+        "dept_id": "D046",
+        "fact_id": "F011"
       },
       {
-        "progid": "P246",
-        "name": "MBA (Pharmaceutical Management) (Regular)",
-        "deptid": "D046",
-        "factid": "F011"
+        "prog_id": "P246",
+        "prog_name": "MBA (Pharmaceutical Management) (Regular)",
+        "dept_id": "D046",
+        "fact_id": "F011"
       },
       {
-        "progid": "P247",
-        "name": "MBA (Pharmaceutical Management) (Self-Financed)",
-        "deptid": "D046",
-        "factid": "F011"
+        "prog_id": "P247",
+        "prog_name": "MBA (Pharmaceutical Management) (Self-Financed)",
+        "dept_id": "D046",
+        "fact_id": "F011"
       },
       {
-        "progid": "P248",
-        "name": "MBA (Pharmaceutical Management) (Industry Sponsored)",
-        "deptid": "D046",
-        "factid": "F011"
+        "prog_id": "P248",
+        "prog_name": "MBA (Pharmaceutical Management) (Industry Sponsored)",
+        "dept_id": "D046",
+        "fact_id": "F011"
       },
       {
-        "progid": "P249",
-        "name": "Ph.D. (Management Studies)",
-        "deptid": "D047",
-        "factid": "F011"
+        "prog_id": "P249",
+        "prog_name": "Ph.D. (Management Studies)",
+        "dept_id": "D047",
+        "fact_id": "F011"
       },
       {
-        "progid": "P250",
-        "name": "MBA (Full-Time)",
-        "deptid": "D047",
-        "factid": "F011"
+        "prog_id": "P250",
+        "prog_name": "MBA (Full-Time)",
+        "dept_id": "D047",
+        "fact_id": "F011"
       },
       {
-        "progid": "P251",
-        "name": "MBA (Executive) (Self-Financed)",
-        "deptid": "D047",
-        "factid": "F011"
+        "prog_id": "P251",
+        "prog_name": "MBA (Executive) (Self-Financed)",
+        "dept_id": "D047",
+        "fact_id": "F011"
       },
       {
-        "progid": "P252",
-        "name": "MBA (International Business) (Self-Financed)",
-        "deptid": "D047",
-        "factid": "F011"
+        "prog_id": "P252",
+        "prog_name": "MBA (International Business) (Self-Financed)",
+        "dept_id": "D047",
+        "fact_id": "F011"
       },
       {
-        "progid": "P253",
-        "name": "MBA (Innovation & Entrepreneurship) (Self-Financed)",
-        "deptid": "D047",
-        "factid": "F011"
+        "prog_id": "P253",
+        "prog_name": "MBA (Innovation & Entrepreneurship) (Self-Financed)",
+        "dept_id": "D047",
+        "fact_id": "F011"
       },
       {
-        "progid": "P254",
-        "name": "Ph.D. (Mass Communication)",
-        "deptid": "D048",
-        "factid": "F012"
+        "prog_id": "P254",
+        "prog_name": "Ph.D. (Mass Communication)",
+        "dept_id": "D048",
+        "fact_id": "F012"
       },
       {
-        "progid": "P255",
-        "name": "M.A. (Mass Communication)",
-        "deptid": "D048",
-        "factid": "F012"
+        "prog_id": "P255",
+        "prog_name": "M.A. (Mass Communication)",
+        "dept_id": "D048",
+        "fact_id": "F012"
       },
       {
-        "progid": "P256",
-        "name": "M.A. (Convergent Journalism) (Self-Financed)",
-        "deptid": "D048",
-        "factid": "F012"
+        "prog_id": "P256",
+        "prog_name": "M.A. (Convergent Journalism) (Self-Financed)",
+        "dept_id": "D048",
+        "fact_id": "F012"
       },
       {
-        "progid": "P257",
-        "name": "M.A. (Development Communication) (Self-Financed)",
-        "deptid": "D048",
-        "factid": "F012"
+        "prog_id": "P257",
+        "prog_name": "M.A. (Development Communication) (Self-Financed)",
+        "dept_id": "D048",
+        "fact_id": "F012"
       },
       {
-        "progid": "P258",
-        "name": "M.A. (Visual Effects and Animation) (Self-Financed)",
-        "deptid": "D048",
-        "factid": "F012"
+        "prog_id": "P258",
+        "prog_name": "M.A. (Visual Effects and Animation) (Self-Financed)",
+        "dept_id": "D048",
+        "fact_id": "F012"
       },
       {
-        "progid": "P259",
-        "name": "P.G. Diploma in Broadcast Technology (Self-Financed)",
-        "deptid": "D048",
-        "factid": "F012"
+        "prog_id": "P259",
+        "prog_name": "P.G. Diploma in Broadcast Technology (Self-Financed)",
+        "dept_id": "D048",
+        "fact_id": "F012"
       },
       {
-        "progid": "P260",
-        "name": "P.G. Diploma in Still Photography & Visual Communication (Self-Financed)",
-        "deptid": "D048",
-        "factid": "F012"
+        "prog_id": "P260",
+        "prog_name": "P.G. Diploma in Still Photography & Visual Communication (Self-Financed)",
+        "dept_id": "D048",
+        "fact_id": "F012"
       },
       {
-        "progid": "P261",
-        "name": "P.G. Diploma in Acting (Self-Financed)",
-        "deptid": "D048",
-        "factid": "F012"
+        "prog_id": "P261",
+        "prog_name": "P.G. Diploma in Acting (Self-Financed)",
+        "dept_id": "D048",
+        "fact_id": "F012"
       },
       {
-        "progid": "P262",
-        "name": "Ph.D. (International Studies)",
-        "deptid": "D049",
-        "factid": "F012"
+        "prog_id": "P262",
+        "prog_name": "Ph.D. (International Studies)",
+        "dept_id": "D049",
+        "fact_id": "F012"
       },
       {
-        "progid": "P263",
-        "name": "M.A. (Politics: International & Area Studies)",
-        "deptid": "D049",
-        "factid": "F012"
+        "prog_id": "P263",
+        "prog_name": "M.A. (Politics: International & Area Studies)",
+        "dept_id": "D049",
+        "fact_id": "F012"
       },
       {
-        "progid": "P264",
-        "name": "Ph.D. (Physiotherapy & Rehabilitation Sciences)",
-        "deptid": "D050",
-        "factid": "F012"
+        "prog_id": "P264",
+        "prog_name": "Ph.D. (Physiotherapy & Rehabilitation Sciences)",
+        "dept_id": "D050",
+        "fact_id": "F012"
       },
       {
-        "progid": "P265",
-        "name": "M.P.T. (Sports / Orthopedics / Neurology / Cardiopulmonary) (Self-Financed)",
-        "deptid": "D050",
-        "factid": "F012"
+        "prog_id": "P265",
+        "prog_name": "M.P.T. (Sports / Orthopedics / Neurology / Cardiopulmonary) (Self-Financed)",
+        "dept_id": "D050",
+        "fact_id": "F012"
       },
       {
-        "progid": "P266",
-        "name": "B.P.T. (Bachelor of Physiotherapy)",
-        "deptid": "D050",
-        "factid": "F012"
+        "prog_id": "P266",
+        "prog_name": "B.P.T. (Bachelor of Physiotherapy)",
+        "dept_id": "D050",
+        "fact_id": "F012"
       },
       {
-        "progid": "P267",
-        "name": "B.Voc. (Medical Laboratory Sciences) (Self-Financed)",
-        "deptid": "D051",
-        "factid": "F012"
+        "prog_id": "P267",
+        "prog_name": "B.Voc. (Medical Laboratory Sciences) (Self-Financed)",
+        "dept_id": "D051",
+        "fact_id": "F012"
       },
       {
-        "progid": "P268",
-        "name": "B.Voc. (Medical Electrophysiology) (Self-Financed)",
-        "deptid": "D051",
-        "factid": "F012"
+        "prog_id": "P268",
+        "prog_name": "B.Voc. (Medical Electrophysiology) (Self-Financed)",
+        "dept_id": "D051",
+        "fact_id": "F012"
       },
       {
-        "progid": "P269",
-        "name": "Ph.D. (Interdisciplinary Research in Basic Sciences)",
-        "deptid": "D052",
-        "factid": "F012"
+        "prog_id": "P269",
+        "prog_name": "Ph.D. (Interdisciplinary Research in Basic Sciences)",
+        "dept_id": "D052",
+        "fact_id": "F012"
       },
       {
-        "progid": "P270",
-        "name": "B.Sc. (Life Sciences with Computer Applications)",
-        "deptid": "D052",
-        "factid": "F012"
+        "prog_id": "P270",
+        "prog_name": "B.Sc. (Life Sciences with Computer Applications)",
+        "dept_id": "D052",
+        "fact_id": "F012"
       },
       {
-        "progid": "P271",
-        "name": "M.Sc. (Biophysics)",
-        "deptid": "D052",
-        "factid": "F012"
+        "prog_id": "P271",
+        "prog_name": "M.Sc. (Biophysics)",
+        "dept_id": "D052",
+        "fact_id": "F012"
       },
       {
-        "progid": "P272",
-        "name": "Ph.D. (Peace and Conflict Resolution)",
-        "deptid": "D053",
-        "factid": "F012"
+        "prog_id": "P272",
+        "prog_name": "Ph.D. (Peace and Conflict Resolution)",
+        "dept_id": "D053",
+        "fact_id": "F012"
       },
       {
-        "progid": "P273",
-        "name": "M.A. (Conflict Analysis and Peace Building)",
-        "deptid": "D053",
-        "factid": "F012"
+        "prog_id": "P273",
+        "prog_name": "M.A. (Conflict Analysis and Peace Building)",
+        "dept_id": "D053",
+        "fact_id": "F012"
       },
       {
-        "progid": "P274",
-        "name": "Ph.D. (Comparative Religions & Civilizations)",
-        "deptid": "D054",
-        "factid": "F012"
+        "prog_id": "P274",
+        "prog_name": "Ph.D. (Comparative Religions & Civilizations)",
+        "dept_id": "D054",
+        "fact_id": "F012"
       },
       {
-        "progid": "P275",
-        "name": "M.A. (Comparative Religions and Civilizations)",
-        "deptid": "D054",
-        "factid": "F012"
+        "prog_id": "P275",
+        "prog_name": "M.A. (Comparative Religions and Civilizations)",
+        "dept_id": "D054",
+        "fact_id": "F012"
       },
       {
-        "progid": "P276",
-        "name": "Ph.D. (Dalit & Minorities Studies)",
-        "deptid": "D055",
-        "factid": "F012"
+        "prog_id": "P276",
+        "prog_name": "Ph.D. (Dalit & Minorities Studies)",
+        "dept_id": "D055",
+        "fact_id": "F012"
       },
       {
-        "progid": "P277",
-        "name": "Ph.D. (Social Exclusion and Inclusive Policy)",
-        "deptid": "D056",
-        "factid": "F012"
+        "prog_id": "P277",
+        "prog_name": "Ph.D. (Social Exclusion and Inclusive Policy)",
+        "dept_id": "D056",
+        "fact_id": "F012"
       },
       {
-        "progid": "P278",
-        "name": "M.A. (Social Exclusion and Inclusive Policy)",
-        "deptid": "D056",
-        "factid": "F012"
+        "prog_id": "P278",
+        "prog_name": "M.A. (Social Exclusion and Inclusive Policy)",
+        "dept_id": "D056",
+        "fact_id": "F012"
       },
       {
-        "progid": "P279",
-        "name": "Ph.D. (West Asian Studies)",
-        "deptid": "D057",
-        "factid": "F012"
+        "prog_id": "P279",
+        "prog_name": "Ph.D. (West Asian Studies)",
+        "dept_id": "D057",
+        "fact_id": "F012"
       },
       {
-        "progid": "P280",
-        "name": "M.A. (International Relations–West Asian Studies)",
-        "deptid": "D057",
-        "factid": "F012"
+        "prog_id": "P280",
+        "prog_name": "M.A. (International Relations–West Asian Studies)",
+        "dept_id": "D057",
+        "fact_id": "F012"
       },
       {
-        "progid": "P281",
-        "name": "Ph.D. (Jawaharlal Nehru Studies)",
-        "deptid": "D058",
-        "factid": "F012"
+        "prog_id": "P281",
+        "prog_name": "Ph.D. (Jawaharlal Nehru Studies)",
+        "dept_id": "D058",
+        "fact_id": "F012"
       },
       {
-        "progid": "P282",
-        "name": "Ph.D. (Culture, Media & Governance)",
-        "deptid": "D059",
-        "factid": "F012"
+        "prog_id": "P282",
+        "prog_name": "Ph.D. (Culture, Media & Governance)",
+        "dept_id": "D059",
+        "fact_id": "F012"
       },
       {
-        "progid": "P283",
-        "name": "M.A. (Media Governance)",
-        "deptid": "D059",
-        "factid": "F012"
+        "prog_id": "P283",
+        "prog_name": "M.A. (Media Governance)",
+        "dept_id": "D059",
+        "fact_id": "F012"
       },
       {
-        "progid": "P284",
-        "name": "Ph.D. (India-Arab Cultural Studies)",
-        "deptid": "D060",
-        "factid": "F012"
+        "prog_id": "P284",
+        "prog_name": "Ph.D. (India-Arab Cultural Studies)",
+        "dept_id": "D060",
+        "fact_id": "F012"
       },
       {
-        "progid": "P285",
-        "name": "M.A. (International Studies – Arab Islamic Culture)",
-        "deptid": "D060",
-        "factid": "F012"
+        "prog_id": "P285",
+        "prog_name": "M.A. (International Studies – Arab Islamic Culture)",
+        "dept_id": "D060",
+        "fact_id": "F012"
       },
       {
-        "progid": "P286",
-        "name": "Ph.D. (Information Technology – FTK-CIT)",
-        "deptid": "D061",
-        "factid": "F012"
+        "prog_id": "P286",
+        "prog_name": "Ph.D. (Information Technology – FTK-CIT)",
+        "dept_id": "D061",
+        "fact_id": "F012"
       },
       {
-        "progid": "P287",
-        "name": "Ph.D. (Theoretical Physics)",
-        "deptid": "D062",
-        "factid": "F012"
+        "prog_id": "P287",
+        "prog_name": "Ph.D. (Theoretical Physics)",
+        "dept_id": "D062",
+        "fact_id": "F012"
       },
       {
-        "progid": "P288",
-        "name": "Ph.D. (Nanoscience & Nanotechnology)",
-        "deptid": "D063",
-        "factid": "F012"
+        "prog_id": "P288",
+        "prog_name": "Ph.D. (Nanoscience & Nanotechnology)",
+        "dept_id": "D063",
+        "fact_id": "F012"
       },
       {
-        "progid": "P289",
-        "name": "M.Tech. (Nanotechnology) (Self-Financed)",
-        "deptid": "D063",
-        "factid": "F012"
+        "prog_id": "P289",
+        "prog_name": "M.Tech. (Nanotechnology) (Self-Financed)",
+        "dept_id": "D063",
+        "fact_id": "F012"
       },
       {
-        "progid": "P290",
-        "name": "Ph.D. (Women's Studies)",
-        "deptid": "D064",
-        "factid": "F012"
+        "prog_id": "P290",
+        "prog_name": "Ph.D. (Women's Studies)",
+        "dept_id": "D064",
+        "fact_id": "F012"
       },
       {
-        "progid": "P291",
-        "name": "M.A. (Gender Studies)",
-        "deptid": "D064",
-        "factid": "F012"
+        "prog_id": "P291",
+        "prog_name": "M.A. (Gender Studies)",
+        "dept_id": "D064",
+        "fact_id": "F012"
       },
       {
-        "progid": "P292",
-        "name": "Ph.D. (North East Studies and Policy Research)",
-        "deptid": "D065",
-        "factid": "F012"
+        "prog_id": "P292",
+        "prog_name": "Ph.D. (North East Studies and Policy Research)",
+        "dept_id": "D065",
+        "fact_id": "F012"
       },
       {
-        "progid": "P293",
-        "name": "Ph.D. (Multidisciplinary Research and Studies)",
-        "deptid": "D066",
-        "factid": "F012"
+        "prog_id": "P293",
+        "prog_name": "Ph.D. (Multidisciplinary Research and Studies)",
+        "dept_id": "D066",
+        "fact_id": "F012"
       },
       {
-        "progid": "P294",
-        "name": "M.Sc. (Virology) (Self-Financed)",
-        "deptid": "D066",
-        "factid": "F012"
+        "prog_id": "P294",
+        "prog_name": "M.Sc. (Virology) (Self-Financed)",
+        "dept_id": "D066",
+        "fact_id": "F012"
       },
       {
-        "progid": "P295",
-        "name": "P.G. Diploma in Molecular Diagnostics (Self-Financed)",
-        "deptid": "D066",
-        "factid": "F012"
+        "prog_id": "P295",
+        "prog_name": "P.G. Diploma in Molecular Diagnostics (Self-Financed)",
+        "dept_id": "D066",
+        "fact_id": "F012"
       },
       {
-        "progid": "P296",
-        "name": "P.G. Diploma in Entrepreneurship, Innovation & Design Thinking (Self-Financed)",
-        "deptid": "D067",
-        "factid": "F012"
+        "prog_id": "P296",
+        "prog_name": "P.G. Diploma in Entrepreneurship, Innovation & Design Thinking (Self-Financed)",
+        "dept_id": "D067",
+        "fact_id": "F012"
       },
       {
-        "progid": "P297",
-        "name": "M.Sc. (Mathematics Education) – Meta University Program (Jointly with University of Delhi)",
-        "deptid": "D068",
-        "factid": "F013"
+        "prog_id": "P297",
+        "prog_name": "M.Sc. (Mathematics Education) – Meta University Program (Jointly with University of Delhi)",
+        "dept_id": "D068",
+        "fact_id": "F013"
       }
   ]
   

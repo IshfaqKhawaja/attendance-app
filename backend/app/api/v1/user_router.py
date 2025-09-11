@@ -4,7 +4,7 @@ from app.db.crud.user import (
     display_user_by_id
 )
 
-from app.db.models.user_model import AddUser, DisplayUser
+from app.db.models.user_model import DisplayUser, UserIn
 
 
 email_otp_pairs = {}
@@ -16,7 +16,7 @@ router = APIRouter(
 
 
 @router.post("/add", response_model=dict, summary="Add a User")
-def add_user(user: AddUser):
+def add_user(user: UserIn):
     result = add_user_to_db(user)
     if not result["success"]:
         raise HTTPException(status_code=400, detail=result["message"])

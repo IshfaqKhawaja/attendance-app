@@ -1,6 +1,6 @@
 import subprocess
 import time
-import psycopg2
+import psycopg2 # type: ignore
 import json
 import os
 
@@ -41,8 +41,8 @@ def get_table_statements():
         # Extract the statements list from models.py
         import importlib.util
         spec = importlib.util.spec_from_file_location("models", os.path.join(os.path.dirname(__file__), "db/models.py"))
-        models = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(models)
+        models = importlib.util.module_from_spec(spec) # type: ignore
+        spec.loader.exec_module(models) # type: ignore
         return models.statements
 
 def create_tables(conn):
@@ -86,8 +86,8 @@ if __name__ == "__main__":
     run_docker()
     conn = connect_db()
     create_tables(conn)
-    insert_json(conn, "json_data/faculty_data.json", "faculty", ["factid", "name"])
-    insert_json(conn, "json_data/departments.json", "department", ["deptid", "name", "factid"])
-    insert_json(conn, "json_data/programs.json", "program", ["progid", "name", "deptid", "factid"])
+    insert_json(conn, "json_data/faculty_data.json", "faculty", ["fact_id", "fact_name"])
+    insert_json(conn, "json_data/departments.json", "department", ["dept_id", "dept_name", "fact_id"])
+    insert_json(conn, "json_data/programs.json", "program", ["prog_id", "prog_name", "dept_id"])
     conn.close()
     print("Setup complete.")

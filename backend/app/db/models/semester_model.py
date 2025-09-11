@@ -5,8 +5,8 @@ from datetime import date
 from typing import List, Optional
 
 class SemesterCreate(BaseModel):
-    semid: str
-    name: str
+    sem_id: str
+    sem_name: str
     start_date: date
     end_date: date
     prog_id: str
@@ -22,8 +22,6 @@ class SemesterDetailResponse(BaseModel):
     start_date: Optional[date] = None
     end_date: Optional[date] = None
     prog_id: Optional[str] = None
-    dept_id: Optional[str] = None
-    fact_id: Optional[str] = None
     message: Optional[str] = None
 class SemesterListItem(BaseModel):
     sem_id: str

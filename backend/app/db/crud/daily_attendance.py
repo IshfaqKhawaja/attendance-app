@@ -15,15 +15,15 @@ def fetch_daily_attendance(att_date: date) -> List[DailyAttendance]:
     with conn.cursor() as cur:
         cur.execute("""
             SELECT
-              a.studentid,
-              s.name,
-              s.phonenumber,
+              a.student_id,
+              s.student_name,
+              s.phone_number,
               COUNT(*) FILTER (WHERE a.present)     AS present_count,
               COUNT(*)                              AS total_count
             FROM attendance a
-            JOIN students s USING(studentid)
+            JOIN students s USING(student_id)
             WHERE a.date = %s
-            GROUP BY a.studentid, s.name, s.phonenumber
+            GROUP BY a.student_id, s.student_name, s.phone_number
         """, (att_date,))
         rows = cur.fetchall()
 
@@ -31,9 +31,9 @@ def fetch_daily_attendance(att_date: date) -> List[DailyAttendance]:
     for sid, name, phone, pres, tot in rows:
         pct = (pres / tot * 100) if tot else 0.0
         results.append(DailyAttendance(
-            studentid=sid,
-            name=name,
-            phonenumber=phone,
+            student_id=sid,
+            student_name=name,
+            phone_number=phone,
             present_count=pres,
             total_count=tot,
             percentage=round(pct, 2),

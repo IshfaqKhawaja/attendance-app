@@ -14,6 +14,7 @@ from app.api.v1.course_students_router import router as course_student_router
 from app.api.v1.attendance_notifier_router import router as attendance_notifier_router
 from app.api.v1.user_router import router as user_router
 from app.api.v1.report_router import router as report_router
+from app.api.v1.student_enrolement_router import router as student_enrolement_router
 # from app.core.security import get_current_user
 # Add CORS Middleware:
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
@@ -70,3 +71,5 @@ app.include_router(attendance_notifier_router)
 app.include_router(user_router)
 # Report Router:
 app.include_router(report_router)
+# Student Enrolement Router:
+app.include_router(student_enrolement_router)

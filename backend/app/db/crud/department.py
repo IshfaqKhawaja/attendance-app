@@ -14,8 +14,8 @@ def add_department_to_db(dept: DepartmentCreate) -> DepartmentCreateResponse:
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO department (deptid, name, factid) VALUES (%s, %s, %s)",
-                (dept.deptid, dept.name, dept.fact_id),
+                "INSERT INTO department (dept_id, dept_name, fact_id) VALUES (%s, %s, %s)",
+                (dept.dept_id, dept.dept_name, dept.fact_id),
             )
         conn.commit()
         return DepartmentCreateResponse(success=True, message="Department added to DB")
@@ -30,7 +30,7 @@ def display_department_by_id(deptid: str) -> DepartmentDetailResponse:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT deptid, name, factid FROM department WHERE deptid = %s",
+            "SELECT dept_id, dept_name, fact_id FROM department WHERE dept_id = %s",
             (deptid,)
         )
         row = cur.fetchone()
@@ -46,7 +46,7 @@ def display_department_by_id(deptid: str) -> DepartmentDetailResponse:
 def display_all_departments() -> List[DepartmentListItem]:
     conn = connection_to_db()
     with conn.cursor() as cur:
-        cur.execute("SELECT deptid, name, factid FROM department")
+        cur.execute("SELECT dept_id, dept_name, fact_id FROM department")
         rows = cur.fetchall()
     return [
         DepartmentListItem(dept_id=r[0], dept_name=r[1], fact_id=r[2])
@@ -62,11 +62,11 @@ def add_departments_bulk(payload: BulkDepartmentCreate) -> BulkDepartmentCreateR
             for dept in payload.departments:
                 cur.execute(
                     """
-                    INSERT INTO department (deptid, name, factid)
+                    INSERT INTO department (dept_id, dept_name, fact_id)
                     VALUES (%s, %s, %s)
-                    ON CONFLICT (deptid) DO NOTHING
+                    ON CONFLICT (dept_id) DO NOTHING
                     """,
-                    (dept.deptid, dept.name, dept.fact_id)
+                    (dept.dept_id, dept.dept_name, dept.fact_id)
                 )
                 if cur.rowcount:
                     inserted += 1

@@ -1,9 +1,7 @@
 from pydantic import BaseModel
 
 class DepartmentCreate(BaseModel):
-    deptid: str
-    name: str
-    factid: str
-
-class DepartmentDetail(DepartmentCreate):
-    pass
+    __tablename__ = "department"
+    dept_id: str
+    dept_name: str
+    fact_id: str

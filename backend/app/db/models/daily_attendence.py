@@ -4,9 +4,9 @@ from datetime import date
 from typing import List
 
 class DailyAttendance(BaseModel):
-    studentid: str
-    name: str
-    phonenumber: int
+    student_id: str
+    student_name: str
+    phone_number: int
     present_count: int
     total_count: int
     percentage: float

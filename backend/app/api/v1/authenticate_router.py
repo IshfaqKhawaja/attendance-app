@@ -4,6 +4,8 @@ from app.db.crud.authenticate import (
     check_if_teacher_exists,
 )
 from app.core.mail import send_mail
+from app.schemas.teacher import TeacherCreate
+from app.schemas.teacher_course import TeacherCourseCreate
 from app.utils.otp_verifier import *
 from app.db.crud.teacher import add_teacher_to_db
 from app.db.crud.user import (
@@ -46,7 +48,7 @@ def verify_otp(
     refresh_token = create_refresh_token(email_id) 
     
     # Check if user exists in users table
-    user_check = check_if_user_exists(email_id=email_id)
+    user_check = check_if_user_exists(user_id=email_id)
     if user_check["success"]:
         print(user_check)
         return {
@@ -68,25 +70,19 @@ def verify_otp(
 
 @router.post("/register_teacher", response_model=dict, summary="Add a User")
 def register_teacher(
-    teacher_id : str = Body(..., embed=True,description="Teacher ID"),
-    teacher_name : str = Body(...,embed=True, description="Teacher Name"),
-    type : str = Body(..., embed=True, description="Type of Teacher"),
-    dept_id : str = Body(...,embed = True, description="Dept to which teacher belongs to") 
+    teacher : TeacherCreate
 ) -> dict:
     data = add_teacher_to_db(
-                teacher_id=teacher_id,
-                name=teacher_name,
-                dept_id=dept_id,
-                type=type,
-            )
+        teacher=teacher
+    )
     if data["success"]:
         return {
             "success" : True,
             "message": "Teacher added",
-            "teacher_id": teacher_id,
-            "name" : teacher_name,
-            "type" : type,
-            "dept_id": dept_id, 
+            "teacher_id": data.get("teacher_id", ""),
+            "name" : data.get("teacher_name", ""),
+            "type" : data.get("type", ""),
+            "dept_id": data.get("dept_id", ""),
         }
     return {
         "success": False,

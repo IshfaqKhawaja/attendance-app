@@ -4,7 +4,7 @@ from app.db.crud.teacher import (
     display_teacher_by_id,
 )
 from app.db.models.teacher_model import (
-    AddTeacherRequest,
+    TeacherCreate,
     DisplayTeacherRequest,
 )
 
@@ -16,15 +16,12 @@ router = APIRouter(
 
 
 @router.post("/add", response_model=dict, summary="Insert a new Teacher")
-def add_teacher(request: AddTeacherRequest) -> dict:
+def add_teacher(teacher: TeacherCreate) -> dict:
     """
     Add a new teacher to the database.
     """
     return add_teacher_to_db(
-        teacher_id=request.teacher_id,
-        name=request.teacher_name,
-        type=request.type,
-        dept_id=request.dept_id,
+        teacher=teacher
     )
 
 

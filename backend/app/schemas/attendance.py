@@ -1,15 +1,9 @@
-from pydantic import BaseModel
-from datetime import date
+from sqlalchemy import Column, String, Date, Boolean, ForeignKey
+from app.db.base import Base
 
-class AttendanceCreate(BaseModel):
-    attendanceid: str
-    studentid: str
-    courseid: str
-    date: date
-    present: bool = False
-    semid: str
-    deptid: str
-    progid: str
-
-class AttendanceDetail(AttendanceCreate):
-    pass
+class Attendance(Base):
+    __tablename__ = "attendance"
+    student_id = Column(String(255), ForeignKey("students.student_id", ondelete="CASCADE"), primary_key=True)
+    course_id = Column(String(255), ForeignKey("course.course_id", ondelete="CASCADE"), primary_key=True)
+    date = Column(Date, primary_key=True)
+    present = Column(Boolean, nullable=False, default=False)

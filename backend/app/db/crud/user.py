@@ -1,12 +1,12 @@
 from app.db.connection import connection_to_db
-from app.db.models.user_model import AddUser, DisplayUser
+from app.db.models.user_model import UserModelIn
 
-def add_user_to_db(user: AddUser) -> dict:
+def add_user_to_db(user: UserModelIn) -> dict:
     conn = connection_to_db()
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO users (userid, name , type, deptid, factid) VALUES (%s, %s, %s, %s, %s)",
+                "INSERT INTO users (user_id, user_name, type, dept_id, fact_id) VALUES (%s, %s, %s, %s, %s)",
                 (user.user_id, user.user_name, user.type, user.dept_id, user.fact_id)
             )
         conn.commit()
@@ -23,7 +23,7 @@ def add_user_to_db(user: AddUser) -> dict:
         }
         
         
-def check_if_user_exists(email_id: str) -> dict:
+def check_if_user_exists(user_id: str) -> dict:
     """
     Returns a dict of all columns for the user with given email_id (userid),
     or None if no such user is found.
@@ -31,8 +31,8 @@ def check_if_user_exists(email_id: str) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT * FROM users WHERE userid = %s",
-            (email_id,)
+            "SELECT * FROM users WHERE user_id = %s",
+            (user_id,)
         )
         row = cur.fetchone()
     if row:
@@ -57,7 +57,7 @@ def display_user_by_id(user_id: str) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT * FROM users WHERE userid = %s",
+            "SELECT * FROM users WHERE user_id = %s",
             (user_id,)
         )
         row = cur.fetchone()
@@ -67,7 +67,9 @@ def display_user_by_id(user_id: str) -> dict:
             "user_id": row[0],
             "user_name": row[1],
             "type": row[2],
-            }
+            "dept_id": row[3],
+            "fact_id": row[4]
+        }
     else:
         return {
             "success" : False,
@@ -78,7 +80,7 @@ def delete_user_by_user_id(user_id: str):
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "DELETE FROM users WHERE userid = %s",
+            "DELETE FROM users WHERE user_id = %s",
             (user_id,)
         )
         row = cur.fetchone()

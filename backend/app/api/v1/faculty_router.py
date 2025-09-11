@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body # type: ignore
 from fastapi.encoders import jsonable_encoder
 from app.db.crud.faculty import *
-from app.schemas.faculty import (
+from app.db.models.faculty_model import (
     FacultyCreate,
     BulkFacultyCreate, BulkFacultyCreateResponse
 )

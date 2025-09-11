@@ -1,129 +1,407 @@
 [
-    {
-        "deptid":"D000",
-        "name":"Multidisciplinary",
-        "factid":"F001"
-
-    },
-    {
-      "deptid": "D001",
-      "name": "Department of Arabic",
-      "factid": "F001"
-    },
-    {
-      "deptid": "D002",
-      "name": "Department of English",
-      "factid": "F001"
-    },
-    {
-      "deptid": "D003",
-      "name": "Department of Hindi",
-      "factid": "F001"
-    },
-    {
-      "deptid": "D004",
-      "name": "Department of History & Culture",
-      "factid": "F001"
-    },
-    {
-      "deptid": "D005",
-      "name": "Department of Islamic Studies",
-      "factid": "F001"
-    },
-    {
-      "deptid": "D006",
-      "name": "Department of Persian",
-      "factid": "F001"
-    },
-    {
-      "deptid": "D007",
-      "name": "Department of Urdu",
-      "factid": "F001"
-    },
-    {
-      "deptid": "D008",
-      "name": "Department of Sanskrit",
-      "factid": "F001"
-    },
-    {
-      "deptid": "D009",
-      "name": "Department of Foreign Languages",
-      "factid": "F001"
-    },
-    { "deptid": "D0100", "name": "Multidisciplinary", "factid": "F002" },
-    { "deptid": "D010", "name": "Department of Economics", "factid": "F002" },
-    { "deptid": "D011", "name": "Department of Social Work", "factid": "F002" },
-    { "deptid": "D012", "name": "Department of Sociology", "factid": "F002" },
-    { "deptid": "D013", "name": "Department of Political Science", "factid": "F002" },
-    { "deptid": "D014", "name": "Department of Psychology", "factid": "F002" },
-    { "deptid": "D015", "name": "Department of Adult and Continuing Education & Extension", "factid": "F002" },
-    { "deptid": "D016", "name": "Department of Commerce & Business Studies", "factid": "F002" },
-    { "deptid": "D0170", "name": "Multidisciplinary", "factid": "F003" },
-    { "deptid": "D017", "name": "Department of Chemistry", "factid": "F003" },
-    { "deptid": "D018", "name": "Department of Computer Science", "factid": "F003" },
-    { "deptid": "D019", "name": "Department of Geography", "factid": "F003" },
-    { "deptid": "D020", "name": "Department of Mathematics", "factid": "F003" },
-    { "deptid": "D021", "name": "Department of Physics", "factid": "F003" },
-    { "deptid": "D0220", "name": "Multidisciplinary", "factid": "F004" },
-    { "deptid": "D022", "name": "Department of Biosciences", "factid": "F004" },
-    { "deptid": "D023", "name": "Department of Biotechnology", "factid": "F004" },
-    { "deptid": "D0240", "name": "Multidisciplinary", "factid": "F005" },
-    { "deptid": "D024", "name": "Department of Educational Studies", "factid": "F005" },
-    { "deptid": "D025", "name": "Department of Teacher's Training and Non-formal Education (IASE)", "factid": "F005" },
-    { "deptid": "D0260", "name": "Multidisciplinary", "factid": "F006" },
-    { "deptid": "D026", "name": "Department of Applied Sciences & Humanities", "factid": "F006" },
-    { "deptid": "D027", "name": "Department of Civil Engineering", "factid": "F006" },
-    { "deptid": "D028", "name": "Department of Computer Engineering", "factid": "F006" },
-    { "deptid": "D029", "name": "Department of Electrical Engineering", "factid": "F006" },
-    { "deptid": "D030", "name": "Department of Electronics & Communication Engineering", "factid": "F006" },
-    { "deptid": "D031", "name": "Department of Mechanical Engineering", "factid": "F006" },
-    { "deptid": "D032", "name": "Department of Environmental Science", "factid": "F006" },
-    { "deptid": "D033", "name": "University Polytechnic", "factid": "F006" },
-    { "deptid": "D0340", "name": "Multidisciplinary", "factid": "F007" },
-    { "deptid": "D034", "name": "Faculty of Law", "factid": "F007" },
-    { "deptid": "D0350", "name": "Multidisciplinary", "factid": "F008" },
-    { "deptid": "D035", "name": "Department of Architecture", "factid": "F008" },
-    { "deptid": "D036", "name": "Department of Planning", "factid": "F008" },
-    { "deptid": "D037", "name": "Department of Design and Innovation", "factid": "F008" },
-    { "deptid": "D0380", "name": "Multidisciplinary", "factid": "F009" },
-    { "deptid": "D038", "name": "Department of Applied Art", "factid": "F009" },
-    { "deptid": "D039", "name": "Department of Art Education", "factid": "F009" },
-    { "deptid": "D040", "name": "Department of Art History & Art Appreciation", "factid": "F009" },
-    { "deptid": "D041", "name": "Department of Graphic Arts", "factid": "F009" },
-    { "deptid": "D042", "name": "Department of Painting", "factid": "F009" },
-    { "deptid": "D043", "name": "Department of Sculpture", "factid": "F009" },
-    { "deptid": "D0440", "name": "Multidisciplinary", "factid": "F010" },
-    { "deptid": "D044", "name": "Faculty of Dentistry", "factid": "F010" },
-    { "deptid": "D0450", "name": "Multidisciplinary", "factid": "F011" },
-    { "deptid": "D045", "name": "Department of Tourism & Hospitality Management", "factid": "F011" },
-    { "deptid": "D046", "name": "Department of Hospital Management and Hospice Studies", "factid": "F011" },
-    { "deptid": "D047", "name": "Department of Management Studies", "factid": "F011" },
-    { "deptid": "D0480", "name": "Multidisciplinary", "factid": "F012" },
-    { "deptid": "D048", "name": "AJK Mass Communication Research Centre", "factid": "F012" },
-    { "deptid": "D049", "name": "MM Ali Jauhar Academy of International Studies", "factid": "F012" },
-    { "deptid": "D050", "name": "Centre for Physiotherapy & Rehabilitation Sciences", "factid": "F012" },
-    { "deptid": "D051", "name": "Deen Dayal Upadhyay Kaushal Kendra", "factid": "F012" },
-    { "deptid": "D052", "name": "Centre for Interdisciplinary Research in Basic Sciences", "factid": "F012" },
-    { "deptid": "D053", "name": "Nelson Mandela Centre for Peace and Conflict Resolution", "factid": "F012" },
-    { "deptid": "D054", "name": "Centre for Comparative Religions & Civilizations", "factid": "F012" },
-    { "deptid": "D055", "name": "Dr. K. R. Narayanan Centre for Dalit & Minorities Studies", "factid": "F012" },
-    { "deptid": "D056", "name": "Centre for the Study of Social Inclusion", "factid": "F012" },
-    { "deptid": "D057", "name": "Centre for West Asian Studies", "factid": "F012" },
-    { "deptid": "D058", "name": "Centre for Jawaharlal Nehru Studies", "factid": "F012" },
-    { "deptid": "D059", "name": "Centre for Culture, Media & Governance", "factid": "F012" },
-    { "deptid": "D060", "name": "India-Arab Cultural Centre", "factid": "F012" },
-    { "deptid": "D061", "name": "FTK Centre For Information Technology", "factid": "F012" },
-    { "deptid": "D062", "name": "Centre for Theoretical Physics", "factid": "F012" },
-    { "deptid": "D063", "name": "Centre for Nanoscience & Nanotechnology", "factid": "F012" },
-    { "deptid": "D064", "name": "Sarojini Naidu Centre For Women’s Studies", "factid": "F012" },
-    { "deptid": "D065", "name": "Centre for North East Studies and Policy Research", "factid": "F012" },
-    { "deptid": "D066", "name": "Multidisciplinary Centre for Advanced Research and Studies", "factid": "F012" },
-    { "deptid": "D067", "name": "Centre for Innovation and Entrepreneurship", "factid": "F012" },
-    { "deptid": "D06800", "name": "Multidisciplinary", "factid": "F013" },
-    {
-        "deptid": "D068",
-        "name": "M.Sc. (Mathematics Education) – in collaboration with University of Delhi",
-        "factid": "F013"
-      }
-  ]
-  
+  {
+    "dept_id": "D000",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F001"
+  },
+  {
+    "dept_id": "D001",
+    "dept_name": "Department of Arabic",
+    "fact_id": "F001"
+  },
+  {
+    "dept_id": "D002",
+    "dept_name": "Department of English",
+    "fact_id": "F001"
+  },
+  {
+    "dept_id": "D003",
+    "dept_name": "Department of Hindi",
+    "fact_id": "F001"
+  },
+  {
+    "dept_id": "D004",
+    "dept_name": "Department of History & Culture",
+    "fact_id": "F001"
+  },
+  {
+    "dept_id": "D005",
+    "dept_name": "Department of Islamic Studies",
+    "fact_id": "F001"
+  },
+  {
+    "dept_id": "D006",
+    "dept_name": "Department of Persian",
+    "fact_id": "F001"
+  },
+  {
+    "dept_id": "D007",
+    "dept_name": "Department of Urdu",
+    "fact_id": "F001"
+  },
+  {
+    "dept_id": "D008",
+    "dept_name": "Department of Sanskrit",
+    "fact_id": "F001"
+  },
+  {
+    "dept_id": "D009",
+    "dept_name": "Department of Foreign Languages",
+    "fact_id": "F001"
+  },
+  {
+    "dept_id": "D0100",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F002"
+  },
+  {
+    "dept_id": "D010",
+    "dept_name": "Department of Economics",
+    "fact_id": "F002"
+  },
+  {
+    "dept_id": "D011",
+    "dept_name": "Department of Social Work",
+    "fact_id": "F002"
+  },
+  {
+    "dept_id": "D012",
+    "dept_name": "Department of Sociology",
+    "fact_id": "F002"
+  },
+  {
+    "dept_id": "D013",
+    "dept_name": "Department of Political Science",
+    "fact_id": "F002"
+  },
+  {
+    "dept_id": "D014",
+    "dept_name": "Department of Psychology",
+    "fact_id": "F002"
+  },
+  {
+    "dept_id": "D015",
+    "dept_name": "Department of Adult and Continuing Education & Extension",
+    "fact_id": "F002"
+  },
+  {
+    "dept_id": "D016",
+    "dept_name": "Department of Commerce & Business Studies",
+    "fact_id": "F002"
+  },
+  {
+    "dept_id": "D0170",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F003"
+  },
+  {
+    "dept_id": "D017",
+    "dept_name": "Department of Chemistry",
+    "fact_id": "F003"
+  },
+  {
+    "dept_id": "D018",
+    "dept_name": "Department of Computer Science",
+    "fact_id": "F003"
+  },
+  {
+    "dept_id": "D019",
+    "dept_name": "Department of Geography",
+    "fact_id": "F003"
+  },
+  {
+    "dept_id": "D020",
+    "dept_name": "Department of Mathematics",
+    "fact_id": "F003"
+  },
+  {
+    "dept_id": "D021",
+    "dept_name": "Department of Physics",
+    "fact_id": "F003"
+  },
+  {
+    "dept_id": "D0220",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F004"
+  },
+  {
+    "dept_id": "D022",
+    "dept_name": "Department of Biosciences",
+    "fact_id": "F004"
+  },
+  {
+    "dept_id": "D023",
+    "dept_name": "Department of Biotechnology",
+    "fact_id": "F004"
+  },
+  {
+    "dept_id": "D0240",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F005"
+  },
+  {
+    "dept_id": "D024",
+    "dept_name": "Department of Educational Studies",
+    "fact_id": "F005"
+  },
+  {
+    "dept_id": "D025",
+    "dept_name": "Department of Teacher's Training and Non-formal Education (IASE)",
+    "fact_id": "F005"
+  },
+  {
+    "dept_id": "D0260",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F006"
+  },
+  {
+    "dept_id": "D026",
+    "dept_name": "Department of Applied Sciences & Humanities",
+    "fact_id": "F006"
+  },
+  {
+    "dept_id": "D027",
+    "dept_name": "Department of Civil Engineering",
+    "fact_id": "F006"
+  },
+  {
+    "dept_id": "D028",
+    "dept_name": "Department of Computer Engineering",
+    "fact_id": "F006"
+  },
+  {
+    "dept_id": "D029",
+    "dept_name": "Department of Electrical Engineering",
+    "fact_id": "F006"
+  },
+  {
+    "dept_id": "D030",
+    "dept_name": "Department of Electronics & Communication Engineering",
+    "fact_id": "F006"
+  },
+  {
+    "dept_id": "D031",
+    "dept_name": "Department of Mechanical Engineering",
+    "fact_id": "F006"
+  },
+  {
+    "dept_id": "D032",
+    "dept_name": "Department of Environmental Science",
+    "fact_id": "F006"
+  },
+  {
+    "dept_id": "D033",
+    "dept_name": "University Polytechnic",
+    "fact_id": "F006"
+  },
+  {
+    "dept_id": "D0340",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F007"
+  },
+  {
+    "dept_id": "D034",
+    "dept_name": "Faculty of Law",
+    "fact_id": "F007"
+  },
+  {
+    "dept_id": "D0350",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F008"
+  },
+  {
+    "dept_id": "D035",
+    "dept_name": "Department of Architecture",
+    "fact_id": "F008"
+  },
+  {
+    "dept_id": "D036",
+    "dept_name": "Department of Planning",
+    "fact_id": "F008"
+  },
+  {
+    "dept_id": "D037",
+    "dept_name": "Department of Design and Innovation",
+    "fact_id": "F008"
+  },
+  {
+    "dept_id": "D0380",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F009"
+  },
+  {
+    "dept_id": "D038",
+    "dept_name": "Department of Applied Art",
+    "fact_id": "F009"
+  },
+  {
+    "dept_id": "D039",
+    "dept_name": "Department of Art Education",
+    "fact_id": "F009"
+  },
+  {
+    "dept_id": "D040",
+    "dept_name": "Department of Art History & Art Appreciation",
+    "fact_id": "F009"
+  },
+  {
+    "dept_id": "D041",
+    "dept_name": "Department of Graphic Arts",
+    "fact_id": "F009"
+  },
+  {
+    "dept_id": "D042",
+    "dept_name": "Department of Painting",
+    "fact_id": "F009"
+  },
+  {
+    "dept_id": "D043",
+    "dept_name": "Department of Sculpture",
+    "fact_id": "F009"
+  },
+  {
+    "dept_id": "D0440",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F010"
+  },
+  {
+    "dept_id": "D044",
+    "dept_name": "Faculty of Dentistry",
+    "fact_id": "F010"
+  },
+  {
+    "dept_id": "D0450",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F011"
+  },
+  {
+    "dept_id": "D045",
+    "dept_name": "Department of Tourism & Hospitality Management",
+    "fact_id": "F011"
+  },
+  {
+    "dept_id": "D046",
+    "dept_name": "Department of Hospital Management and Hospice Studies",
+    "fact_id": "F011"
+  },
+  {
+    "dept_id": "D047",
+    "dept_name": "Department of Management Studies",
+    "fact_id": "F011"
+  },
+  {
+    "dept_id": "D0480",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D048",
+    "dept_name": "AJK Mass Communication Research Centre",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D049",
+    "dept_name": "MM Ali Jauhar Academy of International Studies",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D050",
+    "dept_name": "Centre for Physiotherapy & Rehabilitation Sciences",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D051",
+    "dept_name": "Deen Dayal Upadhyay Kaushal Kendra",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D052",
+    "dept_name": "Centre for Interdisciplinary Research in Basic Sciences",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D053",
+    "dept_name": "Nelson Mandela Centre for Peace and Conflict Resolution",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D054",
+    "dept_name": "Centre for Comparative Religions & Civilizations",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D055",
+    "dept_name": "Dr. K. R. Narayanan Centre for Dalit & Minorities Studies",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D056",
+    "dept_name": "Centre for the Study of Social Inclusion",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D057",
+    "dept_name": "Centre for West Asian Studies",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D058",
+    "dept_name": "Centre for Jawaharlal Nehru Studies",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D059",
+    "dept_name": "Centre for Culture, Media & Governance",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D060",
+    "dept_name": "India-Arab Cultural Centre",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D061",
+    "dept_name": "FTK Centre For Information Technology",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D062",
+    "dept_name": "Centre for Theoretical Physics",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D063",
+    "dept_name": "Centre for Nanoscience & Nanotechnology",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D064",
+    "dept_name": "Sarojini Naidu Centre For Women’s Studies",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D065",
+    "dept_name": "Centre for North East Studies and Policy Research",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D066",
+    "dept_name": "Multidisciplinary Centre for Advanced Research and Studies",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D067",
+    "dept_name": "Centre for Innovation and Entrepreneurship",
+    "fact_id": "F012"
+  },
+  {
+    "dept_id": "D06800",
+    "dept_name": "Multidisciplinary",
+    "fact_id": "F013"
+  },
+  {
+    "dept_id": "D068",
+    "dept_name": "M.Sc. (Mathematics Education) – in collaboration with University of Delhi",
+    "fact_id": "F013"
+  }
+]

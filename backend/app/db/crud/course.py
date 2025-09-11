@@ -3,23 +3,20 @@ from typing import List
 from app.db.connection import connection_to_db
 from app.db.models.course_model import (
     CourseCreate,
-    CourseCreateForDB,
     CourseCreateResponse,
     CourseDetailResponse,
-    CourseListItem,
     BulkCourseCreate,
     BulkCourseCreateResponse,
 )
 
-def add_course_to_db(course: CourseCreateForDB) -> CourseCreateResponse:
+def add_course_to_db(course: CourseCreate) -> CourseCreateResponse:
     conn = connection_to_db()
     try:
         with conn.cursor() as cur:
             cur.execute(
                 "INSERT INTO course (courseid, name, semid, progid, deptid, factid) "
                 "VALUES (%s, %s, %s, %s, %s, %s)",
-                (course.courseid, course.name, course.sem_id,
-                 course.prog_id, course.dept_id, course.fact_id)
+                (course.course_name, course.sem_id)
             )
         conn.commit()
         return CourseCreateResponse(success=True, message="Course added to DB")

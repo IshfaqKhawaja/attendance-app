@@ -7,10 +7,8 @@ class TeacherType(str, Enum):
     CONTRACT = "CONTRACT"
 
 class TeacherCreate(BaseModel):
-    teacherid: str
-    name: str
+    __tablename__ = "teachers"
+    teacher_id: str
+    teacher_name: str
     type: TeacherType
-    deptid: str
-
-class TeacherDetail(TeacherCreate):
-    pass
+    dept_id: str

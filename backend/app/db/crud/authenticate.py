@@ -1,4 +1,3 @@
-from datetime import date
 from app.db.connection import connection_to_db
 
 def check_if_teacher_exists(email_id: str) -> dict:
