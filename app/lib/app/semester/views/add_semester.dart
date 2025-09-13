@@ -6,16 +6,28 @@ import 'package:intl/intl.dart';
 import '../../core/constants/typography.dart';
 import '../../semester/controllers/add_semester_controller.dart';
 
-class AddSemester extends StatelessWidget {
+class AddSemester extends StatefulWidget {
 
   final String progId;
   AddSemester({super.key, required this.progId});
+
+  @override
+  State<AddSemester> createState() => _AddSemesterState();
+}
+
+class _AddSemesterState extends State<AddSemester> {
   final AddSemesterController addSemesterController = Get.put(AddSemesterController());
+
+  @override
+  void initState() {
+    super.initState();
+    addSemesterController.emptyFields();
+  }
 
   @override
   Widget build(BuildContext context) {
     final sizedBox = SizedBox(height: 20);
-    final height = Get.size.height * 0.4;
+    final height = Get.size.height * 0.35;
     
     return Container(
       padding: const EdgeInsets.all(10.0),
@@ -26,7 +38,7 @@ class AddSemester extends StatelessWidget {
         return ListView(
           children: [
              Text(
-              'Semester Details',
+              'Add Semester',
               style: textStyle.copyWith(fontSize: 24),
             ),
             sizedBox,
@@ -44,7 +56,6 @@ class AddSemester extends StatelessWidget {
                   Text('End Date: ${DateFormat('dd/MM/yyyy').format(endDate)}', style: textStyle.copyWith(fontSize: 12),),
               ],
             ),
-           
             sizedBox,
             // Select Start/End Date Button
             Row(
@@ -62,7 +73,7 @@ class AddSemester extends StatelessWidget {
             sizedBox,
             ElevatedButton(
               onPressed: () async {
-                final added = await addSemesterController.addSemester(progId);
+                final added = await addSemesterController.addSemester(widget.progId);
                 Navigator.of(context).pop(added);
               },
               child: Text("Add Semester", style: textStyle.copyWith(fontSize: 16),)

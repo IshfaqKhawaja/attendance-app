@@ -1,5 +1,5 @@
 import 'package:app/app/index/controllers/index_controller.dart';
-import 'package:app/app/dashboard/widgets/teacher_bottom_bar.dart';
+import '../../dashboard/teacher/widgets/teacher_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';

@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 // Local Imports:::
 import '../controllers/teacher_bottom_bar_controller.dart';
 import '../controllers/teacher_dashboard_controller.dart';
-import '../../constants/text_styles.dart';
+import '../../../constants/text_styles.dart';
 import '../widgets/teacher_bottom_bar.dart';
 
 class TeacherDashboard extends StatelessWidget {

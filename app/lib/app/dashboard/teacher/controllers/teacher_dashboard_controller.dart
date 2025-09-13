@@ -4,15 +4,13 @@ import 'package:app/app/models/teacher_course.dart';
 import 'package:app/app/signin/controllers/signin_controller.dart';
 import 'package:get/get.dart';
 // no direct http after refactor
-import '../../core/network/api_client.dart';
-import '../../core/repositories/teacher_repository.dart';
+import '../../../core/repositories/teacher_repository.dart';
 
 class TeacherDashboardController extends GetxController {
   final singInController = Get.find<SignInController>();
   final loadingController = Get.find<LoadingController>();
   final isTeacherCoursesLoaded = false.obs;
   RxList<TeacherCourseModel> thisTeacherCourses = <TeacherCourseModel>[].obs;
-  late final ApiClient _apiClient;
   late final TeacherRepository _repo;
 
   void loadTeacherCourses() async {
@@ -45,8 +43,6 @@ class TeacherDashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-  _apiClient = ApiClient();
-  _repo = TeacherRepository(_apiClient);
     loadTeacherCourses();
   }
 }

@@ -8,6 +8,7 @@ from app.db.models.semester_model import (
     SemesterListItem,
     BulkSemesterCreate,
     BulkSemesterCreateResponse,
+    UpdateSemester,
 )
 
 def add_semester_to_db(sem: SemesterCreate) -> SemesterCreateResponse:
@@ -102,7 +103,17 @@ def display_semesters_by_program_id(prog_id: str) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT sem_id, sem_name, start_date, end_date FROM semester WHERE prog_id = %s",
+            """
+            SELECT 
+            sem_id, 
+            sem_name, 
+            start_date, 
+            end_date 
+            FROM 
+            semester 
+            WHERE prog_id = %s
+            ORDER BY start_date ASC
+            """,
             (prog_id,)
         )
         rows = cur.fetchall()
@@ -119,6 +130,9 @@ def display_semesters_by_program_id(prog_id: str) -> dict:
         for r in rows
     ]
     } if rows else {"success": False, "semesters": []}
+    
+    
+    
 
 def display_semester_with_details_by_id(sem_id: str) -> SemesterDetailResponse:
     """
@@ -175,4 +189,29 @@ def delete_semester_by_id(semid: str) -> SemesterCreateResponse:
         return SemesterCreateResponse(
             success=False,
             message=f"Couldn't delete semester: {e}"
+        )
+
+
+def edit_semester_by_id(semid: str, sem: UpdateSemester) -> SemesterCreateResponse:
+    conn = connection_to_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                UPDATE semester 
+                SET sem_name = %s, start_date = %s, end_date = %s, prog_id = %s
+                WHERE sem_id = %s
+                """,
+                (sem.sem_name, sem.start_date, sem.end_date, sem.prog_id, semid)
+            )
+        conn.commit()
+        if cur.rowcount:
+            return SemesterCreateResponse(success=True, message="Semester updated")
+        else:
+            return SemesterCreateResponse(success=False, message="Semester not found")
+    except Exception as e:
+        conn.rollback()
+        return SemesterCreateResponse(
+            success=False,
+            message=f"Couldn't update semester: {e}"
         )

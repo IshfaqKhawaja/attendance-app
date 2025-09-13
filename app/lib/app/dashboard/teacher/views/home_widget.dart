@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'card_widget.dart';
+import '../widgets/card_widget.dart';
 import '../controllers/teacher_dashboard_controller.dart';
 
 class HomeWidget extends StatelessWidget {

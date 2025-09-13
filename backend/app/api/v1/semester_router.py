@@ -7,6 +7,7 @@ from app.db.models.semester_model import (
     SemesterListItem,
     BulkSemesterCreate,
     BulkSemesterCreateResponse,
+    UpdateSemester,
 )
 
 
@@ -51,5 +52,9 @@ def get_semesters_by_program_id(program_id: str):
 
 @router.get("/delete/{sem_id}", response_model=SemesterCreateResponse, summary="Delete Semester by ID")
 def delete_semester(sem_id: str):
-    print(sem_id)
     return delete_semester_by_id(sem_id)
+
+
+@router.post("/edit/{sem_id}", response_model=SemesterCreateResponse, summary="Edit Semester by ID")
+def edit_semester(sem_id: str, semester: UpdateSemester):
+    return edit_semester_by_id(sem_id, semester)

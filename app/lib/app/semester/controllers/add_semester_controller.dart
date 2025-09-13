@@ -14,6 +14,7 @@ class AddSemesterController  extends GetxController{
     semesterNameController.value.clear();
     startDate.value = null;
     endDate.value = null;
+    update();
   }
 
   Future<bool> addSemester(String progId) async  {

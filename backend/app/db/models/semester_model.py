@@ -18,6 +18,13 @@ class SemesterCreate(BaseModel):
         if not self.sem_id:
             self.sem_id = str(id)
 
+
+class UpdateSemester(BaseModel):
+    sem_name: Optional[str] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    prog_id: Optional[str] = None
+
 class SemesterCreateResponse(BaseModel):
     success: bool
     message: str

@@ -1,9 +1,9 @@
 import 'package:app/app/course/views/course.dart';
-import 'package:app/app/dashboard/views/teacher_dashboard.dart';
+import 'package:app/app/dashboard/teacher/views/teacher_dashboard.dart';
 import 'package:get/get.dart';
 // Local Imports
 import '../course/views/course_by_semester_id.dart';
-import '../dashboard/views/hod_dashboard.dart';
+import '../dashboard/hod/views/hod_dashboard.dart';
 import '../loading/views/loading.dart';
 import '../semester/views/semester_dashboard.dart' show SemesterDashboard;
 import '../signin/views/sign_in.dart';

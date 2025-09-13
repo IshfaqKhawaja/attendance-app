@@ -1,6 +1,8 @@
 import 'package:app/app/constants/text_styles.dart';
 import 'package:app/app/semester/controllers/semester_controller.dart';
 import 'package:app/app/semester/views/add_semester.dart';
+import 'package:app/app/semester/widgets/delete_semester_button.dart';
+import 'package:app/app/semester/widgets/edit_semester_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -22,12 +24,12 @@ class SemesterDashboard extends StatelessWidget {
       progId = Get.arguments['prog_id'] ?? '';
       progName = Get.arguments['prog_name'] ?? 'Semester Dashboard';
     }
+    final width = Get.size.width;
     return Scaffold(
       appBar: AppBar(
           title: Text(progName, style: textStyle.copyWith(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),),
         centerTitle: true,
         actions: [
-          // Add button to create new semester
           IconButton(
             icon: Icon(Icons.add),
             onPressed: ()  async {
@@ -40,7 +42,6 @@ class SemesterDashboard extends StatelessWidget {
                     ),);
                 },
               );
-            print(added);
             if (added != null && added is bool && added) {
                 semesterController.getSemestersByProgramId(semesterController.progId);
               }
@@ -70,32 +71,36 @@ class SemesterDashboard extends StatelessWidget {
                         onTap: (){
                           Get.toNamed(Routes.COURSEBYSEM, arguments: {'semesterId': semester.semId, 'semesterName': semester.semName});
                         },
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red,),
-                          onPressed: () async {
-                            final confirmed = await Get.dialog(
-                              AlertDialog(
-                                title: Text("Confirm Deletion"),
-                                content: Text("Are you sure you want to delete this semester?"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () async {
-                                      semesterController.deleteSemester(semester.semId);
-                                      Navigator.of( context).pop(true);
-                                    },
-                                    child: Text("Delete"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.of(context).pop(false),
-                                    child: Text("Cancel"),
-                                  ),
-                                ],
+                        trailing: SizedBox(
+                          width: width * 0.25,
+                          child: Row(
+                            children: [
+                              // Edit Button
+                              IconButton(
+                                icon: Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () async {
+                                  var updated = await showDialog(context: context, builder: (context) {
+                                    return Dialog(
+                                      child: EditSemesterButton(
+                                        semId: semester.semId,
+                                        semName: semester.semName,
+                                        progId: semester.progId,
+                                        startDate: semester.startDate,
+                                        endDate: semester.endDate,
+                                      ),
+                                    );
+                                  });
+                                  if (updated != null && updated is bool && updated) {
+                                    semesterController.getSemestersByProgramId(semesterController.progId);
+                                  }
+                                },
                               ),
-                            );
-                            if (confirmed == true) {
-                              semesterController.deleteSemester(semester.semId);
-                            }
-                          },
+
+                              // Delete Button
+                              DeleteSemesterButton(semId: semester.semId),
+                            ],
+                             
+                        ),
                         ),
                         title: Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),

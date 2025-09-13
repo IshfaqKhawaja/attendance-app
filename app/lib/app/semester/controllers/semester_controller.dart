@@ -20,10 +20,10 @@ class SemesterController  extends GetxController {
             .map((e) => SemesterModel.fromJson(e))
             .toList();
       } else {
-        Get.snackbar('Error', res['message']?.toString() ?? 'Failed to load semesters');
+        print('Failed to load semesters: ${res["message"]}');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to load semesters: $e');
+      print(e.toString());
     }
     
   }
@@ -38,6 +38,7 @@ class SemesterController  extends GetxController {
       return true;
     } else {
       Get.snackbar('Error', res['message'] ?? 'Failed to delete semester', duration: Duration(seconds: 1));
+      
     }
     return false;
   }

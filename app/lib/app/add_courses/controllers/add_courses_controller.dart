@@ -2,7 +2,7 @@
 
 import 'package:app/app/core/network/endpoints.dart';
 import 'package:app/app/core/network/api_client.dart';
-import 'package:app/app/dashboard/controllers/teacher_dashboard_controller.dart';
+import 'package:app/app/dashboard/teacher/controllers/teacher_dashboard_controller.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'package:get/get.dart';
 // no direct http usage after refactor
