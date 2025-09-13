@@ -1,12 +1,12 @@
-from pydantic import BaseModel, Field # type: ignore
+from pydantic import BaseModel
 
 class TeacherCreate(BaseModel):
-    teacher_id: str = Field(..., description="ID of the Teacher")
-    teacher_name: str = Field(..., description="Name of the new Teacher")
-    type: str = Field(..., description="Type of Teacher (GUEST, PERMANENT, CONTRACT)")
-    dept_id: str = Field(..., description="Dept id to which Teacher belongs")
+    teacher_id: str
+    teacher_name: str
+    type: str
+    dept_id: str
 
 
 # Request model for displaying a teacher
 class DisplayTeacherRequest(BaseModel):
-    teacher_id: str = Field(..., description="Teacher ID")
+    teacher_id: str

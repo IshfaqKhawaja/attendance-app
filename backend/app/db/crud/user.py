@@ -1,7 +1,7 @@
 from app.db.connection import connection_to_db
-from app.db.models.user_model import UserModelIn
+from app.db.models.user_model import UserIn
 
-def add_user_to_db(user: UserModelIn) -> dict:
+def add_user_to_db(user: UserIn) -> dict:
     conn = connection_to_db()
     try:
         with conn.cursor() as cur:

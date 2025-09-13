@@ -39,18 +39,15 @@ def display_course_by_id(courseid: str) -> CourseDetailResponse:
     if row:
         return CourseDetailResponse(
             success=True,
-            courses=[CourseListItem(
+            courses=[CourseCreate(
                 course_id=row[0],
                 course_name=row[1],
                 sem_id=row[2],
-                prog_id=row[3],
-                dept_id=row[4],
-                fact_id=row[5]
             )]
         )
     return CourseDetailResponse(success=False)
 
-def display_all_courses() -> List[CourseListItem]:
+def display_all_courses() -> List[CourseCreate]:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
@@ -58,13 +55,10 @@ def display_all_courses() -> List[CourseListItem]:
         )
         rows = cur.fetchall()
     return [
-        CourseListItem(
+        CourseCreate(
             course_id=r[0],
             course_name=r[1],
             sem_id=r[2],
-            prog_id=r[3],
-            dept_id=r[4],
-            fact_id=r[5]
         )
         for r in rows
     ]
@@ -78,12 +72,11 @@ def add_courses_bulk(payload: BulkCourseCreate) -> BulkCourseCreateResponse:
             for c in payload.courses:
                 cur.execute(
                     """
-                    INSERT INTO course (courseid, name, semid, progid, deptid, factid)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                    ON CONFLICT (courseid) DO NOTHING
+                    INSERT INTO course (course_id, course_name, sem_id)
+                    VALUES (%s, %s, %s)
+                    ON CONFLICT (course_id) DO NOTHING
                     """,
-                    (c.courseid, c.name, c.sem_id,
-                     c.prog_id, c.dept_id, c.fact_id)
+                    (c.course_id, c.course_name, c.sem_id)
                 )
                 if cur.rowcount:
                     inserted += 1
@@ -120,13 +113,10 @@ def fetch_courses_by_semester_id(sem_id: str) -> CourseDetailResponse:
         return CourseDetailResponse(success=False)
     
     courses = [
-        CourseListItem(
+        CourseCreate(
             course_id=r[0],
             course_name=r[1],
             sem_id=r[2],
-            prog_id=r[3],
-            dept_id=r[4],
-            fact_id=r[5]
         )
         for r in rows
     ]

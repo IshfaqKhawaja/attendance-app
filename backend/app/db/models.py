@@ -9,7 +9,7 @@ Create the following schema in PostgreSQL (DDL strings only):
   COURSE
   STUDENT
   ATTENDANCE
-  STUDENT_ENROLLMENT (new)
+  STUDENT_ENROLLMENT
 
 Expose `statements` as a module-level list of SQL strings.
 This module does not perform any DB connections or execution on import.
