@@ -43,6 +43,13 @@ def bulk_add_semesters(payload: BulkSemesterCreate):
 
 
 
-@router.get("/display_semester_by_program_id/{program_id}", response_model=list[SemesterListItem], summary="List all Semesters by Program ID")
+@router.get("/display_semester_by_program_id/{program_id}", response_model=dict, summary="List all Semesters by Program ID")
 def get_semesters_by_program_id(program_id: str):
     return display_semesters_by_program_id(program_id)
+
+
+
+@router.get("/delete/{sem_id}", response_model=SemesterCreateResponse, summary="Delete Semester by ID")
+def delete_semester(sem_id: str):
+    print(sem_id)
+    return delete_semester_by_id(sem_id)

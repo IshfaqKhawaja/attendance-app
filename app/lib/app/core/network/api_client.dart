@@ -59,6 +59,7 @@ class ApiClient {
         .post(Uri.parse(url), headers: mergedHeaders, body: jsonEncode(body))
         .timeout(timeout);
     http.Response res = await run();
+
     if (res.statusCode == 401 && onUnauthorized != null) {
       if (await onUnauthorized!.call()) {
         final retryHeaders = await _authHeaders({

@@ -2,13 +2,11 @@ class ProgramModel {
   final String progId;
   final String progName;
   final String deptId;
-  final String factId;
 
   ProgramModel({
     required this.progId,
     required this.progName,
     required this.deptId,
-    required this.factId,
   });
 
   factory ProgramModel.fromJson(Map<String, dynamic> json) {
@@ -16,7 +14,6 @@ class ProgramModel {
       progId: json["prog_id"],
       progName: json["prog_name"],
       deptId: json["dept_id"],
-      factId: json["fact_id"],
     );
   }
 
@@ -24,20 +21,17 @@ class ProgramModel {
         "prog_id": progId,
         "prog_name": progName,
         "dept_id": deptId,
-        "fact_id": factId,
       };
 
   ProgramModel copyWith({
     String? progId,
     String? progName,
     String? deptId,
-    String? factId,
   }) {
     return ProgramModel(
       progId: progId ?? this.progId,
       progName: progName ?? this.progName,
       deptId: deptId ?? this.deptId,
-      factId: factId ?? this.factId,
     );
   }
 
@@ -47,10 +41,9 @@ class ProgramModel {
     return other is ProgramModel &&
         other.progId == progId &&
         other.progName == progName &&
-        other.deptId == deptId &&
-        other.factId == factId;
+        other.deptId == deptId;
   }
 
   @override
-  int get hashCode => Object.hash(progId, progName, deptId, factId);
+  int get hashCode => Object.hash(progId, progName, deptId);
 }

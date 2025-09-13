@@ -136,7 +136,6 @@ statements = [
         course_id       VARCHAR(255) NOT NULL REFERENCES course(course_id) ON DELETE CASCADE,
         "date"         DATE NOT NULL,
         present        BOOLEAN NOT NULL DEFAULT FALSE,
-        PRIMARY KEY (student_id, course_id)
     );
     """,
 

@@ -51,7 +51,7 @@ def display_all_courses() -> List[CourseCreate]:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT courseid, name, semid, progid, deptid, factid FROM course"
+            "SELECT course_id, course_name, sem_id FROM course"
         )
         rows = cur.fetchall()
     return [
@@ -104,8 +104,8 @@ def fetch_courses_by_semester_id(sem_id: str) -> CourseDetailResponse:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT courseid, name, semid, progid, deptid, factid "
-            "FROM course WHERE semid = %s",
+            "SELECT course_id, course_name, sem_id "
+            "FROM course WHERE sem_id = %s",
             (sem_id,)
         )
         rows = cur.fetchall()

@@ -29,8 +29,8 @@ class AttendanceApp extends StatelessWidget {
       title: "JMI Attendance",
       initialRoute: Routes.LOADING,
       getPages: Pages.routes,
-  theme: AppTheme.light(),
-  darkTheme: AppTheme.dark(),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
     );

@@ -98,7 +98,7 @@ def add_semesters_bulk(payload: BulkSemesterCreate) -> BulkSemesterCreateRespons
         )
 
 
-def display_semesters_by_program_id(prog_id: str) -> List[SemesterListItem]:
+def display_semesters_by_program_id(prog_id: str) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         cur.execute(
@@ -106,7 +106,9 @@ def display_semesters_by_program_id(prog_id: str) -> List[SemesterListItem]:
             (prog_id,)
         )
         rows = cur.fetchall()
-    return [
+    return {
+        "success": True,
+        "semesters": [
         SemesterListItem(
             sem_id=r[0],
             sem_name=r[1],
@@ -116,6 +118,7 @@ def display_semesters_by_program_id(prog_id: str) -> List[SemesterListItem]:
         )
         for r in rows
     ]
+    } if rows else {"success": False, "semesters": []}
 
 def display_semester_with_details_by_id(sem_id: str) -> SemesterDetailResponse:
     """
@@ -151,3 +154,25 @@ def display_semester_with_details_by_id(sem_id: str) -> SemesterDetailResponse:
             prog_id=row[4],
         )
     return SemesterDetailResponse(success=False, message="Semester not found")
+
+
+
+def delete_semester_by_id(semid: str) -> SemesterCreateResponse:
+    conn = connection_to_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM semester WHERE sem_id = %s",
+                (semid,)
+            )
+        conn.commit()
+        if cur.rowcount:
+            return SemesterCreateResponse(success=True, message="Semester deleted")
+        else:
+            return SemesterCreateResponse(success=False, message="Semester not found")
+    except Exception as e:
+        conn.rollback()
+        return SemesterCreateResponse(
+            success=False,
+            message=f"Couldn't delete semester: {e}"
+        )

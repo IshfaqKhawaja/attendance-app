@@ -1,38 +1,51 @@
-
-
-
-import 'dart:convert';
-
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:app/app/constants/network_constants.dart';
 
+import '../../core/network/api_client.dart';
 import '../../models/semester_model.dart';
 class SemesterController  extends GetxController {
-  final String programId;
+  final String progId;
+    final client = ApiClient();
 
-  SemesterController({required this.programId});
+
+  SemesterController({required this.progId});
   final semesters = <SemesterModel>[].obs;
 
   void getSemestersByProgramId(String progId) async {
-    try{
-      var response = await http.get(Uri.parse("$baseUrl/semester/display_semester_by_program_id/$progId"));
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        semesters.value = (data as List)
-            .map((s) => SemesterModel.fromJson(s))
+    semesters.clear();
+    try {
+      final res = await client.getJson(Endpoints.displaySemesterByProgramId(progId));
+      if (res["success"] == true) {
+        semesters.value = (res["semesters"] as List)
+            .map((e) => SemesterModel.fromJson(e))
             .toList();
+      } else {
+        Get.snackbar('Error', res['message']?.toString() ?? 'Failed to load semesters');
       }
-    }catch (e) {
-      Get.snackbar("Error", "Failed to load semesters: $e",
-          snackPosition: SnackPosition.BOTTOM);
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to load semesters: $e');
     }
+    
   }
+
+
+  // Delete Semester
+  Future<bool> deleteSemester(String semId) async {
+    final res = await client.getJson(Endpoints.deleteSemester(semId));
+    if(res['success'] == true){
+      Get.snackbar('Success', 'Semester Deleted Successfully', duration: Duration(seconds: 1));
+      getSemestersByProgramId(progId);
+      return true;
+    } else {
+      Get.snackbar('Error', res['message'] ?? 'Failed to delete semester', duration: Duration(seconds: 1));
+    }
+    return false;
+  }
+
 
   @override
   void onInit() {
     super.onInit();
-    getSemestersByProgramId(programId);
-    
+    getSemestersByProgramId(progId);
   }
 }
