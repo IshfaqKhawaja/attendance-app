@@ -58,3 +58,5 @@ def delete_semester(sem_id: str):
 @router.post("/edit/{sem_id}", response_model=SemesterCreateResponse, summary="Edit Semester by ID")
 def edit_semester(sem_id: str, semester: UpdateSemester):
     return edit_semester_by_id(sem_id, semester)
+
+

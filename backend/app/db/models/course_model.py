@@ -1,11 +1,15 @@
 # app/schemas/course.py
 from pydantic import BaseModel #type: ignore
 from typing import List, Optional
-
+from uuid import uuid4
 class CourseCreate(BaseModel):
     course_name: str 
     course_id: str
     sem_id: str
+    def __init__(self, **data):
+        if 'course_id' not in data:
+            data['course_id'] = str(uuid4())
+        super().__init__(**data)
 
 
 class CourseCreateResponse(BaseModel):

@@ -19,6 +19,7 @@ import '../models/student_attendence.dart';
 class CourseController extends GetxController {
   CourseController({required this.courseId});
   var studentsInThisCourse = <StudentModel>[].obs;
+  var studentsInThisSem = <StudentModel>[].obs;
   final String courseId;
   // New Data
   var newStudents = <StudentModel>[].obs;
@@ -230,6 +231,12 @@ class CourseController extends GetxController {
     Get.snackbar("Error", "Something went wrong: $e", colorText: Colors.red);
   }
 }
+
+
+
+
+
+ 
   @override
   void onInit() {
     super.onInit();

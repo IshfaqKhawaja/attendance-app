@@ -89,7 +89,7 @@ statements = [
         student_id   VARCHAR(255) PRIMARY KEY,
         student_name        VARCHAR(255) NOT NULL,
         phone_number BIGINT,
-        dept_id      VARCHAR(255) REFERENCES department(dept_id) ON DELETE SET NULL
+        sem_id      VARCHAR(255) REFERENCES semester(sem_id) ON DELETE CASCADE
     );
     """,
 
@@ -135,7 +135,7 @@ statements = [
         student_id      VARCHAR(255) NOT NULL REFERENCES students(student_id) ON DELETE CASCADE,
         course_id       VARCHAR(255) NOT NULL REFERENCES course(course_id) ON DELETE CASCADE,
         "date"         DATE NOT NULL,
-        present        BOOLEAN NOT NULL DEFAULT FALSE,
+        present        BOOLEAN NOT NULL DEFAULT FALSE
     );
     """,
 

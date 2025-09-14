@@ -14,9 +14,9 @@ def add_course_to_db(course: CourseCreate) -> CourseCreateResponse:
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO course (courseid, name, semid, progid, deptid, factid) "
-                "VALUES (%s, %s, %s, %s, %s, %s)",
-                (course.course_name, course.sem_id)
+                "INSERT INTO course (course_id, course_name, sem_id) "
+                "VALUES (%s, %s, %s)",
+                (course.course_id, course.course_name, course.sem_id)
             )
         conn.commit()
         return CourseCreateResponse(success=True, message="Course added to DB")
@@ -122,3 +122,30 @@ def fetch_courses_by_semester_id(sem_id: str) -> CourseDetailResponse:
     ]
     
     return CourseDetailResponse(success=True, courses=courses)
+
+
+
+def delete_course_by_id(course_id: str) -> CourseCreateResponse:
+    conn = connection_to_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM course WHERE course_id = %s",
+                (course_id,)
+            )
+            if cur.rowcount == 0:
+                return CourseCreateResponse(
+                    success=False,
+                    message="Course not found"
+                )
+        conn.commit()
+        return CourseCreateResponse(
+            success=True,
+            message="Course deleted successfully"
+        )
+    except Exception as e:
+        conn.rollback()
+        return CourseCreateResponse(
+            success=False,
+            message=f"Couldn't delete course: {e}"
+        )

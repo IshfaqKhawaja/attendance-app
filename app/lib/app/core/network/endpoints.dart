@@ -14,4 +14,12 @@ class Endpoints {
   static String addTeacher = "$baseUrl/teacher/add";
   static String deleteTeacher =  "$baseUrl/teacher/delete";
   static String editTeacher = "$baseUrl/teacher/edit";
+  static String addCourse = "$baseUrl/course/add";
+  static String displayCoursesBySemesterId(String semId) => "$baseUrl/course/display_courses_by_semester_id/$semId";
+  static String generateCourseReport = "$baseUrl/reports/generate_course_report";
+  static String deleteCourseById(String courseId) => "$baseUrl/course/delete/$courseId";
+  static String addStudentsFromFile = "$baseUrl/student_enrollment/upload_bulk_enrollment_file";
+  static String getStudentsBySemId(String semId) => "$baseUrl/student_enrollment/display_by_sem_id/$semId";
+  static String getTeachersByDeptId(String deptId) => "$baseUrl/teacher/display/$deptId";
 }
+  

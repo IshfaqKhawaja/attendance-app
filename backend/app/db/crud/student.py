@@ -9,8 +9,8 @@ def add_student_to_db(
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO students (student_id, student_name , phone_number, dept_id) VALUES (%s, %s, %s, %s)",
-                (student.student_id, student.student_name, student.phone_number, student.dept_id)
+                "INSERT INTO students (student_id, student_name , phone_number, sem_id) VALUES (%s, %s, %s, %s)",
+                (student.student_id, student.student_name, student.phone_number, student.sem_id)
             )
         conn.commit()
         return {
@@ -45,7 +45,7 @@ def display_student_by_id(student_id: str) -> dict:
             "student_id": row[0],
             "student_name": row[1],
             "phone_number": row[2],
-            "dept_id": row[3]
+            "sem_id": row[3]
             }
     else:
         return {
@@ -63,11 +63,8 @@ def add_students_in_bulk(
       - student_id (str)
       - student_name (str)
       - phone_number (int)
-      - dept_id    (str)
+      - sem_id    (str)
     """
-    if not isinstance(students, list):
-        return {"success": False, "message": "Payload must be a list of student dicts"}
-
     records = []
     for idx, st in enumerate(students.students, start=1):
         if not isinstance(st, StudentIn):
@@ -77,7 +74,7 @@ def add_students_in_bulk(
                 st.student_id,
                 st.student_name,
                 st.phone_number,
-                st.dept_id,
+                st.sem_id,
             ))
         except KeyError as missing:
             return {
@@ -91,7 +88,7 @@ def add_students_in_bulk(
             cur.executemany(
                 """
                 INSERT INTO students
-                  (student_id, student_name, phone_number, dept_id)
+                  (student_id, student_name, phone_number, sem_id)
                 VALUES (%s, %s, %s, %s)
                 ON CONFLICT (student_id) DO NOTHING
                 """,
@@ -122,7 +119,7 @@ def fetch_students_by_student_ids(student_ids: list) -> dict:
     conn = connection_to_db()
     with conn.cursor() as cur:
         placeholders = ','.join(['%s'] * len(student_ids))
-        query = f"SELECT * FROM students WHERE student_id IN ({placeholders})"
+        query = f"""SELECT * FROM students WHERE student_id IN ({placeholders}) ORDER BY student_name ASC"""
         cur.execute(query, student_ids) # type: ignore
         rows = cur.fetchall()
 
@@ -132,7 +129,7 @@ def fetch_students_by_student_ids(student_ids: list) -> dict:
             "student_id": row[0],
             "student_name": row[1],
             "phone_number": row[2],
-            "dept_id": row[5]
+            "sem_id": row[5]
         })
 
     return {

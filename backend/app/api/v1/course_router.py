@@ -1,6 +1,5 @@
-import uuid
-from app.db.crud.semester import display_semester_with_details_by_id
-from fastapi import APIRouter, Body # type: ignore
+from fastapi import APIRouter, Body
+from httpx import delete # type: ignore
 
 from app.db.crud.course import *
 
@@ -24,6 +23,7 @@ def add(
     """
     Expects JSON payload: { "name": "Department of Engineering"}
     """
+    print(course.course_name)
     return add_course_to_db(course)
 
 
@@ -48,3 +48,8 @@ def bulk_add_courses(payload: BulkCourseCreate):
 @router.get("/display_courses_by_semester_id/{sem_id}", response_model=CourseDetailResponse, summary="Get Course Details")
 def display_courses_by_semester_id(sem_id: str) -> CourseDetailResponse:
     return fetch_courses_by_semester_id(sem_id)
+
+
+@router.get("/delete/{course_id}", response_model=CourseCreateResponse, summary="Delete a Course")
+def delete_course(course_id: str) -> CourseCreateResponse:
+    return delete_course_by_id(course_id)

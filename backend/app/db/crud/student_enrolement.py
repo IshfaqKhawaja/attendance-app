@@ -1,5 +1,5 @@
 from app.db.connection import connection_to_db
-from app.db.models.student_enrolement_model import BulkStudentEnrolementModel, StudentEnrolementModel
+from app.db.models.student_enrolement_model import BulkStudentEnrolementModel, DisplayStudentsBySemIdResponseModel, StudentEnrolementModel, StudentResponseModel
 
 
 
@@ -33,7 +33,7 @@ def add_students_enrolled_in_sem_bulk(students: BulkStudentEnrolementModel) -> d
     records = []
     for idx, st in enumerate(students.enrolements):
         if not isinstance(st, StudentEnrolementModel):
-            return {"success": False, "message": f"Item #{idx} is not a StudentEnrolementModel"}
+            return {"success": False, "message": f"Item #{idx} is not a StudentEnrollmentModel"}
         try:
             records.append((
                 st.student_id,
@@ -47,7 +47,7 @@ def add_students_enrolled_in_sem_bulk(students: BulkStudentEnrolementModel) -> d
     try:
         with conn.cursor() as cur:
             cur.executemany(
-                "INSERT INTO student_enrolement (student_id, sem_id) VALUES (%s, %s) ON CONFLICT (student_id, sem_id) DO NOTHING",
+                "INSERT INTO student_enrollment (student_id, sem_id) VALUES (%s, %s) ON CONFLICT (student_id, sem_id) DO NOTHING",
                 records
             )
         conn.commit()
@@ -62,7 +62,7 @@ def add_students_enrolled_in_sem_bulk(students: BulkStudentEnrolementModel) -> d
             "message": f"Couldn't add students in bulk: {e}"
         }
         
-def display_student_by_sem_id(sem_id: str) -> dict:
+def display_students_by_sem_id(sem_id: str) -> DisplayStudentsBySemIdResponseModel:
     """
     Get student details enrolled in a particular semester using JOIN.
     """
@@ -71,21 +71,23 @@ def display_student_by_sem_id(sem_id: str) -> dict:
     with conn.cursor() as cur:
         cur.execute(
             """
-            SELECT s.student_id, s.student_name, s.phone_number, s.dept_id
+            SELECT s.student_id, s.student_name, s.phone_number, s.sem_id
             FROM students s
-            INNER JOIN student_enrolement se ON s.student_id = se.student_id
+            INNER JOIN student_enrollment se ON s.student_id = se.student_id
             WHERE se.sem_id = %s
+            ORDER BY s.student_name ASC
             """,
             (sem_id,)
         )
         for row in cur.fetchall():
-            data.append({
-                "student_id": row[0],
-                "student_name": row[1],
-                "phone_number": row[2],
-                "dept_id": row[3]
-            })
-    return {
-        "success": True,
-        "students": data
-    }
+             # Append each student as a StudentResponseModel
+            data.append(StudentResponseModel(
+                student_id=row[0],
+                student_name=row[1],
+                phone_number=str(row[2]),
+                sem_id=row[3]
+            ))
+    return DisplayStudentsBySemIdResponseModel(
+        success=True,
+        students=data
+    )

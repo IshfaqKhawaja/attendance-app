@@ -55,7 +55,7 @@ class SemesterDashboard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+             SizedBox(
               height: Get.size.height * 0.8,
               child: Obx(() {
                 if (semesterController.semesters.isEmpty) {

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 
@@ -106,8 +108,60 @@ class ApiClient {
     return res.bodyBytes;
   }
 
-  void close() => _client.close();
+  
+
+// Upload File to Server:
+Future<Map<String, dynamic>> uploadFile(
+  String url,
+  File file,
+  String fileName,
+  Map<String, String> fields, {
+  Map<String, String>? headers,
+}) async {
+  final mergedHeaders = await _authHeaders(headers ?? const {});
+  try {
+    // 1. Create a FormData object to hold multipart data.
+    final formData = FormData.fromMap({
+      ...fields,
+      'file': await MultipartFile.fromFile(
+        file.path,
+        filename: fileName,
+      ),
+    });
+
+    // 2. Send the request using Dio with merged headers.
+    final dio = Dio();
+    dio.options.headers = mergedHeaders;
+    final response = await dio.post(
+      url,
+      data: formData,
+      onSendProgress: (int sent, int total) {
+        if (total != 0) {
+          print('Uploading... ${((sent / total) * 100).toStringAsFixed(0)}%');
+        }
+      },
+    );
+
+    // 3. Handle the response.
+    if (response.statusCode == 200) {
+      final data = response.data;
+      if (data is Map<String, dynamic>) return data;
+      if (data is String) return jsonDecode(data) as Map<String, dynamic>;
+      return Map<String, dynamic>.from(data);
+    } else {
+      throw HttpException(response.statusCode ?? 500, response.data.toString());
+    }
+  } on DioException catch (e) { // More specific error handling for Dio
+    throw HttpException(e.response?.statusCode ?? 500, e.response?.data?.toString() ?? e.message ?? e.toString());
+  } catch (e) {
+    throw HttpException(500, 'An unexpected error occurred: $e');
+  }
 }
+
+
+void close() => _client.close();
+}
+
 
 class HttpException implements Exception {
   final int statusCode;
