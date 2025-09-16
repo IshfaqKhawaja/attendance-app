@@ -37,20 +37,20 @@ class CourseRepository {
     );
   }
 
-  Future<Uint8List> generateCourseReport(
-    String courseId,
-    String startDate,
-    String endDate,
-  ) async {
-    return api.postBytes(
-      '${Endpoints.baseUrl}/course_students/generate_report',
-      {
-        'course_id': courseId,
-        'start_date': startDate,
-        'end_date': endDate,
-      },
-    );
-  }
+  // Future<Uint8List> generateCourseReport(
+  //   String courseId,
+  //   String startDate,
+  //   String endDate,
+  // ) async {
+  //   return api.postBytes(
+  //     '${Endpoints.baseUrl}/course_students/generate_report',
+  //     {
+  //       'course_id': courseId,
+  //       'start_date': startDate,
+  //       'end_date': endDate,
+  //     },
+  //   );
+  // }
 
   Future<Uint8List> generateCourseReportXlsx(
     String courseId,

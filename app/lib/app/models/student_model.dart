@@ -2,17 +2,11 @@ class StudentModel {
   final String studentId;
   final String studentName;
   final String phoneNumber; // keep as string to avoid locale/format issues
-  final String progId;
-  final String semId;
-  final String deptId;
 
   StudentModel({
     required this.studentId,
     required this.studentName,
     required this.phoneNumber,
-    required this.progId,
-    required this.semId,
-    required this.deptId,
   });
   factory StudentModel.fromJson(Map<String, dynamic> json) {
     final phone = json["phone_number"];
@@ -20,9 +14,6 @@ class StudentModel {
       studentId: json["student_id"],
       studentName: json["student_name"],
       phoneNumber: phone is int ? phone.toString() : (phone?.toString() ?? ''),
-      progId: json["prog_id"],
-      semId: json["sem_id"],
-      deptId: json["dept_id"],
     );
   }
 
@@ -31,9 +22,6 @@ class StudentModel {
       "student_id": studentId,
       "student_name": studentName,
       "phone_number": phoneNumber,
-      "prog_id": progId,
-      "sem_id": semId,
-      "dept_id": deptId,
     };
   }
 
@@ -49,9 +37,6 @@ class StudentModel {
       studentId: studentId ?? this.studentId,
       studentName: studentName ?? this.studentName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
-      progId: progId ?? this.progId,
-      semId: semId ?? this.semId,
-      deptId: deptId ?? this.deptId,
     );
   }
 
@@ -61,14 +46,11 @@ class StudentModel {
     return other is StudentModel &&
         other.studentId == studentId &&
         other.studentName == studentName &&
-        other.phoneNumber == phoneNumber &&
-        other.progId == progId &&
-        other.semId == semId &&
-        other.deptId == deptId;
+        other.phoneNumber == phoneNumber;
   }
 
   @override
-  int get hashCode => Object.hash(studentId, studentName, phoneNumber, progId, semId, deptId);
+  int get hashCode => Object.hash(studentId, studentName, phoneNumber);
 }
 
 

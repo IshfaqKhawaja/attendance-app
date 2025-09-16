@@ -9,12 +9,12 @@ def check_if_teacher_exists(email_id: str) -> dict:
     with conn.cursor() as cur:
         cur.execute(
             """
-            SELECT teacherid,
-                    name,
+            SELECT teacher_id,
+                   teacher_name,
                     type,
-                    deptid
+                    dept_id
                 FROM teachers
-                WHERE teacherid = %s
+                WHERE teacher_id = %s
             """,
             (email_id,),
         )
@@ -25,7 +25,7 @@ def check_if_teacher_exists(email_id: str) -> dict:
             "success" : True,
             "is_registered" : True,
             "teacher_id" : row[0],
-            "name" : row[1],
+            "teacher_name" : row[1],
             "type" : row[2],
             "dept_id" : row[3]  
         }
@@ -35,7 +35,7 @@ def check_if_teacher_exists(email_id: str) -> dict:
             "is_registered": False,
         }
 
-def add_teacher(email_id : str, name : str, type : str, dept_id : str) -> dict:
+def add_teacher(email_id : str, teacher_name : str, type : str, dept_id : str) -> dict:
     """
     Returns a dict of all columns for the user with given email_id (userid),
     or None if no such user is found.
@@ -46,13 +46,13 @@ def add_teacher(email_id : str, name : str, type : str, dept_id : str) -> dict:
             cur.execute(
                 """
                 INSERT INTO  teachers (
-                    teacherid,
-                    name,
+                    teacher_id,
+                    teacher_name,
                     type,
                     dept_id) VALUES (%s, %s , %s , %s)
                     
                 """,
-                (email_id, name, type, dept_id),
+                (email_id, teacher_name, type, dept_id),
             )
         conn.close()
         return {

@@ -20,8 +20,3 @@ class StudentsToCourseInput(BaseModel):
     students: List[dict] = Field(..., description="Student records")
     course_students: List[CourseStudent] = Field(..., description="Course-student mappings")
 
-
-class ReportInput(BaseModel):
-    course_id: str = Field(..., description="Course ID")
-    start_date: str = Field(..., description="Start date for the report")
-    end_date: str = Field(..., description="End date for the report")

@@ -23,7 +23,6 @@ def add(
     """
     Expects JSON payload: { "name": "Department of Engineering"}
     """
-    print(course.course_name)
     return add_course_to_db(course)
 
 

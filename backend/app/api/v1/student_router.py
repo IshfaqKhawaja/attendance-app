@@ -3,10 +3,9 @@ from app.db.crud.student import (
     add_student_to_db,
     add_students_in_bulk,
     display_student_by_id,
-    fetch_students_by_student_ids,
 )
-from app.db.crud.student_enrolement import display_students_by_sem_id
-from app.db.models.student_enrolement_model import DisplayStudentsBySemIdResponseModel
+from app.db.crud.student_enrolement import display_students_by_sem_id, fetch_students_by_course_id
+from app.db.models.student_enrolement_model import DisplayStudentsBySemIdResponseModel, StudentCourseEnrolementModel, StudentEnrollmentDetailsModel
 from app.db.models.student_model import BulkStudentIn, StudentIn
 
 
@@ -47,9 +46,3 @@ def bulk_add_students(
 @router.post("/display_students_by_sem_id", response_model=DisplayStudentsBySemIdResponseModel, summary="Display Student Details")
 def display_by_sem_id(sem_id: str = Body(..., embed=True, description="Semester ID")) -> DisplayStudentsBySemIdResponseModel:
     return display_students_by_sem_id(sem_id=sem_id)
-
-
-@router.post("/display_students_by_ids" , response_model=dict, summary="Display Student Details by ids")
-def display_students_by_ids(student_ids: list = Body(..., embed=True, description="Student IDs")) -> dict:
-    return fetch_students_by_student_ids(student_ids=student_ids)
-

@@ -16,8 +16,8 @@ class SignIn extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Get.theme.primaryColor,
-              Get.theme.primaryColor.withOpacity(0.6),
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColor.withOpacity(0.6),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

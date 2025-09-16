@@ -147,8 +147,8 @@ class AddCoursesController extends GetxController {
     faculities = controller.faculities;
     departments = controller.departments;
     programs = controller.programs;
-    courses = controller.courses;
-    semesters = controller.semesters;
+    // courses = controller.courses;
+    // semesters = controller.semesters;
   }
 
   @override

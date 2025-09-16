@@ -21,5 +21,10 @@ class Endpoints {
   static String addStudentsFromFile = "$baseUrl/student_enrollment/upload_bulk_enrollment_file";
   static String getStudentsBySemId(String semId) => "$baseUrl/student_enrollment/display_by_sem_id/$semId";
   static String getTeachersByDeptId(String deptId) => "$baseUrl/teacher/display/$deptId";
+  static String teacherCourses(String teacherId) => "$baseUrl/teacher_course/display/$teacherId";
+  static String getStudentsByCourseId(String courseId) => "$baseUrl/student_enrollment/fetch_students/$courseId";
+  static String addAttendanceBulk = "$baseUrl/attendance/add_attendence_bulk";
+  static String generateAttendanceReport = "$baseUrl/attendance/generate_report";
+
 }
   

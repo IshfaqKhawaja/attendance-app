@@ -4,8 +4,8 @@ from fastapi import APIRouter, HTTPException
 from sqlalchemy import intersect
 
 from app.db.crud.student import add_students_in_bulk
-from app.db.crud.student_enrolement import add_student_enrolled_in_sem, add_students_enrolled_in_sem_bulk, display_students_by_sem_id
-from app.db.models.student_enrolement_model import BulkStudentEnrolementModel, DisplayStudentsBySemIdResponseModel, StudentEnrolementModel
+from app.db.crud.student_enrolement import add_student_enrolled_in_sem, add_students_enrolled_in_sem_bulk, display_students_by_sem_id, fetch_students_by_course_id
+from app.db.models.student_enrolement_model import BulkStudentEnrolementModel, DisplayStudentsBySemIdResponseModel, StudentEnrolementModel, StudentEnrollmentDetailsModel
 from fastapi import File, UploadFile
 from fastapi import Form
 import pandas as pd
@@ -133,3 +133,10 @@ async def upload_bulk_enrolement_file(
 async def display_by_sem_id(sem_id: str)-> DisplayStudentsBySemIdResponseModel:
     """Get students enrolled in a particular semester."""
     return display_students_by_sem_id(sem_id)
+
+
+
+
+@router.get("/fetch_students/{course_id}", response_model=StudentEnrollmentDetailsModel, summary="Fetch Students by Course ID")
+def fetch_students(course_id: str) -> StudentEnrollmentDetailsModel:
+    return fetch_students_by_course_id(course_id=course_id)

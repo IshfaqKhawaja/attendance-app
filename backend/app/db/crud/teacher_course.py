@@ -1,6 +1,6 @@
 from app.db.connection import connection_to_db
 
-from app.db.models.teacher_course_model import BulkTeacherCourseIn, TeacherCourseIn
+from app.db.models.teacher_course_model import BulkTeacherCourseIn, TeacherCourseDetail, TeacherCourseIn, TeacherCourseResponse
 
 
 def add_teacher_course_to_db(teacher_course: TeacherCourseIn) -> dict:
@@ -73,33 +73,73 @@ def add_bulk_teacher_courses_to_db(
         return {"success": False, "message": f"Couldn't add teacher courses in bulk: {e}"}
 
 
-def display_teacher_course_by_teacher_id(teacher_id: str) -> dict:
+def display_teacher_course_by_teacher_id(teacher_id: str) -> TeacherCourseResponse:
     """
-    Fetches the teacher_course row(s) with the given course_id and returns it as a dict,
-    or returns success=False if not found.
+    Fetches a detailed list of courses (with semester and program info)
+    for a specific teacher.
     """
-    conn = connection_to_db()
-    with conn.cursor() as cur:
-        cur.execute(
-            "SELECT teacher_id, course_id"
-            " FROM teacher_course WHERE teacher_id = %s",
-            (teacher_id,)
-        )
-        rows = cur.fetchall()
-    data = []
-    if rows:
-        for row in rows:
-            data.append({
-                "teacher_id": row[0],
-                "course_id": row[1]
-            })
-        return {
-            "success": True,
-            "teacher_courses" : data,
-            
-        }
-    else:
-        return {"success": False}
+    sql_query = """
+        SELECT
+            tc.teacher_id,    -- r[0]
+            tc.course_id,     -- r[1]
+            c.course_name,    -- r[2]
+            s.sem_id,         -- r[3]
+            s.sem_name,       -- r[4]
+            p.prog_id,        -- r[5]
+            p.prog_name       -- r[6]
+        FROM
+            teacher_course tc
+        JOIN
+            course c ON tc.course_id = c.course_id
+        JOIN
+            semester s ON c.sem_id = s.sem_id
+        JOIN
+            program p ON s.prog_id = p.prog_id
+        WHERE
+            tc.teacher_id = %s
+        ORDER BY
+            s.sem_name, c.course_name;
+    """
+    
+    conn = connection_to_db() 
+    if not conn:
+        print("Error: Could not connect to the database.")
+        return TeacherCourseResponse(success=False)
+
+    assignments = []
+    try:
+        with conn.cursor() as cur:
+            cur.execute(sql_query, (teacher_id,))
+            rows = cur.fetchall()
+
+        if not rows:
+            return TeacherCourseResponse(success=True, teacher_courses=[])
+
+        # Map tuple indexes to the TeacherCourseDetail model
+        for r in rows:
+            assignments.append(
+                TeacherCourseDetail(
+                    teacher_id=r[0],
+                    course_id=r[1],
+                    course_name=r[2],
+                    sem_id=r[3],
+                    sem_name=r[4],
+                    prog_id=r[5],
+                    prog_name=r[6]
+                )
+            )
+
+        return TeacherCourseResponse(success=True, teacher_courses=assignments)
+    
+    except Exception as e:
+        print(f"Error fetching teacher course details: {e}")
+        if conn:
+            conn.rollback()
+        return TeacherCourseResponse(success=False)
+    
+    finally:
+        if conn:
+            conn.close()
 
 
 def display_all() -> list:

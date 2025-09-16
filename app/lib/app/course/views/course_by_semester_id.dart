@@ -73,7 +73,6 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
                 Dialog(
                   child: AddCourse(
                     semesterId: semesterId,
-
                   ),
                 ),
               );
@@ -91,7 +90,7 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
             final course = courseController.coursesBySemesterId[index];
             return ListTile(
               title: Text(course.courseName, style: textStyle.copyWith(fontSize: 16)),
-              // subtitle: Text("Course ID: ${course.courseId}", style: textStyle.copyWith(fontSize: 12)),
+              subtitle: Text("Assigned To: ${course.assignedTeacherId}", style: textStyle.copyWith(fontSize: 12)),
               trailing: IntrinsicWidth(
                 child: Row(
                   children: [

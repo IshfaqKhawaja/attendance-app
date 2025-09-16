@@ -24,8 +24,6 @@ def initial_data() -> dict:
                     (faculties,    "faculties"),
                     (departments,  "departments"),
                     (programs,     "programs"),
-                    (courses,      "courses"),
-                    (semesters,    "semesters"),
                 ]
             }
 

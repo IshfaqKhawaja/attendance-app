@@ -1,5 +1,5 @@
 from app.db.connection import connection_to_db
-from app.db.models.course_student_model import BulkCourseStudentInput, CourseIdInput, CourseStudent, ReportInput
+from app.db.models.course_student_model import BulkCourseStudentInput, CourseIdInput, CourseStudent
 from typing import  List
 
 
@@ -157,23 +157,3 @@ def display_all() -> list:
 
 
 
-
-def fetch_attendance_report(report : ReportInput) -> List:
-    conn = connection_to_db()
-    query = """
-        SELECT
-          s.student_id,
-          s.student_name,
-          COUNT(a.attendance_id) FILTER (WHERE a.present = true) AS present_days,
-          COUNT(a.attendance_id) AS total_days
-        FROM attendance a
-        JOIN students s ON a.student_id = s.student_id
-        WHERE a.course_id = %s
-          AND a.date BETWEEN %s AND %s
-        GROUP BY s.student_id, s.student_name
-        ORDER BY s.student_id;
-    """
-    with conn.cursor() as cur:
-        cur.execute(query, (report.course_id, report.start_date, report.end_date))
-        rows = cur.fetchall()
-    return rows

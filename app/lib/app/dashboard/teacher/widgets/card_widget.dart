@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../models/teacher_course.dart';
+
 class CardWidget extends StatelessWidget {
-  final course;
-  const CardWidget({required this.course});
+  final TeacherCourseModel course;
+  const CardWidget({super.key, required this.course});
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -21,28 +23,18 @@ class CardWidget extends StatelessWidget {
             children: [
               // Course:
               Text(
-                course.courseName,
+                course.courseName!,
                 style: GoogleFonts.openSans(color: Colors.white, fontSize: 20),
               ),
               // Sem Name
               Text(
-                course.semName,
+                course.semName!,
                 style: GoogleFonts.openSans(color: Colors.white, fontSize: 16),
               ),
               // Prog Name:
               Text(
-                course.progName,
+                course.progName!,
                 style: GoogleFonts.openSans(color: Colors.white, fontSize: 14),
-              ),
-              // Dept Name
-              Text(
-                course.deptName,
-                style: GoogleFonts.openSans(color: Colors.white, fontSize: 12),
-              ),
-              // Fact Name
-              Text(
-                course.factName,
-                style: GoogleFonts.openSans(color: Colors.white, fontSize: 12),
               ),
             ],
           ),

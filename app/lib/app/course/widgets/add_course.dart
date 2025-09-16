@@ -46,6 +46,9 @@ class _AddCourseState extends State<AddCourse> {
                 ),
                 const SizedBox(height: 20),
                 Obx(() {
+                  if (courseController.teachersInThisDept.isEmpty) {
+                    return Text("Loading teachers...", style: textStyle.copyWith(fontSize: 14, color: Colors.grey),);
+                  }
                     return DropdownButton<TeacherModel>(
                       hint: Text("Assign Teacher"),
                       value: courseController.selectedTeacher.value,

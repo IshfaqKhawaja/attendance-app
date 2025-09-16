@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body
 from app.db.crud.teacher_course import add_bulk_teacher_courses_to_db, add_teacher_course_to_db, display_all, display_teacher_course_by_teacher_id
-from app.db.models.teacher_course_model import BulkTeacherCourseIn, TeacherCourseIn
+from app.db.models.teacher_course_model import BulkTeacherCourseIn, TeacherCourseDetail, TeacherCourseIn, TeacherCourseResponse
 
 
 
@@ -30,8 +30,8 @@ def add_all_teacher_courses(
     """
     return add_bulk_teacher_courses_to_db(courses)
 
-@router.post("/display", response_model=dict, summary="Display Course")
-def display(teacher_id: str = Body(..., embed=True, description="Teacher ID")) -> dict:
+@router.get("/display/{teacher_id}", response_model=TeacherCourseResponse, summary="Display Course")
+def display(teacher_id: str) -> TeacherCourseResponse:
     return display_teacher_course_by_teacher_id(teacher_id=teacher_id)
 
 

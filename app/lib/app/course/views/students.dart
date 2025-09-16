@@ -1,28 +1,34 @@
 import 'package:app/app/constants/text_styles.dart';
 import 'package:app/app/course/widgets/student_widget.dart';
-import 'package:app/app/models/teacher_course.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/course_controller.dart';
 
-class Students extends StatelessWidget {
-  final TeacherCourseModel course;
+class Students extends StatefulWidget {
+  // final TeacherCourseModel course;
   late final CourseController courseController;
 
-  Students({super.key, required this.course}) {
-    courseController = Get.put(
-      CourseController(courseId: course.courseId),
-      permanent: true,
-    );
+  Students({super.key}) {
+    courseController = Get.find<CourseController>();
   }
 
+  @override
+  State<Students> createState() => _StudentsState();
+}
+
+class _StudentsState extends State<Students> {
+  @override
+  void initState() {
+    super.initState();
+    widget.courseController.getStudentsList();
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Obx(() {
-          final students = courseController.studentsInThisCourse;
+          final students = widget.courseController.studentsInThisCourse;
           return ListView.builder(
             itemCount: students.length + 1,
             itemBuilder: (_, index) {
@@ -47,15 +53,15 @@ class Students extends StatelessWidget {
           );
         }),
 
-        // FAB Overlay
-        Positioned(
-          bottom: 16,
-          right: 16,
-          child: FloatingActionButton(
-            onPressed: () => courseController.pickCsvFile(course),
-            child: Icon(Icons.upload_file),
-          ),
-        ),
+        // // FAB Overlay
+        // Positioned(
+        //   bottom: 16,
+        //   right: 16,
+        //   child: FloatingActionButton(
+        //     onPressed: () => courseController.pickCsvFile(course),
+        //     child: Icon(Icons.upload_file),
+        //   ),
+        // ),
       ],
     );
   }

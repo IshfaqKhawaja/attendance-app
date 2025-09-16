@@ -20,9 +20,11 @@ class _CourseState extends State<Course> {
 
  late CourseController courseController;
 
+ 
+ @override
  void initState() {
     super.initState();
-    courseController = Get.put(CourseController(courseId: course.courseId));
+    courseController = Get.put(CourseController(courseId: course.courseId), permanent: true);
   }
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class _CourseState extends State<Course> {
                   ),
                   ElevatedButton(
                     onPressed: (){
-                      courseController.showDateRangeDialog(context);
+                      courseController.showDateRangeDialog(context, course.courseName!);
                       },                   
                     child: Text("Report",),)
                 ],
@@ -69,7 +71,7 @@ class _CourseState extends State<Course> {
             child: Padding(
               padding: EdgeInsets.only(left: 10),
               child: Text(
-                "Course Name: ${course.courseName}\nCourse ID : ${course.courseId}\nSem ID : ${course.semName}\nDept Name: ${course.deptName}\nFaculty : ${course.factName}",
+                "Course Name: ${course.courseName}\nCourse ID : ${course.courseId}\nSem ID : ${course.semName}",
                 style: GoogleFonts.openSans(fontSize: 14, color: Colors.white),
               ),
             ),
@@ -100,8 +102,8 @@ class _CourseState extends State<Course> {
               ),
               child: TabBarWidget(
                 tabs: [
-                  Students(course: course),
-                  Attendence(course: course),
+                  Students(),
+                  Attendence(),
                 ],
               ),
             ),

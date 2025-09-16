@@ -1,6 +1,7 @@
+from re import A
 from typing import List
 from app.db.connection import connection_to_db
-from app.db.models.attendence_model import AttendenceModel, AttendenceIdModel
+from app.db.models.attendence_model import AttendenceModel, AttendenceIdModel, BulkAttendenceResponseModel, ReportInput
 
 def add_attendence_to_db(model: AttendenceModel) -> dict:
     """
@@ -31,7 +32,7 @@ def add_attendence_to_db(model: AttendenceModel) -> dict:
         return {"success": False, "message": f"Couldn't Record Attendence: {e}"}
 
 
-def add_attendence_bulk(models: List[AttendenceModel]) -> dict:
+def add_attendence_bulk(attendances: List[AttendenceModel]) -> BulkAttendenceResponseModel:
     """
     Bulk-insert multiple attendance records via a list of AttendenceModel.
     """
@@ -41,9 +42,9 @@ def add_attendence_bulk(models: List[AttendenceModel]) -> dict:
             cur.executemany(
                 """
                 INSERT INTO attendance
-                  (attendanceid, studentid, courseid,
-                   date, present, progid, semid, deptid)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                  (student_id, course_id,
+                   date, present)
+                VALUES (%s, %s, %s, %s)
                 """,
                 [
                     (
@@ -52,18 +53,21 @@ def add_attendence_bulk(models: List[AttendenceModel]) -> dict:
                         m.date,
                         m.present
                     )
-                    for m in models
+                    for m in attendances
                 ],
             )
         conn.commit()
-        return {
-            "success": True,
-            "message": f"{len(models)} attendance records inserted"
-        }
+        return BulkAttendenceResponseModel(
+            success=True,
+            message=f"{len(attendances)} attendance records inserted"
+        )
     except Exception as e:
         conn.rollback()
         print("Bulk insert failed:", e)
-        return {"success": False, "message": f"Couldn't insert records: {e}"}
+        return BulkAttendenceResponseModel(
+            success=False,
+            message=f"Couldn't insert records: {e}"
+        )
 
 
 def display_attendence_by_id(attendence_id: AttendenceIdModel) -> dict:
@@ -91,3 +95,30 @@ def display_attendence_by_id(attendence_id: AttendenceIdModel) -> dict:
         present=row[3],
     )
     return {"success": True, **model.dict()}
+
+
+
+
+def fetch_attendance_report(report : ReportInput) -> List:
+    conn = connection_to_db()
+    query = """
+        SELECT
+          s.student_id,
+          s.student_name,
+          COUNT(*) FILTER (WHERE a.present = true) AS present_days,
+          COUNT(*) AS total_days
+        FROM attendance a
+        JOIN students s ON a.student_id = s.student_id
+        WHERE a.course_id = %s
+          AND a."date" BETWEEN %s AND %s  -- Quoted "date"
+        GROUP BY s.student_id, s.student_name
+        ORDER BY s.student_id;
+    """
+    with conn.cursor() as cur:
+        # Note: I also put "date" in quotes as it's a reserved keyword
+        cur.execute(query, (report.course_id, report.start_date, report.end_date))
+        rows = cur.fetchall()
+    
+    # Don't forget to close the connection
+    conn.close() 
+    return rows

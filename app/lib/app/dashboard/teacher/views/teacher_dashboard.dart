@@ -8,16 +8,28 @@ import '../controllers/teacher_dashboard_controller.dart';
 import '../../../constants/text_styles.dart';
 import '../widgets/teacher_bottom_bar.dart';
 
-class TeacherDashboard extends StatelessWidget {
+class TeacherDashboard extends StatefulWidget {
   TeacherDashboard({super.key});
+
+  @override
+  State<TeacherDashboard> createState() => _TeacherDashboardState();
+}
+
+class _TeacherDashboardState extends State<TeacherDashboard> {
   final TeacherDashboardController teacherDashboardController = Get.put(
     TeacherDashboardController(),
     permanent: true,
   );
+
   final TeacherBottomBarController bottomBarController = Get.put(
     TeacherBottomBarController(),
   );
-
+  
+  @override
+  void initState() {
+    super.initState();
+    teacherDashboardController.loadTeacherCourses();
+  }
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -84,6 +96,7 @@ class TeacherDashboard extends StatelessWidget {
                     .screens[bottomBarController.currentIndex.value],
               ),
             ),
+
           ],
         ),
         bottomNavigationBar: TeacherBottomBar(),

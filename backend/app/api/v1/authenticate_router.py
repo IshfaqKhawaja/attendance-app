@@ -1,11 +1,9 @@
-from app.db.crud import user
 from fastapi import APIRouter, Body, HTTPException # type: ignore
 from app.db.crud.authenticate import (
     check_if_teacher_exists,
 )
 from app.core.mail import send_mail
-from app.schemas.teacher import TeacherCreate
-from app.schemas.teacher_course import TeacherCourseCreate
+from app.db.models.teacher_model import TeacherCreate
 from app.utils.otp_verifier import *
 from app.db.crud.teacher import add_teacher_to_db
 from app.db.crud.user import (

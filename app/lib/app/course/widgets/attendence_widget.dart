@@ -5,7 +5,7 @@ import '../../constants/text_styles.dart';
 import '../controllers/course_controller.dart';
 
 class AttendenceWidget extends StatefulWidget {
-  AttendenceWidget({super.key});
+  const AttendenceWidget({super.key});
 
   @override
   State<AttendenceWidget> createState() => _AttendenceWidgetState();

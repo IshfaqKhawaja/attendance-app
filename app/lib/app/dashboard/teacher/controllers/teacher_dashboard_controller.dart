@@ -1,9 +1,11 @@
 // json/http calls moved into repository
+import 'package:app/app/core/network/api_client.dart';
 import 'package:app/app/loading/controllers/loading_controller.dart';
 import 'package:app/app/models/teacher_course.dart';
 import 'package:app/app/signin/controllers/signin_controller.dart';
 import 'package:get/get.dart';
 // no direct http after refactor
+import '../../../core/network/endpoints.dart';
 import '../../../core/repositories/teacher_repository.dart';
 
 class TeacherDashboardController extends GetxController {
@@ -12,12 +14,12 @@ class TeacherDashboardController extends GetxController {
   final isTeacherCoursesLoaded = false.obs;
   RxList<TeacherCourseModel> thisTeacherCourses = <TeacherCourseModel>[].obs;
   late final TeacherRepository _repo;
+  final client = ApiClient();
 
   void loadTeacherCourses() async {
     isTeacherCoursesLoaded.value = false;
     try {
-      final res = await _repo.listTeacherCourses(
-          singInController.teacherData.value.teacherId);
+      final res = await client.getJson(Endpoints.teacherCourses(singInController.teacherData.value.teacherId));
       if (res['success'] == true) {
         thisTeacherCourses.value = (res['teacher_courses'] as List<dynamic>)
             .map((e) => TeacherCourseModel.fromJson(e))
@@ -40,9 +42,4 @@ class TeacherDashboardController extends GetxController {
     }
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    loadTeacherCourses();
-  }
 }

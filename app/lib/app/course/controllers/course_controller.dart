@@ -1,19 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:csv/csv.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../models/student_model.dart';
 import '../../core/network/endpoints.dart';
 import '../../core/network/api_client.dart';
-import '../../core/repositories/course_repository.dart';
-import '../models/course_students_model.dart';
 import '../models/student_attendence.dart';
 
 class CourseController extends GetxController {
@@ -21,22 +13,17 @@ class CourseController extends GetxController {
   var studentsInThisCourse = <StudentModel>[].obs;
   var studentsInThisSem = <StudentModel>[].obs;
   final String courseId;
-  // New Data
-  var newStudents = <StudentModel>[].obs;
-  var newCourseStudents = <CourseStudentsModel>[].obs;
-
   // Attendence data:::
   var countedAs = 1.obs;
-  var attendenceMarked = <StudentAttendance>[].obs;
+  var attendenceMarked = <StudentAttendanceList>[].obs;
 
-  late final ApiClient _apiClient;
-  late final CourseRepository _repo;
+  final ApiClient client = ApiClient();
 
 
   void getStudentsList() async {
     studentsInThisCourse.clear();
     try {
-      final res = await _repo.listStudentsByCourse(courseId);
+      final res = await client.getJson(Endpoints.getStudentsByCourseId(courseId));
       if (res["success"] == true) {
         studentsInThisCourse.value = (res["students"] as List)
             .map((e) => StudentModel.fromJson(e))
@@ -48,126 +35,61 @@ class CourseController extends GetxController {
       Get.snackbar('Error', 'Failed to load students: $e');
     }
   }
-
-  void addStudents() async {
-    try {
-      final res = await _repo.addStudentsToCourse(
-        newStudents.map((e) => e.toJson()).toList(),
-        newCourseStudents.map((e) => e.toJson()).toList(),
-      );
-      if (res['success'] == true) {
-        Get.snackbar(
-          'SUCCESS',
-          'Students and Course Students Added',
-          colorText: Colors.green,
-        );
-      } else {
-        Get.snackbar('ERROR', res['message']?.toString() ?? 'Could not add students', colorText: Colors.red);
-      }
-    } catch (e) {
-      Get.snackbar('ERROR', 'Could not add students: $e', colorText: Colors.red);
-    } finally {
-      getStudentsList();
-    }
-  }
-
-  Future<void> pickCsvFile(course) async {
-    newCourseStudents.clear();
-    newStudents.clear();
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['csv'],
-      );
-
-      if (result == null) {
-        print("❌ No file selected.");
-        return;
-      }
-
-      final file = result.files.single;
-      Uint8List fileBytes;
-
-      if (file.bytes != null) {
-        fileBytes = file.bytes!;
-      } else if (file.path != null) {
-        fileBytes = await File(file.path!).readAsBytes();
-      } else {
-        print("❌ No valid file content.");
-        return;
-      }
-
-      final content = String.fromCharCodes(fileBytes);
-      final csvTable = const CsvToListConverter().convert(content);
-
-      for (int i = 0; i < csvTable.length; i++) {
-        newCourseStudents.add(
-          CourseStudentsModel(
-            studentId: csvTable[i][0],
-            progId: course.progId,
-            semId: course.semId,
-            deptId: course.deptId,
-            courseId: course.courseId,
-          ),
-        );
-        newStudents.add(
-          StudentModel(
-            studentId: csvTable[i][0],
-            studentName: csvTable[i][1],
-            phoneNumber: csvTable[i][2],
-            progId: course.progId,
-            semId: course.semId,
-            deptId: course.deptId,
-          ),
-        );
-      }
-      addStudents();
-    } catch (e, st) {
-      print("⚠️ Error reading CSV: $e\n$st");
-    }
-  }
-
   // Attendence :::
 
   void getStudentsForAttendence() {
     attendenceMarked.value = studentsInThisCourse.map((student) {
-      return StudentAttendance(
+      return StudentAttendanceList(
         studentId: student.studentId,
         studentName: student.studentName,
         courseId: courseId,
-        semId: student.semId,
         date: DateTime.now(),
-        deptId: student.deptId,
-        progId: student.progId,
         marked: List.generate(countedAs.value, (_) => false),
       );
     }).toList();
   }
 
+
+  // Prepare attendance data for submission
+  // making list of maps
+  List<StudentAttendance> prepareAttendenceData() {
+    var list = <StudentAttendance>[];
+    for (var attendance in attendenceMarked) {
+      for (int i = 0; i < countedAs.value; i++) {
+        list.add(StudentAttendance(
+          studentId: attendance.studentId,
+          studentName: attendance.studentName,
+          courseId: attendance.courseId,
+          date: attendance.date,
+          present: attendance.marked[i],
+        ));
+      }
+    }
+    return list;
+  }
+
+
   void addAttendence() async {
     try {
-      var attendence = jsonEncode(
-        attendenceMarked.map((e) => e.toJson()).toList(),
-      );
-      var response = await http.post(
-        Uri.parse("${Endpoints.baseUrl}/attendance/add_attendence_bulk"),
-        body: attendence,
-        headers: {'Content-Type': 'application/json'},
-      );
-      if (response.statusCode == 200) {
-        var res = jsonDecode(response.body);
-        if (res["success"]) {
-          Get.snackbar("Success", res["message"], colorText: Colors.green);
-        } else {
+  
+      var res = await client.postJson(Endpoints.addAttendanceBulk,{
+        'attendances': prepareAttendenceData().map((e) => e.toJson()).toList(),
+      });
+      print(res);
+      if (res["success"]) {
+        Get.snackbar("Success", res["message"], colorText: Colors.green);
+      } else {
           Get.snackbar("ERROR", res["message"], colorText: Colors.red);
         }
-      }
     } catch (e) {
       print(e);
       Get.snackbar("ERROR", "$e", colorText: Colors.red);
     }
   }
- void showDateRangeDialog(BuildContext context) async {
+
+
+
+ void showDateRangeDialog(BuildContext context, String courseName) async {
   DateTime? startDate = await showDatePicker(
     context: context,
     initialDate: DateTime.now().subtract(Duration(days: 7)),
@@ -201,7 +123,7 @@ class CourseController extends GetxController {
         TextButton(
           onPressed: () {
             Get.back(); // close the dialog
-            generateReport(startDate, endDate);
+            generateReport(courseName, startDate, endDate);
           },
           child: Text("Generate"),
         ),
@@ -210,12 +132,18 @@ class CourseController extends GetxController {
   );
 }
 
-  Future<void> generateReport(DateTime startDate, DateTime endDate) async {
+  Future<void> generateReport(String courseName, DateTime startDate, DateTime endDate) async {
   try {
-    final bytes = await _repo.generateCourseReport(
-      courseId,
-      startDate.toIso8601String(),
-      endDate.toIso8601String(),
+    
+
+    final bytes = await client.postBytes(
+      Endpoints.generateAttendanceReport,
+      {
+        'course_name': courseName,
+        'course_id': courseId,
+        'start_date': startDate.toIso8601String(),
+        'end_date': endDate.toIso8601String(),
+      },
     );
 
       // 📁 Get download directory
@@ -233,15 +161,15 @@ class CourseController extends GetxController {
 }
 
 
+void clear() {
+  studentsInThisCourse.clear();
+  attendenceMarked.clear();
+  countedAs.value = 1;
+}
 
+void clearAttendence() {
+  attendenceMarked.clear();
+  countedAs.value = 1;
+}
 
-
- 
-  @override
-  void onInit() {
-    super.onInit();
-  _apiClient = ApiClient();
-  _repo = CourseRepository(_apiClient);
-    getStudentsList();
-  }
 }

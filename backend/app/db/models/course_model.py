@@ -6,6 +6,7 @@ class CourseCreate(BaseModel):
     course_name: str 
     course_id: str
     sem_id: str
+    assigned_teacher_id: str
     def __init__(self, **data):
         if 'course_id' not in data:
             data['course_id'] = str(uuid4())

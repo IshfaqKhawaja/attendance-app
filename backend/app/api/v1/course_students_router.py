@@ -3,7 +3,6 @@ from fastapi.responses import FileResponse # type: ignore
 from app.db.crud import course
 from app.db.crud.course_students import *
 from app.db.crud.student import add_students_in_bulk, fetch_students_by_student_ids
-from app.services.generate_course_report import  generate_pdf_report
 from app.db.models.course_student_model import *
 
 
@@ -63,19 +62,3 @@ def display_students_by_ids(data: CourseIdInput) -> dict:
     }
 
 
-@router.post("/generate_report", response_model=dict, summary="Generate Report for Course Students")
-def generate_report(data: ReportInput) -> dict:
-    d = fetch_attendance_report(
-        data
-        )
-    pdf = generate_pdf_report(
-        data=d,
-        course_id=data.course_id,
-        start_date=data.start_date,
-        end_date=data.end_date
-    )
-    return {
-        "success": True,
-        "message": "Report generated successfully.",
-        "file_path": pdf
-    }

@@ -44,7 +44,6 @@ class CourseBySemesterIdController  extends GetxController{
       await file.writeAsBytes(bytes);
       await OpenFile.open(filePath);
     } catch (e) {
-      print(e);
       Get.snackbar("Error", "Failed to generate report",
         colorText: Colors.red,
       );
@@ -97,11 +96,24 @@ class CourseBySemesterIdController  extends GetxController{
   // Add Course Function
   void addCourse(String name, String semId) async {
       try{
+        if(selectedTeacher.value == null){
+          Get.snackbar("Error", "Please select a teacher",
+            colorText: Colors.red,
+          );
+          return;
+        }
+        if(name.isEmpty){
+          Get.snackbar("Error", "Please enter course name",
+            colorText: Colors.red,
+          );
+          return;
+        }
         var res = await client.postJson(
           Endpoints.addCourse,
           {
             "course_name": name,
             "sem_id": semId,
+            "assigned_teacher_id": selectedTeacher.value?.teacherId,
           },
         );
         if(res["success"] == true){
@@ -235,20 +247,15 @@ void fetchTeachersInThisDept() async {
       var res = await client.getJson(
         Endpoints.getTeachersByDeptId(deptId),
       );
-      debugPrint(res.toString());
       if (res["success"] == true) {
         final teachersList = (res["teachers"] as List)
             .map((e) => TeacherModel.fromJson(e))
             .toList();
-        print(teachersList);
         teachersInThisDept.assignAll(teachersList);
-        print(teachersInThisDept);
-        debugPrint('teachers count: ${teachersInThisDept.length}');
       } else {
         Get.snackbar('Error', res['message']?.toString() ?? 'Failed to load teachers for department');
       }
     } catch (e) {
-      print(e);
       Get.snackbar('Error', 'Failed to load teachers for department: $e');
     }
   }
@@ -256,6 +263,7 @@ void fetchTeachersInThisDept() async {
 
  void clear(){
   nameController.clear();
+  selectedTeacher.value = null;
   }
 
 

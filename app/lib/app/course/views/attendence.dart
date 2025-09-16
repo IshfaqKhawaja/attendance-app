@@ -4,16 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/teacher_course.dart';
 import '../widgets/drop_down_widget.dart';
 import '../../constants/text_styles.dart';
 
-class Attendence extends StatelessWidget {
-  final TeacherCourseModel course;
-  Attendence({super.key, required this.course});
+class Attendence extends StatefulWidget {
+  Attendence({super.key});
 
+  @override
+  State<Attendence> createState() => _AttendenceState();
+}
+
+class _AttendenceState extends State<Attendence> {
   final CourseController courseController = Get.find<CourseController>();
-
+  @override
+  void dispose() {
+    super.dispose();
+    courseController.clear();
+  }
   @override
   Widget build(BuildContext context) {
     final height = Get.size.height;

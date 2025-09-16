@@ -1,5 +1,5 @@
 from app.db.connection import connection_to_db
-from app.db.models.student_enrolement_model import BulkStudentEnrolementModel, DisplayStudentsBySemIdResponseModel, StudentEnrolementModel, StudentResponseModel
+from app.db.models.student_enrolement_model import BulkStudentEnrolementModel, DisplayStudentsBySemIdResponseModel, StudentCourseEnrolementModel, StudentEnrolementModel, StudentEnrollmentDetailsModel, StudentResponseModel
 
 
 
@@ -88,6 +88,39 @@ def display_students_by_sem_id(sem_id: str) -> DisplayStudentsBySemIdResponseMod
                 sem_id=row[3]
             ))
     return DisplayStudentsBySemIdResponseModel(
+        success=True,
+        students=data
+    )
+    
+    
+def fetch_students_by_course_id(course_id: str) -> StudentEnrollmentDetailsModel:
+    """
+    Fetches the Students enrolled in a particular course using JOIN.
+    """
+    conn = connection_to_db()
+    data = []
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT s.student_id, s.student_name, s.phone_number, s.sem_id
+            FROM students s
+            INNER JOIN student_enrollment se ON s.student_id = se.student_id
+            INNER JOIN course c ON se.sem_id = c.sem_id
+            WHERE c.course_id = %s
+            ORDER BY s.student_name ASC
+            """,
+            (course_id,)
+        )
+        rows = cur.fetchall()
+        for row in rows:
+             # Append each student as a StudentResponseModel
+            data.append(StudentCourseEnrolementModel(
+                student_id=row[0],
+                student_name=row[1],
+                phone_number=str(row[2]),
+                course_id=course_id
+            ))
+    return StudentEnrollmentDetailsModel(
         success=True,
         students=data
     )
