@@ -5,13 +5,8 @@ import '../views/home_widget.dart';
 
 class TeacherBottomBarController extends GetxController {
   var currentIndex = 0.obs;
-  var screens = [HomeWidget(), SizedBox(), SizedBox(), SizedBox()];
+  var screens = [HomeWidget(), SizedBox()];
   void changeIndex(int index) {
     currentIndex.value = index;
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
   }
 }

@@ -33,6 +33,32 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
         title: Text( semesterName, style: textStyle.copyWith(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),),
         centerTitle: true,
         actions: [
+          // Attendance Report Button
+          IconButton(
+            icon: Icon(Icons.picture_as_pdf),
+            onPressed: (){
+              showDialog(context: context, builder: (context) {
+               return AlertDialog(
+                title: Text("Generate Attendance Report", style: textStyle.copyWith(fontSize: 18,  fontWeight: FontWeight.bold),),
+                content: Text("Do you want to generate attendance report for the semester '$semesterName'?", style: textStyle.copyWith(fontSize: 14,),),
+                actions: [
+                  TextButton(
+                    onPressed: () => Get.back(),
+                    child: Text("Cancel"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Get.back(); // close the dialog
+                     courseController.attendanceForSem(semesterId);
+                    },
+                    child: Text("Generate"),
+                  ),
+                ],
+               );
+              });
+            },
+          ),
+
           // Show Student List Button
           IconButton(
             icon: Icon(Icons.list),

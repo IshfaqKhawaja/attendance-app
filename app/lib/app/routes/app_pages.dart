@@ -1,4 +1,5 @@
 import 'package:app/app/course/views/course.dart';
+import 'package:app/app/course/views/students.dart';
 import 'package:app/app/dashboard/teacher/views/teacher_dashboard.dart';
 import 'package:get/get.dart';
 // Local Imports
@@ -26,5 +27,6 @@ class Pages {
     GetPage(name: Routes.COURSE, page: () => Course()),
     GetPage(name: Routes.INDEX_PAGE, page: () => IndexPage()),
     GetPage(name: Routes.ADD_STUDENTS, page: () => AddStudents()),
+    GetPage(name: Routes.STUDENTS, page: () => Students()),
   ];
 }

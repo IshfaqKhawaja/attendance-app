@@ -10,4 +10,5 @@ class Routes {
   static const String COURSE = "/course";
   static const String INDEX_PAGE = '/index_page';
   static const String ADD_STUDENTS = '/add_students';
+  static const String STUDENTS = '/students';
 }

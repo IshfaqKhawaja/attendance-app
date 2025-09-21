@@ -17,10 +17,10 @@ class DropDownWidget extends StatelessWidget {
             child: Text(e.toString(), style: textStyle.copyWith(fontSize: 16)),
           );
         }).toList(),
-        onChanged: (value) {
+        onChanged: (value) async  {
           if (value != null) {
             courseController.countedAs.value = value;
-            courseController.getStudentsForAttendence();
+            await courseController.getStudentsForAttendence();
           }
         },
         borderRadius: BorderRadius.all(Radius.circular(10)),

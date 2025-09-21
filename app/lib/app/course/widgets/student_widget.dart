@@ -14,7 +14,7 @@ class StudentWidget extends StatelessWidget {
       elevation: WidgetStateProperty.all<double>(0.1),
       shadowColor: WidgetStateProperty.all<Color>(Colors.white),
     );
-    final rowWidth = Get.size.width * 0.5;
+    final rowWidth = Get.size.width * 0.3;
     return Card(
       color: Get.theme.primaryColor.withOpacity(0.7),
       elevation: 10,
@@ -31,7 +31,7 @@ class StudentWidget extends StatelessWidget {
                   width: rowWidth,
                   child: Text(
                     student.studentName,
-                    style: textStyle.copyWith(color: Colors.white),
+                    style: textStyle.copyWith(fontSize: 16, color: Colors.white),
                   ),
                 ),
                 SizedBox(
@@ -39,8 +39,9 @@ class StudentWidget extends StatelessWidget {
                   child: Text(
                     student.studentId,
                     style: textStyle.copyWith(
+                  
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 11,
                     ),
                   ),
                 ),

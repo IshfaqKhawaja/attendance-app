@@ -28,30 +28,12 @@ class TeacherBottomBar extends StatelessWidget {
             ),
             IconButton(
               icon: FaIcon(
-                FontAwesomeIcons.addressCard,
+                FontAwesomeIcons.cog,
                 color: controller.currentIndex.value == 1
                     ? selectedColor
                     : unSelectedColor,
               ),
               onPressed: () => controller.changeIndex(1),
-            ),
-            IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons.userFriends,
-                color: controller.currentIndex.value == 2
-                    ? selectedColor
-                    : unSelectedColor,
-              ),
-              onPressed: () => controller.changeIndex(2),
-            ),
-            IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons.cog,
-                color: controller.currentIndex.value == 3
-                    ? selectedColor
-                    : unSelectedColor,
-              ),
-              onPressed: () => controller.changeIndex(3),
             ),
           ],
         ),

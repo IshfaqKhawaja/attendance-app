@@ -1,7 +1,7 @@
+import 'package:app/app/constants/text_styles.dart';
 import 'package:app/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../models/teacher_course.dart';
 
@@ -24,17 +24,17 @@ class CardWidget extends StatelessWidget {
               // Course:
               Text(
                 course.courseName!,
-                style: GoogleFonts.openSans(color: Colors.white, fontSize: 20),
+                style: textStyle.copyWith(color: Colors.white, fontSize: 20),
               ),
               // Sem Name
               Text(
                 course.semName!,
-                style: GoogleFonts.openSans(color: Colors.white, fontSize: 16),
+                style: textStyle.copyWith(color: Colors.white, fontSize: 16),
               ),
               // Prog Name:
               Text(
                 course.progName!,
-                style: GoogleFonts.openSans(color: Colors.white, fontSize: 14),
+                style: textStyle.copyWith(color: Colors.white, fontSize: 14),
               ),
             ],
           ),

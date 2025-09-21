@@ -1,28 +1,92 @@
+import os
+from click import File
+from app.db.models.attendence_model import ReportBySemId, ReportInput
 from app.db.models.report_by_course_id_model import ReportByCourseId
 from fastapi import APIRouter # type: ignore
 from fastapi.responses import FileResponse # type: ignore
-from app.db.reports.generate_report_by_course_id import generate_report_by_course_id
+from app.db.reports.generate_report_by_course_id import generate_report_by_course_id_xls, generate_report_by_course_id_pdf
+from app.db.reports.generate_report_by_sem_id import  generate_semester_attendance_report_xls
+from app.services.generate_course_report import generate_pdf_report
 from app.utils.excel_generator import generate_attendance_excel
 
 router = APIRouter(
     prefix="/reports",
     tags=["reports"]
 )
-
-@router.post("/generate_course_report", summary="Generate Attendance Report")
-def generate_report(course_model: ReportByCourseId) -> dict:
-    data = generate_report_by_course_id(course_model.course_id)
+@router.post("/generate_course_report_xls", summary="Generate Attendance Report")
+def generate_course_report_xls(course_model: ReportByCourseId) -> FileResponse:
+    data = generate_report_by_course_id_xls(course_model.course_id)
     if data.empty:
-        return {"success": False, "message": "No attendance data found for the specified course."}
+        return FileResponse(
+            path="",
+            filename="",
+            media_type="text/plain",
+        )
 
     output_path = course_model.file_path or "attendance_report.xlsx"
     excel_file = generate_attendance_excel(data, output_path)
 
     if not excel_file:
-        return {"success": False, "message": "Failed to generate report."}
+        return FileResponse(
+            path="",
+            filename="",
+            media_type="text/plain",
+        )
     # Return the generated Excel file as a response and success message
-    return {
-        "success": True,
-        "message": "Report generated successfully.",
-        "file_path": excel_file
-    }
+    return FileResponse(
+        path=excel_file,
+        filename=output_path,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+
+
+@router.post(
+    "/generate_course_report_pdf",
+    summary="Generate Report for Course Students"
+)
+def generate_report(data: ReportInput):
+    try:
+        d = generate_report_by_course_id_pdf(data)
+        if not d:
+            # Handle case where no data is found
+            return {"success": False, "message": "No attendance data found for this report."}
+
+        output_dir = "reports"
+        file_name = f"{data.course_id}_{data.start_date}_{data.end_date}_report.pdf"
+        full_path = os.path.join(output_dir, file_name)
+
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # This function returns the file path
+        pdf_file_path = generate_pdf_report(
+            data=d,
+            course_id=data.course_name,
+            start_date=data.start_date,
+            end_date=data.end_date,
+            filename=full_path
+        )        
+        # 4. INSTEAD of returning JSON, return the file itself
+        return FileResponse(
+            path=pdf_file_path,
+            media_type='application/pdf',
+            filename=file_name  # This is the name the user will see if they "Save As"
+        )
+
+    except Exception as e:
+        print(f"Error during report generation: {e}")
+        return {
+            "success": False,
+            "message": f"An error occurred: {e}"
+        }
+        
+        
+@router.post("/generate_report_by_sem_id_xls", summary="Generate Attendance Report by Semester ID")
+def report_by_sem_id(sem_id: ReportBySemId) -> FileResponse:
+    output_path = f"reports/attendance_report_{sem_id}.xlsx"
+    generate_semester_attendance_report_xls(sem_id.sem_id, output_path)
+    return FileResponse(
+        path=output_path,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        filename=os.path.basename(output_path)
+    )

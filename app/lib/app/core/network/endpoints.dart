@@ -16,7 +16,6 @@ class Endpoints {
   static String editTeacher = "$baseUrl/teacher/edit";
   static String addCourse = "$baseUrl/course/add";
   static String displayCoursesBySemesterId(String semId) => "$baseUrl/course/display_courses_by_semester_id/$semId";
-  static String generateCourseReport = "$baseUrl/reports/generate_course_report";
   static String deleteCourseById(String courseId) => "$baseUrl/course/delete/$courseId";
   static String addStudentsFromFile = "$baseUrl/student_enrollment/upload_bulk_enrollment_file";
   static String getStudentsBySemId(String semId) => "$baseUrl/student_enrollment/display_by_sem_id/$semId";
@@ -24,7 +23,10 @@ class Endpoints {
   static String teacherCourses(String teacherId) => "$baseUrl/teacher_course/display/$teacherId";
   static String getStudentsByCourseId(String courseId) => "$baseUrl/student_enrollment/fetch_students/$courseId";
   static String addAttendanceBulk = "$baseUrl/attendance/add_attendence_bulk";
-  static String generateAttendanceReport = "$baseUrl/attendance/generate_report";
+  // Reports endpoints
+  static String generateCourseReport = "$baseUrl/reports/generate_course_report_xls";
+  static String generateAttendanceReport = "$baseUrl/reports/generate_course_report_pdf";
+  static String generateAttendanceReportBySemId = "$baseUrl/reports/generate_report_by_sem_id_xls";
 
 }
   

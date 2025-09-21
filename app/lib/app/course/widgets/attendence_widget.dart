@@ -17,7 +17,6 @@ class _AttendenceWidgetState extends State<AttendenceWidget> {
   @override
   void initState() {
     super.initState();
-    courseController.getStudentsForAttendence();
   }
 
   @override
@@ -28,7 +27,9 @@ class _AttendenceWidgetState extends State<AttendenceWidget> {
       scrollDirection: Axis.horizontal,
       child: Obx(() {
         return DataTable(
-          columnSpacing: 45 / courseController.countedAs.value,
+          columnSpacing: courseController.countedAs.value == 0
+              ? 45.0
+              : 45 / courseController.countedAs.value,
           columns: [
             DataColumn(label: Text("ID", style: headerStyle)),
             DataColumn(label: Text("Name", style: headerStyle)),
@@ -56,22 +57,33 @@ class _AttendenceWidgetState extends State<AttendenceWidget> {
                     style: rowStyle,
                   ),
                 ),
-                ...List.generate(courseController.countedAs.value, (colIndex) {
-                  return DataCell(
-                    Checkbox(
-                      value: courseController
-                          .attendenceMarked[rowIndex]
-                          .marked[colIndex],
-                      onChanged: (bool? val) {
-                        courseController
-                                .attendenceMarked[rowIndex]
-                                .marked[colIndex] =
-                            val ?? false;
-                        courseController.attendenceMarked.refresh();
-                      },
-                    ),
-                  );
-                }),
+                ...List.generate(
+                  courseController.countedAs.value,
+                  (colIndex) {
+                    final markedList =
+                        courseController.attendenceMarked[rowIndex].marked;
+                    final bool currentValue = (colIndex < markedList.length)
+                        ? markedList[colIndex]
+                        : false;
+                    return DataCell(
+                      Checkbox(
+                        value: currentValue,
+                        onChanged: (bool? val) {
+                          final newVal = val ?? false;
+                          // Ensure the marked list is large enough before writing.
+                          if (colIndex < markedList.length) {
+                            markedList[colIndex] = newVal;
+                          } else {
+                            markedList.addAll(List<bool>.filled(
+                                colIndex - markedList.length + 1, false));
+                            markedList[colIndex] = newVal;
+                          }
+                          courseController.attendenceMarked.refresh();
+                        },
+                      ),
+                    );
+                  },
+                ),
               ],
             );
           }),

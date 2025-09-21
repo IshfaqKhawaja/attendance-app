@@ -20,7 +20,7 @@ class CourseController extends GetxController {
   final ApiClient client = ApiClient();
 
 
-  void getStudentsList() async {
+ Future<void> getStudentsList() async {
     studentsInThisCourse.clear();
     try {
       final res = await client.getJson(Endpoints.getStudentsByCourseId(courseId));
@@ -36,18 +36,17 @@ class CourseController extends GetxController {
     }
   }
   // Attendence :::
-
-  void getStudentsForAttendence() {
+  Future<void> getStudentsForAttendence() async  {
     attendenceMarked.value = studentsInThisCourse.map((student) {
       return StudentAttendanceList(
         studentId: student.studentId,
-        studentName: student.studentName,
+        studentName: student.studentName, 
         courseId: courseId,
         date: DateTime.now(),
         marked: List.generate(countedAs.value, (_) => false),
       );
     }).toList();
-  }
+  } 
 
 
   // Prepare attendance data for submission

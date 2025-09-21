@@ -261,6 +261,30 @@ void fetchTeachersInThisDept() async {
   }
 
 
+
+void attendanceForSem(String semId) async {
+    final dir = await getApplicationDocumentsDirectory();
+    String filePath = "${dir.path}/attendance_report_$semId${DateTime.now().millisecondsSinceEpoch}.xlsx";
+    final bytes = await client.postBytes(
+      Endpoints.generateAttendanceReportBySemId,
+      {
+        'sem_id': semId,     
+      },
+      
+    );
+    try{
+      final file = File(filePath);
+      await file.writeAsBytes(bytes);
+      await OpenFile.open(filePath);
+      
+    } catch (e) {
+      Get.snackbar("Error", "Failed to generate report",
+        colorText: Colors.red,
+      );
+    }
+  }
+
+
  void clear(){
   nameController.clear();
   selectedTeacher.value = null;

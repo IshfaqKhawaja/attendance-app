@@ -13,6 +13,7 @@ class HomeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       return ListView.builder(
+        padding: EdgeInsets.only(top: 10),
         itemCount: dashboardController.thisTeacherCourses.length + 1,
         itemBuilder: (_, index) {
           if (index == 0) {

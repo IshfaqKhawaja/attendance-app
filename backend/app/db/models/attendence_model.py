@@ -35,3 +35,7 @@ class ReportInput(BaseModel):
     course_name: str = Field(..., description="Course Name")
     start_date: str = Field(..., description="Start date for the report")
     end_date: str = Field(..., description="End date for the report")
+    
+
+class ReportBySemId(BaseModel):
+    sem_id: str = Field(..., description="Semester ID")

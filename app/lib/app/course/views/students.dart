@@ -21,48 +21,37 @@ class _StudentsState extends State<Students> {
   @override
   void initState() {
     super.initState();
-    widget.courseController.getStudentsList();
   }
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Obx(() {
-          final students = widget.courseController.studentsInThisCourse;
-          return ListView.builder(
-            itemCount: students.length + 1,
-            itemBuilder: (_, index) {
-              if (students.isEmpty) {
-                return Center(
-                  child: Text(
-                    "No Students Found In this Course",
-                    style: textStyle.copyWith(fontSize: 16),
-                  ),
-                );
-              }
-              if (index == 0) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Students In this Course", style: textStyle),
-                );
-              }
-
-              index = index - 1;
-              return StudentWidget(student: students[index]);
-            },
-          );
-        }),
-
-        // // FAB Overlay
-        // Positioned(
-        //   bottom: 16,
-        //   right: 16,
-        //   child: FloatingActionButton(
-        //     onPressed: () => courseController.pickCsvFile(course),
-        //     child: Icon(Icons.upload_file),
-        //   ),
-        // ),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Students In this Course", style: textStyle.copyWith(fontSize: 16, color: Colors.white),),
+        backgroundColor: Get.theme.primaryColor,
+      ),
+      body: Stack(
+        children: [
+          Obx(() {
+            final students = widget.courseController.studentsInThisCourse;
+            return ListView.builder(
+              padding: EdgeInsets.only(top: 10),
+              itemCount: students.length,
+              itemBuilder: (_, index) {
+                if (students.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "No Students Found In this Course",
+                      style: textStyle.copyWith(fontSize: 16),
+                    ),
+                  );
+                }     
+                index = index;
+                return StudentWidget(student: students[index]);
+              },
+            );
+          }),
+        ],
+      ),
     );
   }
 }

@@ -95,30 +95,3 @@ def display_attendence_by_id(attendence_id: AttendenceIdModel) -> dict:
         present=row[3],
     )
     return {"success": True, **model.dict()}
-
-
-
-
-def fetch_attendance_report(report : ReportInput) -> List:
-    conn = connection_to_db()
-    query = """
-        SELECT
-          s.student_id,
-          s.student_name,
-          COUNT(*) FILTER (WHERE a.present = true) AS present_days,
-          COUNT(*) AS total_days
-        FROM attendance a
-        JOIN students s ON a.student_id = s.student_id
-        WHERE a.course_id = %s
-          AND a."date" BETWEEN %s AND %s  -- Quoted "date"
-        GROUP BY s.student_id, s.student_name
-        ORDER BY s.student_id;
-    """
-    with conn.cursor() as cur:
-        # Note: I also put "date" in quotes as it's a reserved keyword
-        cur.execute(query, (report.course_id, report.start_date, report.end_date))
-        rows = cur.fetchall()
-    
-    # Don't forget to close the connection
-    conn.close() 
-    return rows

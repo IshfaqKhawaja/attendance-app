@@ -5,11 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 // Local Imports:::
 import '../controllers/teacher_bottom_bar_controller.dart';
 import '../controllers/teacher_dashboard_controller.dart';
-import '../../../constants/text_styles.dart';
 import '../widgets/teacher_bottom_bar.dart';
 
 class TeacherDashboard extends StatefulWidget {
-  TeacherDashboard({super.key});
+  const TeacherDashboard({super.key});
 
   @override
   State<TeacherDashboard> createState() => _TeacherDashboardState();
@@ -100,24 +99,24 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
           ],
         ),
         bottomNavigationBar: TeacherBottomBar(),
-        floatingActionButton: bottomBarController.currentIndex.value == 0
-            ? FloatingActionButton(
-                onPressed: teacherDashboardController.attendanceNotifier,
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text(
-                      "Send SMS",
-                      style: textStyle.copyWith(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontStyle: FontStyle.normal,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            : null,
+        // floatingActionButton: bottomBarController.currentIndex.value == 0
+        //     ? FloatingActionButton(
+        //         onPressed: teacherDashboardController.attendanceNotifier,
+        //         child: Container(
+        //           padding: const EdgeInsets.all(8.0),
+        //           child: Center(
+        //             child: Text(
+        //               "Send SMS",
+        //               style: textStyle.copyWith(
+        //                 color: Colors.white,
+        //                 fontSize: 12,
+        //                 fontStyle: FontStyle.normal,
+        //               ),
+        //             ),
+        //           ),
+        //         ),
+        //       )
+        //     : null,
       );
     });
   }

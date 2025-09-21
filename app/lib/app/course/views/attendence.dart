@@ -8,7 +8,7 @@ import '../widgets/drop_down_widget.dart';
 import '../../constants/text_styles.dart';
 
 class Attendence extends StatefulWidget {
-  Attendence({super.key});
+   const Attendence({super.key});
 
   @override
   State<Attendence> createState() => _AttendenceState();
@@ -70,41 +70,29 @@ class _AttendenceState extends State<Attendence> {
             width: width,
             padding: EdgeInsets.all(4),
             color: Colors.black12.withOpacity(0.1),
-            child: Tooltip(
-              message: "Upload Attendence",
-              textStyle: TextStyle(color: Colors.white),
-              decoration: BoxDecoration(
-                color: Colors.black87,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Obx(() {
-                // ignore: invalid_use_of_protected_member
-                courseController.attendenceMarked.value;
-                return ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Get.theme.primaryColor,
-                    padding: EdgeInsets.all(2), // Adjust size
-                  ),
-                  onPressed: () {
-                    courseController.addAttendence();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Add Attendance",
-                        style: textStyle.copyWith(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Get.theme.primaryColor,
+                  padding: EdgeInsets.all(2), // Adjust size
+                ),
+                onPressed: () {
+                  courseController.addAttendence();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Add Attendance",
+                      style: textStyle.copyWith(
+                        color: Colors.white,
+                        fontSize: 16,
                       ),
-                      SizedBox(width: 10),
-                      Icon(Icons.save_as, color: Colors.white, size: 30),
-                    ],
-                  ),
-                );
-              }),
-            ),
+                    ),
+                    SizedBox(width: 10),
+                    Icon(Icons.save_as, color: Colors.white, size: 30),
+                  ],
+                ),
+              ),
           ),
         ],
       ),
