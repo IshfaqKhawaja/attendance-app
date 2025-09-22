@@ -52,7 +52,13 @@ class StudentWidget extends StatelessWidget {
                 ElevatedButton(
                   style: buttonStyle,
                   onPressed: () {},
-                  child: Icon(Icons.edit, color: Colors.blue, size: 20),
+                  child: Icon(Icons.edit, color: Get.theme.primaryColor, size: 20),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  style: buttonStyle,
+                  onPressed: () {},
+                  child: Icon(Icons.delete, color: Colors.redAccent, size: 20),
                 ),
               ],
             ),

@@ -74,14 +74,12 @@ class CourseController extends GetxController {
       var res = await client.postJson(Endpoints.addAttendanceBulk,{
         'attendances': prepareAttendenceData().map((e) => e.toJson()).toList(),
       });
-      print(res);
       if (res["success"]) {
         Get.snackbar("Success", res["message"], colorText: Colors.green);
       } else {
           Get.snackbar("ERROR", res["message"], colorText: Colors.red);
         }
     } catch (e) {
-      print(e);
       Get.snackbar("ERROR", "$e", colorText: Colors.red);
     }
   }
