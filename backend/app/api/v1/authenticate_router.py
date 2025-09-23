@@ -1,3 +1,66 @@
+
+
+from fastapi import APIRouter, Body, HTTPException, Request # type: ignore
+import jwt
+from app.core.secrets import JWT_SECRET_KEY, ALGORITHM
+# ...existing code...
+
+# ...existing code...
+
+from app.db.crud.authenticate import (
+    check_if_teacher_exists,
+)
+from app.core.mail import send_mail
+from app.db.models.teacher_model import TeacherCreate
+from app.utils.otp_verifier import *
+from app.db.crud.teacher import add_teacher_to_db
+from app.db.crud.user import (
+    check_if_user_exists,
+)
+from app.core.security import (
+    create_access_token,
+    create_refresh_token,
+    )
+
+
+email_otp_pairs = {}
+router = APIRouter(
+     prefix="/authenticate",
+     tags=["authenticate"]
+)
+
+
+# --- Token Refresh Endpoint ---
+@router.post("/token/refresh", response_model=dict, summary="Refresh Access Token")
+async def refresh_access_token(request: Request):
+    # Accept refresh token from Authorization header or body
+    refresh_token = None
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        refresh_token = auth_header.split(" ", 1)[1]
+    else:
+        try:
+            data = await request.json()
+            refresh_token = data.get("refresh_token")
+        except Exception:
+            refresh_token = None
+    if not refresh_token:
+        return {"success": False, "message": "Refresh token required"}
+    try:
+        payload = jwt.decode(refresh_token, JWT_SECRET_KEY, algorithms=[ALGORITHM])
+        user_id = payload.get("sub")
+        if not user_id:
+            return {"success": False, "message": "Invalid refresh token"}
+        new_access_token = create_access_token(user_id)
+        return {
+            "success": True,
+            "access_token": new_access_token,
+            "message": "Access token refreshed"
+        }
+    except jwt.ExpiredSignatureError:
+        return {"success": False, "message": "Refresh token expired"}
+    except Exception:
+        return {"success": False, "message": "Invalid refresh token"}
 from fastapi import APIRouter, Body, HTTPException # type: ignore
 from app.db.crud.authenticate import (
     check_if_teacher_exists,

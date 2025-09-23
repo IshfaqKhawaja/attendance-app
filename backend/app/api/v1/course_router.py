@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 from httpx import delete # type: ignore
 
 from app.db.crud.course import *
+from app.core.security import get_current_user
 
 from app.db.models.course_model import (
     CourseCreate,
@@ -18,7 +19,8 @@ router = APIRouter(
 
 @router.post("/add", response_model=CourseCreateResponse, summary="Insert a new Course")
 def add(
-    course : CourseCreate
+    course : CourseCreate,
+    user=Depends(get_current_user)
 ) -> CourseCreateResponse:
     """
     Expects JSON payload: { "name": "Department of Engineering"}
@@ -28,24 +30,24 @@ def add(
 
 
 @router.post("/display", response_model=CourseDetailResponse, summary="Display Course")
-def display(course_id: str = Body(..., embed=True, description="Course ID")) -> CourseDetailResponse:
+def display(course_id: str = Body(..., embed=True, description="Course ID"), user=Depends(get_current_user)) -> CourseDetailResponse:
     return display_course_by_id(course_id)
 
 
 @router.get("/display_all", response_model=list[CourseDetailResponse])
-def list_courses():
+def list_courses(user=Depends(get_current_user)):
     return display_all_courses()
 
 
 
 @router.post("/bulk_add", response_model=BulkCourseCreateResponse)
-def bulk_add_courses(payload: BulkCourseCreate):
+def bulk_add_courses(payload: BulkCourseCreate, user=Depends(get_current_user)):
     return add_courses_bulk(payload)
 
 
 
 @router.get("/display_courses_by_semester_id/{sem_id}", response_model=CourseDetailResponse, summary="Get Course Details")
-def display_courses_by_semester_id(sem_id: str) -> CourseDetailResponse:
+def display_courses_by_semester_id(sem_id: str, user=Depends(get_current_user)) -> CourseDetailResponse:
     return fetch_courses_by_semester_id(sem_id)
 
 

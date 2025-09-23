@@ -4,9 +4,9 @@ Script to create all required tables and enums for the attendance app in Postgre
 import psycopg2
 
 # Update these values as needed for your local setup
-DB_NAME = "attendance_db"
-DB_USER = "postgres"
-DB_PASSWORD = "postgres"
+DB_NAME = "mydb"
+DB_USER = "myuser"
+DB_PASSWORD = "mypassword"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 

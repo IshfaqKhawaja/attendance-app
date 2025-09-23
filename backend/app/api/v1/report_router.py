@@ -2,10 +2,11 @@ import os
 from click import File
 from app.db.models.attendence_model import ReportBySemId, ReportInput
 from app.db.models.report_by_course_id_model import ReportByCourseId
-from fastapi import APIRouter # type: ignore
+from fastapi import APIRouter, Depends # type: ignore
 from fastapi.responses import FileResponse # type: ignore
 from app.db.reports.generate_report_by_course_id import generate_report_by_course_id_xls, generate_report_by_course_id_pdf
 from app.db.reports.generate_report_by_sem_id import  generate_semester_attendance_report_xls
+from app.core.security import get_current_user
 from app.services.generate_course_report import generate_pdf_report
 from app.utils.excel_generator import generate_attendance_excel
 
@@ -14,7 +15,7 @@ router = APIRouter(
     tags=["reports"]
 )
 @router.post("/generate_course_report_xls", summary="Generate Attendance Report")
-def generate_course_report_xls(course_model: ReportByCourseId) -> FileResponse:
+def generate_course_report_xls(course_model: ReportByCourseId, user=Depends(get_current_user)) -> FileResponse:
     data = generate_report_by_course_id_xls(course_model.course_id)
     if data.empty:
         return FileResponse(
@@ -45,7 +46,7 @@ def generate_course_report_xls(course_model: ReportByCourseId) -> FileResponse:
     "/generate_course_report_pdf",
     summary="Generate Report for Course Students"
 )
-def generate_report(data: ReportInput):
+def generate_report(data: ReportInput, user=Depends(get_current_user)):
     try:
         d = generate_report_by_course_id_pdf(data)
         if not d:

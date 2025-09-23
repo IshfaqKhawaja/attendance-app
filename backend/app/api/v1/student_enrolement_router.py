@@ -1,11 +1,12 @@
 import io
-from turtle import st
-from fastapi import APIRouter, HTTPException
+# from turtle import st
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy import intersect
 
 from app.db.crud.student import add_students_in_bulk
 from app.db.crud.student_enrolement import add_student_enrolled_in_sem, add_students_enrolled_in_sem_bulk, display_students_by_sem_id, fetch_students_by_course_id
 from app.db.models.student_enrolement_model import BulkStudentEnrolementModel, DisplayStudentsBySemIdResponseModel, StudentEnrolementModel, StudentEnrollmentDetailsModel
+from app.core.security import get_current_user
 from fastapi import File, UploadFile
 from fastapi import Form
 import pandas as pd
@@ -22,13 +23,13 @@ router = APIRouter(
 )
 
 @router.post("/add", response_model=dict, summary="Enroll a student in a semester")
-def add_student_enrolement(student: StudentEnrolementModel):
+def add_student_enrolement(student: StudentEnrolementModel, user=Depends(get_current_user)):
     """Add a student enrollment record."""
     return add_student_enrolled_in_sem(student)
 
 
 @router.post("/add_bulk", response_model=dict, summary="Enroll multiple students in semesters")
-def add_students_enrolement(students: BulkStudentEnrolementModel):
+def add_students_enrolement(students: BulkStudentEnrolementModel, user=Depends(get_current_user)):
     """Add multiple student enrollment records."""
     return add_students_enrolled_in_sem_bulk(students)
 
@@ -36,7 +37,8 @@ def add_students_enrolement(students: BulkStudentEnrolementModel):
 @router.post("/upload_bulk_enrollment_file", response_model=dict, summary="Upload a file to enroll multiple students in semesters")
 async def upload_bulk_enrolement_file(
     sem_id: str = Form(...),
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    user=Depends(get_current_user)
 ):
     """Upload a file to add multiple student enrollment records."""
     

@@ -1,5 +1,5 @@
 from ast import Return
-from fastapi import APIRouter  # type: ignore
+from fastapi import APIRouter, Depends  # type: ignore
 from app.db.crud.teacher import (
     add_teacher_to_db,
     delete_teacher_by_teacher_id,
@@ -7,13 +7,8 @@ from app.db.crud.teacher import (
     display_teacher_by_id,
     edit_teacher_by_id,
 )
-from app.db.models.teacher_model import (
-    ReturnTeacherDetails,
-    TeacherCreate,
-    DisplayTeacherRequest,
-    TeacherID,
-    UpdateTeacherRequest,
-)
+from app.db.models.teacher_model import ReturnTeacherDetails, TeacherCreate, DisplayTeacherRequest, TeacherID, UpdateTeacherRequest
+from app.core.security import get_current_user
 
 router = APIRouter(
     prefix="/teacher",
@@ -23,7 +18,7 @@ router = APIRouter(
 
 
 @router.post("/add", response_model=dict, summary="Insert a new Teacher")
-def add_teacher(teacher: TeacherCreate) -> dict:
+def add_teacher(teacher: TeacherCreate, user=Depends(get_current_user)) -> dict:
     """
     Add a new teacher to the database.
     """
@@ -33,7 +28,7 @@ def add_teacher(teacher: TeacherCreate) -> dict:
 
 
 @router.post("/display", response_model=dict, summary="Display Teacher")
-def display_teacher(request: DisplayTeacherRequest) -> ReturnTeacherDetails:
+def display_teacher(request: DisplayTeacherRequest, user=Depends(get_current_user)) -> ReturnTeacherDetails:
     """
     Fetch teacher details by ID.
     """
@@ -41,7 +36,7 @@ def display_teacher(request: DisplayTeacherRequest) -> ReturnTeacherDetails:
 
 
 @router.get("/display/{dept_id}", response_model=ReturnTeacherDetails, summary="Fetch All Teachers")
-def display_teachers_by_dept(dept_id: str) -> ReturnTeacherDetails:
+def display_teachers_by_dept(dept_id: str, user=Depends(get_current_user)) -> ReturnTeacherDetails:
     """
     Fetch all teachers by department ID.
     """

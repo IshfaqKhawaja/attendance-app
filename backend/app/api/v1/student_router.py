@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Body # type: ignore
+from fastapi import APIRouter, Body, Depends # type: ignore
 from app.db.crud.student import (
     add_student_to_db,
     add_students_in_bulk,
     display_student_by_id,
 )
 from app.db.crud.student_enrolement import display_students_by_sem_id, fetch_students_by_course_id
+from app.core.security import get_current_user
 from app.db.models.student_enrolement_model import DisplayStudentsBySemIdResponseModel, StudentCourseEnrolementModel, StudentEnrollmentDetailsModel
 from app.db.models.student_model import BulkStudentIn, StudentIn
 
@@ -16,7 +17,8 @@ router = APIRouter(
 
 @router.post("/add", response_model=dict, summary="Insert a new Student")
 def add(
-    student : StudentIn
+    student : StudentIn,
+    user=Depends(get_current_user)
 ) -> dict:
     """
     Expects JSON payload: { "name": "Department of Engineering"}
@@ -27,7 +29,7 @@ def add(
 
 
 @router.post("/display", response_model=dict, summary="Display Student Details")
-def display(student_id: str = Body(..., embed=True, description="Student ID")) -> dict:
+def display(student_id: str = Body(..., embed=True, description="Student ID"), user=Depends(get_current_user)) -> dict:
     return display_student_by_id(student_id=student_id)
 
 
@@ -35,7 +37,8 @@ def display(student_id: str = Body(..., embed=True, description="Student ID")) -
 
 @router.post("/add_students_in_bulk", response_model=dict, summary="Insert multiple students")
 def bulk_add_students(
-    students: BulkStudentIn = Body(..., embed=True, description="List of students to add")
+    students: BulkStudentIn = Body(..., embed=True, description="List of students to add"),
+    user=Depends(get_current_user)
 ) -> dict:
     # Pydantic will have parsed the JSON into a list of dicts under the hood
     return add_students_in_bulk(students=students)
@@ -44,5 +47,5 @@ def bulk_add_students(
 
 
 @router.post("/display_students_by_sem_id", response_model=DisplayStudentsBySemIdResponseModel, summary="Display Student Details")
-def display_by_sem_id(sem_id: str = Body(..., embed=True, description="Semester ID")) -> DisplayStudentsBySemIdResponseModel:
+def display_by_sem_id(sem_id: str = Body(..., embed=True, description="Semester ID"), user=Depends(get_current_user)) -> DisplayStudentsBySemIdResponseModel:
     return display_students_by_sem_id(sem_id=sem_id)

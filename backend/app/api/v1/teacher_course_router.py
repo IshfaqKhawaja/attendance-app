@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 from app.db.crud.teacher_course import add_bulk_teacher_courses_to_db, add_teacher_course_to_db, display_all, display_teacher_course_by_teacher_id
 from app.db.models.teacher_course_model import BulkTeacherCourseIn, TeacherCourseDetail, TeacherCourseIn, TeacherCourseResponse
+from app.core.security import get_current_user
 
 
 
@@ -11,7 +12,8 @@ router = APIRouter(
 
 @router.post("/add", response_model=dict, summary="Insert a new Course")
 def add(
-    teacher_course : TeacherCourseIn
+    teacher_course : TeacherCourseIn,
+    user=Depends(get_current_user)
 ) -> dict:
     """
     Expects JSON payload: { "name": "Department of Engineering"}
@@ -23,7 +25,8 @@ def add(
     
 @router.post("/add_all_teacher_courses", response_model=dict, summary="Insert a new Course")
 def add_all_teacher_courses(
-    courses : BulkTeacherCourseIn
+    courses : BulkTeacherCourseIn,
+    user=Depends(get_current_user)
 ) -> dict:
     """
     Expects JSON payload: { "name": "Department of Engineering"}
@@ -31,10 +34,10 @@ def add_all_teacher_courses(
     return add_bulk_teacher_courses_to_db(courses)
 
 @router.get("/display/{teacher_id}", response_model=TeacherCourseResponse, summary="Display Course")
-def display(teacher_id: str) -> TeacherCourseResponse:
+def display(teacher_id: str, user=Depends(get_current_user)) -> TeacherCourseResponse:
     return display_teacher_course_by_teacher_id(teacher_id=teacher_id)
 
 
 @router.get("/fetch_all",  response_model=list, summary="Display All Teacher Courses")
-def get_all():
+def get_all(user=Depends(get_current_user)):
     return display_all()

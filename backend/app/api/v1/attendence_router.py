@@ -1,7 +1,8 @@
 import os
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import FileResponse # type: ignore
 from app.db.models.attendence_model import AttendenceModel, AttendenceIdModel, BulkAttendenceModel, BulkAttendenceResponseModel
+from app.core.security import get_current_user
 from app.db.crud.attendance import (
     add_attendence_bulk,
     add_attendence_to_db,
@@ -20,7 +21,7 @@ router = APIRouter(
     response_model=dict,
     summary="Record New Attendence"
 )
-def add(attendance: AttendenceModel) -> dict:
+def add(attendance: AttendenceModel, user=Depends(get_current_user)) -> dict:
     """
     Expects JSON payload matching AttendenceModel:
     {
@@ -38,7 +39,7 @@ def add(attendance: AttendenceModel) -> dict:
     response_model=dict,
     summary="Display Attendence Details"
 )
-def display(payload: AttendenceIdModel) -> dict:
+def display(payload: AttendenceIdModel, user=Depends(get_current_user)) -> dict:
     """
     Expects JSON payload:
     { "attendance_id": "att123" }

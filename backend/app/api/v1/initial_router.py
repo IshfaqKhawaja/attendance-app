@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException # type: ignore
+from fastapi import APIRouter, HTTPException, Depends # type: ignore
+from app.core.security import get_current_user
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from app.db.crud.faculty import display_all as faculties
@@ -14,7 +15,7 @@ router = APIRouter(
 )
 
 @router.get("/get_all_data", response_model=dict, summary="Get Initial Data")
-def initial_data() -> dict:
+def initial_data(current_user=Depends(get_current_user)) -> dict:
     try:
         # spin up a thread pool to call each display_all() in parallel
         with ThreadPoolExecutor(max_workers=4) as executor:
