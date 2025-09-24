@@ -15,7 +15,8 @@ router = APIRouter(
 )
 
 @router.get("/get_all_data", response_model=dict, summary="Get Initial Data")
-def initial_data(current_user=Depends(get_current_user)) -> dict:
+def initial_data() -> dict:
+    # current_user=Depends(get_current_user)
     try:
         # spin up a thread pool to call each display_all() in parallel
         with ThreadPoolExecutor(max_workers=4) as executor:

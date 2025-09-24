@@ -1,6 +1,7 @@
 # app/core/security.py
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Request
 import jwt
 import datetime
 
@@ -17,7 +18,22 @@ def create_refresh_token(user_id: str) -> str:
 
 
 # Use HTTPBearer for Swagger UI bearer token support
-http_bearer = HTTPBearer()
+
+# Custom HTTPBearer that returns 401 instead of 403 if header is missing
+class CustomHTTPBearer(HTTPBearer):
+    async def __call__(self, request: Request) -> HTTPAuthorizationCredentials:
+        try:
+            return await super().__call__(request)
+        except HTTPException as exc:
+            if exc.status_code == status.HTTP_403_FORBIDDEN:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Not authenticated",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+            raise
+
+http_bearer = CustomHTTPBearer()
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(http_bearer)) -> dict:
     credentials_exception = HTTPException(
