@@ -24,4 +24,10 @@ class AccessController {
     header["access_token"] = await AccessController.getAccessToken();
     return header;
   }
+
+  static Future<void> clearTokens() async {
+    final secureStorage = FlutterSecureStorage();
+    await secureStorage.delete(key: 'access_token');
+    await secureStorage.delete(key: 'refresh_token');
+  }
 }

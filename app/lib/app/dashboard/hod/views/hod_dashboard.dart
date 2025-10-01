@@ -6,16 +6,33 @@ import 'package:google_fonts/google_fonts.dart';
 // Local Imports:::
 import '../controllers/hod_dashboard_controller.dart' show HodDashboardController;
 import '../widgets/hod_bottom_bar.dart';
+import '../../../signin/controllers/signin_controller.dart';
 
-class HodDashboard extends StatelessWidget {
-  HodDashboard({super.key});
+class HodDashboard extends StatefulWidget {
+  const HodDashboard({super.key});
+
+  @override
+  State<HodDashboard> createState() => _HodDashboardState();
+}
+
+class _HodDashboardState extends State<HodDashboard> {
   final HodDashboardController hodDashboardController = Get.put(
     HodDashboardController(),
     permanent: true,
   );
+
   final HodBottomBarController hodBottomBarController = Get.put(
     HodBottomBarController(),
   );
+  
+  String? deptId;
+  
+  @override
+  void initState() {
+    super.initState();
+    deptId = Get.parameters['deptId'];
+    hodDashboardController.init(deptId: deptId);
+  }
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -37,7 +54,7 @@ class HodDashboard extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(left: 10),
               child: Text(
-                "Welcome \n${hodDashboardController.singInController.userData.value.userName}",
+                "Welcome \n${Get.find<SignInController>().userData.value.userName}",
                 style: GoogleFonts.openSans(
                   fontSize: 30,
                   color: Colors.white,
@@ -71,5 +88,5 @@ class HodDashboard extends StatelessWidget {
   );
 
   }
-  }
+}
   

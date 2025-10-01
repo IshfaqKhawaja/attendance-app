@@ -4,9 +4,28 @@ import 'package:get/get.dart';
 import '../../constants/text_styles.dart';
 import '../controllers/signin_controller.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   SignIn({super.key});
-  final SignInController controller = Get.find<SignInController>();
+
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+  late final SignInController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // Try to find existing controller, create if not found
+    try {
+      controller = Get.find<SignInController>();
+    } catch (e) {
+      controller = Get.put(SignInController(), permanent: true);
+    }
+    // Clear form when entering sign-in page
+    controller.clearForm();
+  }
 
   @override
   Widget build(BuildContext context) {

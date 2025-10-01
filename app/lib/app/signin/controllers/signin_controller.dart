@@ -1,23 +1,19 @@
-// json not needed after repository refactor
-
-import 'package:app/app/routes/app_routes.dart';
-import 'package:app/app/signin/models/teacher_model.dart';
-import 'package:app/app/signin/models/user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:get/get.dart';
-// http no longer used directly after repository refactor
-// Local Imports
-import '../../register/views/register.dart';
-import '../../core/network/api_client.dart';
-import '../../core/repositories/auth_repository.dart';
-import 'access_controller.dart';
 
-class SignInController extends GetxController {
-  final emailController = TextEditingController();
-  final otpController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-  final isLoading = false.obs;
+// Core imports
+import '../../core/core.dart';
+import '../../routes/routes.dart';
+
+
+// Local imports
+import 'access_controller.dart';
+import '../models/teacher_model.dart';
+import '../models/user_model.dart';
+
+class SignInController extends BaseFormController {
+  late final TextEditingController emailController;
+  late final TextEditingController otpController;
   final otpReady = false.obs;
   Rx<TeacherModel> teacherData = TeacherModel(
     teacherId: "",
@@ -48,88 +44,98 @@ class SignInController extends GetxController {
   }
 
   Future<void> sendOtp() async {
-    if (!formKey.currentState!.validate()) return;
-    isLoading.value = true;
-    final email = emailController.text.trim();
-    try {
-    final res = await _authRepo.sendOtp(email);
-    if ((res['success'] ?? false) == true) {
-        // If backend returns an OTP in test/dev, surface it in debug mode
+    return handleAsync(() async {
+      if (!validateForm()) return;
+      
+      final email = emailController.text.trim();
+      final res = await _authRepo.sendOtp(email);
+      
+      if ((res['success'] ?? false) == true) {
         final dynamic maybeOtp = res['otp'] ?? (res['data'] != null ? res['data']['otp'] : null);
-        if (kDebugMode && maybeOtp != null) {
-          // Print to console and show a temporary snackbar for quick copy
-          // WARNING: Do not enable this in production builds.
-          // ignore: avoid_print
-          print('DEBUG OTP: ' + maybeOtp.toString());
-          Get.snackbar('OTP (debug)', maybeOtp.toString(), colorText: Colors.white);
-        }
-        Get.snackbar("OTP Sent to:", email, colorText: Colors.white);
+        print("OTP Sent: $maybeOtp");
+        showSuccessSnackbar("OTP sent to: $email");
         otpReady.value = true;
       } else {
-        Get.snackbar(
-          "Error",
-      res['message']?.toString() ?? 'Failed to send OTP',
-          colorText: Colors.white,
-        );
+        throw Exception(res['message']?.toString() ?? 'Failed to send OTP');
       }
-    } catch (e) {
-      Get.snackbar("Error", e.toString(), colorText: Colors.white);
-    } finally {
-      isLoading.value = false;
-    }
+    });
   }
 
-  Future verifyOtp() async {
-    isLoading.value = true;
-    final otp = otpController.text.trim();
-    final email = emailController.text.trim();
-    try {
+  Future<void> verifyOtp() async {
+    return handleAsync(() async {
+      final otp = otpController.text.trim();
+      final email = emailController.text.trim();
+      
       final res = await _authRepo.verifyOtp(email, otp);
       final success = res["success"] == true;
       final isRegistered = res["is_registered"] == true;
-      final isRegularUser = res["is_regular_user"] == true;
+      final isHod = res["is_hod"] == true;
+      final isSuperAdmin = res["is_super_admin"] == true;
+
       if (success) {
-        if (!isRegularUser) {
-          // Not a regular teacher: HOD/Dean/etc
+        await AccessController.saveTokens(
+          res["access_token"],
+          res["refresh_token"],
+        );
+        
+        // Set user data based on role
+        if (isSuperAdmin || isHod) {
           userData.value = UserModel.fromJson(res);
-          if (userData.value.type == "HOD") {
-            Get.offAllNamed(Routes.HOD_DASHBOARD);
-          }
-          // TODO: route other roles as needed
         } else if (isRegistered) {
           teacherData.value = TeacherModel.fromJson(res);
-          await AccessController.saveTokens(
-            res["access_token"],
-            res["refresh_token"],
-          );
-          Get.offAllNamed(Routes.TEACHER_DASHBOARD);
+        }
+        
+        // Navigate to main dashboard if user is registered, otherwise show registration message
+        if (isSuperAdmin || isHod || isRegistered) {
+          clearForm(); // Clear form after successful login
+          safeNavigateOffAll(Routes.MAIN_DASHBOARD);
         } else {
-          Get.dialog(
-            RegisterTeacher(),
-            useSafeArea: true,
-            barrierDismissible: false,
-          );
+          showInfoSnackbar("Please complete your registration.");
         }
         otpReady.value = true;
       } else {
-        Get.snackbar("ERROR", res["message"].toString(), colorText: Colors.red);
+        throw Exception(res["message"]?.toString() ?? 'Verification failed');
       }
-    } catch (e) {
-      Get.snackbar("Error", e.toString(), colorText: Colors.white);
-    } finally {
-      isLoading.value = false;
-    }
+    });
+  }
+
+  /// Clear all form fields and reset to initial state
+  void clearForm() {
+    clearFormFields(); // Use base controller method
+    otpReady.value = false;
+  }
+
+  /// Reset user data to initial state
+  void resetUserData() {
+    userData.value = UserModel(
+      userId: "",
+      userName: "",
+      type: "",
+      deptId: null,
+      factId: null,
+    );
+    teacherData.value = TeacherModel(
+      teacherId: "",
+      teacherName: "",
+      type: "",
+      deptId: "",
+    );
+    isUserLoggedIn.value = false;
   }
 
   @override
   void onClose() {
-    emailController.dispose();
+    // Base form controller handles controller disposal
     super.onClose();
   }
 
   @override
   void onInit() {
     super.onInit();
+    // Initialize text controllers using base form controller
+    emailController = registerController();
+    otpController = registerController();
+    
     _apiClient = ApiClient(
       tokenProvider: () => AccessController.getAccessToken(),
       // onUnauthorized: you can plug a token refresh handler here later

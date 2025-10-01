@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 class DisplayStudents extends StatefulWidget {
   final String semId;
-  DisplayStudents({super.key, required this.semId});
+  const DisplayStudents({super.key, required this.semId});
 
   @override
   State<DisplayStudents> createState() => _DisplayStudentsState();
@@ -38,8 +38,27 @@ class _DisplayStudentsState extends State<DisplayStudents> {
             subtitle: Text(student.studentId),
             trailing: IntrinsicWidth(child: Row(
               children: [
-                IconButton(onPressed: (){}, icon: Icon(Icons.edit)),
-                IconButton(onPressed: (){}, icon: Icon(Icons.delete, color: Colors.red,))
+                IconButton(onPressed: (){
+                  showDialog(context: context, builder: (context) {
+                   return AlertDialog(
+                    title: Text("Remove Student", style: TextStyle(fontSize: 18,  fontWeight: FontWeight.bold),),
+                    content: Text("Are you sure you want to remove '${student.studentName}' from this semester?", style: TextStyle(fontSize: 14,),),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Get.back(),
+                        child: Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Get.back(); // close the dialog
+                         courseController.deleteStudentFromSem(student.studentId, widget.semId);
+                        },
+                        child: Text("Remove", style: TextStyle(color: Colors.red),),
+                      ),
+                    ],
+                   );
+                  });
+                }, icon: Icon(Icons.delete, color: Colors.red,))
               ],
             )),
           );

@@ -1,45 +1,82 @@
-// json/http calls moved into repository
+import 'package:app/app/core/controllers/base_controller.dart';
 import 'package:app/app/core/network/api_client.dart';
-import 'package:app/app/loading/controllers/loading_controller.dart';
 import 'package:app/app/models/teacher_course.dart';
 import 'package:app/app/signin/controllers/signin_controller.dart';
+import 'package:app/app/core/network/endpoints.dart';
+import 'package:app/app/core/repositories/teacher_repository.dart';
 import 'package:get/get.dart';
-// no direct http after refactor
-import '../../../core/network/endpoints.dart';
-import '../../../core/repositories/teacher_repository.dart';
 
-class TeacherDashboardController extends GetxController {
-  final singInController = Get.find<SignInController>();
-  final loadingController = Get.find<LoadingController>();
-  final isTeacherCoursesLoaded = false.obs;
-  RxList<TeacherCourseModel> thisTeacherCourses = <TeacherCourseModel>[].obs;
-  late final TeacherRepository _repo;
-  final client = ApiClient();
+class TeacherDashboardController extends BaseController {
+  late final SignInController _signInController;
+  late final TeacherRepository _teacherRepository;
+  late final ApiClient _apiClient;
 
-  void loadTeacherCourses() async {
-    isTeacherCoursesLoaded.value = false;
-    try {
-      final res = await client.getJson(Endpoints.teacherCourses(singInController.teacherData.value.teacherId));
-      if (res['success'] == true) {
-        thisTeacherCourses.value = (res['teacher_courses'] as List<dynamic>)
+  final RxList<TeacherCourseModel> teacherCourses = <TeacherCourseModel>[].obs;
+  final RxBool isCoursesLoaded = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _initializeDependencies();
+    loadTeacherCourses();
+  }
+
+  void _initializeDependencies() {
+    _signInController = Get.find<SignInController>();
+    _apiClient = ApiClient();
+    _teacherRepository = TeacherRepository(_apiClient);
+  }
+
+  /// Load teacher courses from API
+  Future<void> loadTeacherCourses() async {
+    isCoursesLoaded.value = false;
+    
+    await handleAsync(() async {
+      final teacherId = _signInController.teacherData.value.teacherId;
+      if (teacherId.isEmpty) {
+        throw Exception('Teacher ID not found');
+      }
+
+      final response = await _apiClient.getJson(
+        Endpoints.teacherCourses(teacherId)
+      );
+
+      if (response['success'] == true) {
+        teacherCourses.value = (response['teacher_courses'] as List<dynamic>)
             .map((e) => TeacherCourseModel.fromJson(e))
             .toList();
+      } else {
+        throw Exception('Failed to load courses');
       }
-    } catch (e) {
-      Get.snackbar('ERROR', 'Failed to load courses: $e');
-    }
-    isTeacherCoursesLoaded.value = true;
+    });
+    
+    isCoursesLoaded.value = true;
   }
 
-  void attendanceNotifier() async {
-    try {
-      final res = await _repo.attendanceNotifier();
-      if (res['success'] != true) {
-        Get.snackbar('ERROR', 'Error Sending SMS');
+  /// Send attendance notification SMS
+  Future<void> sendAttendanceNotification() async {
+    await handleAsync(() async {
+      final result = await _teacherRepository.attendanceNotifier();
+      
+      if (result['success'] != true) {
+        throw Exception('Failed to send SMS notification');
       }
-    } catch (e) {
-      Get.snackbar('ERROR', 'Error Sending SMS');
-    }
+      
+      showSuccessSnackbar('Attendance notification sent successfully');
+    });
   }
 
+  /// Refresh teacher courses
+  Future<void> refreshCourses() async {
+    await loadTeacherCourses();
+  }
+
+  /// Get courses count
+  int get coursesCount => teacherCourses.length;
+
+  /// Check if teacher has courses
+  bool get hasCourses => teacherCourses.isNotEmpty;
+
+  /// Get teacher ID
+  String? get teacherId => _signInController.teacherData.value.teacherId;
 }

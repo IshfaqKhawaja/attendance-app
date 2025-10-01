@@ -14,7 +14,7 @@ class HomeWidget extends StatelessWidget {
     return Obx(() {
       return ListView.builder(
         padding: EdgeInsets.only(top: 10),
-        itemCount: dashboardController.thisTeacherCourses.length + 1,
+        itemCount: dashboardController.teacherCourses.length + 1,
         itemBuilder: (_, index) {
           if (index == 0) {
             return Padding(
@@ -29,11 +29,11 @@ class HomeWidget extends StatelessWidget {
               ),
             );
           }
-          if (!dashboardController.isTeacherCoursesLoaded.value) {
+          if (!dashboardController.isCoursesLoaded.value) {
             return SizedBox.shrink();
           }
           index = index - 1;
-          final d = dashboardController.thisTeacherCourses[index];
+          final d = dashboardController.teacherCourses[index];
           return CardWidget(course: d);
         },
       );

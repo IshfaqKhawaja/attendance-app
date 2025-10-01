@@ -1,5 +1,16 @@
+// Core barrel exports
 export 'constants/app_colors.dart';
 export 'constants/typography.dart';
 export 'network/endpoints.dart';
 export 'network/api_client.dart';
 export 'theme/app_theme.dart';
+export 'controllers/base_controller.dart';
+export 'controllers/base_form_controller.dart';
+export 'managers/controller_manager.dart';
+export 'bindings/dashboard_bindings.dart';
+export 'repositories/auth_repository.dart';
+export 'repositories/teacher_repository.dart';
+export 'utils/result.dart';
+export 'services/services.dart';
+export 'mixins/mixins.dart';
+export 'widgets/widgets.dart';

@@ -226,11 +226,9 @@ void fetchStudentsInThisSem(String semId) async {
             .map((e) => StudentInSemModel.fromJson(e))
             .toList();
       } else {
-        print(res);
         Get.snackbar('Error', res['message']?.toString() ?? 'Failed to load students for semester');
       }
     } catch (e) {
-      print(e);
       Get.snackbar('Error', 'Failed to load students for semester: $e');
     }
   }
@@ -279,6 +277,32 @@ void attendanceForSem(String semId) async {
       
     } catch (e) {
       Get.snackbar("Error", "Failed to generate report",
+        colorText: Colors.red,
+      );
+    }
+  }
+
+  void deleteStudentFromSem(String studentId, String semId) async {
+    try {
+      final res = await client.postJson(
+        Endpoints.deleteStudentById,
+        {
+          'student_id': studentId,
+          'sem_id': semId,
+        },
+      );
+      if (res['success'] == true) {
+        Get.snackbar('Success', 'Student removed from semester successfully',
+          colorText: Colors.green,
+        );
+        fetchStudentsInThisSem(semId);
+      } else {
+        Get.snackbar('Error', res['message']?.toString() ?? 'Failed to remove student from semester',
+          colorText: Colors.red,
+        );
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to remove student from semester: $e',
         colorText: Colors.red,
       );
     }

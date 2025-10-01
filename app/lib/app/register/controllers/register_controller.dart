@@ -106,7 +106,7 @@ class RegisterController extends GetxController {
         if (res["success"]) {
           // Go to Dashboard:
           signInController.teacherData.value = TeacherModel.fromJson(res);
-          Get.offAllNamed(Routes.TEACHER_DASHBOARD);
+          Get.offAllNamed(Routes.MAIN_DASHBOARD);
         } else {
           Get.snackbar("Error", res["message"], colorText: Colors.red);
         }

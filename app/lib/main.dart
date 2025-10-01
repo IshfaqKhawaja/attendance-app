@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // For system UI overlay & edge-to-edge
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'app/core/theme/app_theme.dart';
-import 'app/routes/app_pages.dart';
-import 'app/routes/app_routes.dart';
 
-void main() {
+// Core imports using barrel exports
+import 'app/core/core.dart';
+import 'app/core/injection/dependency_injection.dart';
+import 'app/routes/routes.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Enable edge-to-edge so content can draw under the status & nav bars.
+  
+  // Initialize dependency injection system
+  await DependencyInjection.init();
+  
+  // Configure system UI
+  _configureSystemUI();
+  
+  runApp(const AttendanceApp());
+}
+
+/// Configure system UI appearance
+void _configureSystemUI() {
+  // Enable edge-to-edge display
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  // Make status/navigation bars transparent (adjust icon brightness as needed).
+  
+  // Configure system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     systemNavigationBarColor: Colors.transparent,
@@ -17,7 +32,6 @@ void main() {
     statusBarBrightness: Brightness.dark,
     systemNavigationBarIconBrightness: Brightness.light,
   ));
-  runApp(const AttendanceApp());
 }
 
 class AttendanceApp extends StatelessWidget {
@@ -26,13 +40,17 @@ class AttendanceApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: "JMI Attendance",
+      title: ConfigService.to.appName,
       initialRoute: Routes.LOADING,
       getPages: Pages.routes,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
+      // Add global error handling
+      builder: (context, child) {
+        return child ?? const SizedBox.shrink();
+      },
     );
   }
 }

@@ -27,6 +27,7 @@ class Endpoints {
   static String generateCourseReport = "$baseUrl/reports/generate_course_report_xls";
   static String generateAttendanceReport = "$baseUrl/reports/generate_course_report_pdf";
   static String generateAttendanceReportBySemId = "$baseUrl/reports/generate_report_by_sem_id_xls";
+  static String deleteStudentById = "$baseUrl/student_enrollment/delete_student_enrollment";
 
 }
   

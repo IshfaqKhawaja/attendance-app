@@ -55,10 +55,10 @@ class Programs extends StatelessWidget {
                           Center(child: CircularProgressIndicator()),
                         ]);
                       }
-                      if ((hodDashboardController.errorMessage?.value ?? '').isNotEmpty) {
+                      if ((hodDashboardController.errorMessage.value).isNotEmpty) {
                         return ListView(children: [
                           SizedBox(height: 16),
-                          Center(child: Text(hodDashboardController.errorMessage!.value)),
+                          Center(child: Text(hodDashboardController.errorMessage.value)),
                         ]);
                       }
                       final items = hodDashboardController.programs;

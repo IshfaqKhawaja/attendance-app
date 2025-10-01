@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../controllers/teacher_bottom_bar_controller.dart';
 import '../controllers/teacher_dashboard_controller.dart';
 import '../widgets/teacher_bottom_bar.dart';
+import '../../../signin/controllers/signin_controller.dart';
 
 class TeacherDashboard extends StatefulWidget {
   const TeacherDashboard({super.key});
@@ -49,7 +50,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  "Hi\n${teacherDashboardController.singInController.teacherData.value.teacherName}",
+                  "Hi\n${Get.find<SignInController>().teacherData.value.teacherName}",
                   style: GoogleFonts.openSans(
                     fontSize: 30,
                     color: Colors.white,
@@ -63,7 +64,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  teacherDashboardController.singInController.teacherData.value.teacherId,
+                  Get.find<SignInController>().teacherData.value.teacherId,
                   style: GoogleFonts.openSans(
                     fontSize: 16,
                     color: Colors.white,
@@ -99,24 +100,6 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
           ],
         ),
         bottomNavigationBar: TeacherBottomBar(),
-        // floatingActionButton: bottomBarController.currentIndex.value == 0
-        //     ? FloatingActionButton(
-        //         onPressed: teacherDashboardController.attendanceNotifier,
-        //         child: Container(
-        //           padding: const EdgeInsets.all(8.0),
-        //           child: Center(
-        //             child: Text(
-        //               "Send SMS",
-        //               style: textStyle.copyWith(
-        //                 color: Colors.white,
-        //                 fontSize: 12,
-        //                 fontStyle: FontStyle.normal,
-        //               ),
-        //             ),
-        //           ),
-        //         ),
-        //       )
-        //     : null,
       );
     });
   }

@@ -4,8 +4,8 @@ class UserModel {
   final String userId;
   final String userName;
   final String type;
-  final String? deptId;
-  final String? factId;
+  String? deptId;
+  String? factId;
   UserModel({
     required this.userId,
     required this.userName,

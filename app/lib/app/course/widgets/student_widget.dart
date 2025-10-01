@@ -9,11 +9,11 @@ class StudentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonStyle = ButtonStyle(
-      backgroundColor: WidgetStateProperty.all<Color>(Colors.white70),
-      elevation: WidgetStateProperty.all<double>(0.1),
-      shadowColor: WidgetStateProperty.all<Color>(Colors.white),
-    );
+    // final buttonStyle = ButtonStyle(
+    //   backgroundColor: WidgetStateProperty.all<Color>(Colors.white70),
+    //   elevation: WidgetStateProperty.all<double>(0.1),
+    //   shadowColor: WidgetStateProperty.all<Color>(Colors.white),
+    // );
     final rowWidth = Get.size.width * 0.3;
     return Card(
       color: Get.theme.primaryColor.withOpacity(0.7),
@@ -39,7 +39,6 @@ class StudentWidget extends StatelessWidget {
                   child: Text(
                     student.studentId,
                     style: textStyle.copyWith(
-                  
                       color: Colors.white,
                       fontSize: 11,
                     ),
@@ -47,21 +46,15 @@ class StudentWidget extends StatelessWidget {
                 ),
               ],
             ),
-            Row(
-              children: [
-                ElevatedButton(
-                  style: buttonStyle,
-                  onPressed: () {},
-                  child: Icon(Icons.edit, color: Get.theme.primaryColor, size: 20),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  style: buttonStyle,
-                  onPressed: () {},
-                  child: Icon(Icons.delete, color: Colors.redAccent, size: 20),
-                ),
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     ElevatedButton(
+            //       style: buttonStyle,
+            //       onPressed: () {},
+            //       child: Icon(Icons.delete, color: Colors.redAccent, size: 20),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),
