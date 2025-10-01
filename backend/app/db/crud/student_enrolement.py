@@ -1,5 +1,6 @@
+from ast import Delete
 from app.db.connection import connection_to_db
-from app.db.models.student_enrolement_model import BulkStudentEnrolementModel, DisplayStudentsBySemIdResponseModel, StudentCourseEnrolementModel, StudentEnrolementModel, StudentEnrollmentDetailsModel, StudentResponseModel
+from app.db.models.student_enrolement_model import BulkStudentEnrolementModel, DeleteStudentEnrollmentResponseModel, DisplayStudentsBySemIdResponseModel, StudentCourseEnrolementModel, StudentEnrolementModel, StudentEnrollmentDetailsModel, StudentResponseModel
 
 
 
@@ -124,3 +125,32 @@ def fetch_students_by_course_id(course_id: str) -> StudentEnrollmentDetailsModel
         success=True,
         students=data
     )
+    
+    
+def delete_student_enrollment(student_id: str, sem_id: str) -> DeleteStudentEnrollmentResponseModel:
+    """
+    Deletes a student's enrollment in a semester.
+    """
+    conn = connection_to_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM student_enrollment WHERE student_id = %s AND sem_id = %s",
+                (student_id, sem_id)
+            )
+            if cur.rowcount == 0:
+                return DeleteStudentEnrollmentResponseModel(
+                    success=False,
+                    message="No such enrollment found."
+                )
+            conn.commit()
+        return DeleteStudentEnrollmentResponseModel(
+            success=True,
+            message="Student enrollment deleted successfully."
+        )
+    except Exception as e:
+        conn.rollback()
+        return DeleteStudentEnrollmentResponseModel(
+            success=False,
+            message=f"Couldn't delete student enrollment: {e}"
+        )

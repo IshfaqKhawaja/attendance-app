@@ -30,7 +30,6 @@ def initial_data() -> dict:
             results: dict[str, list] = {}
             for future in as_completed(future_to_key):
                 key = future_to_key[future]
-                # .result() will re-raise exceptions if any
                 results[key] = future.result()
         return {
             "success": True,
@@ -38,5 +37,4 @@ def initial_data() -> dict:
         }
 
     except Exception as e:
-        # log e if you have logging configured
         raise HTTPException(status_code=500, detail=f"Failed to load initial data: {e}")

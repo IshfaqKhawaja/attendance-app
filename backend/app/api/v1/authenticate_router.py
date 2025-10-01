@@ -54,7 +54,8 @@ def verify_otp(
             "is_registered": True,
             "access_token": access_token,
             "refresh_token": refresh_token,
-            "is_regular_user": False,
+            "is_hod": user_check.get("type", "") == "HOD",
+            "is_super_admin": user_check.get("type", "") == "SUPER_ADMIN",
             "message": "Login Success",
         }
 

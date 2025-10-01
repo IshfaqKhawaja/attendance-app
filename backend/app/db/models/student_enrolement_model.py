@@ -44,3 +44,12 @@ class StudentResponseModel(BaseModel):
 class DisplayStudentsBySemIdResponseModel(BaseModel):
     success: bool
     students : list[StudentResponseModel]
+
+
+class DeleteStudentEnrollment(BaseModel):
+    student_id: str
+    sem_id: str
+    
+class DeleteStudentEnrollmentResponseModel(BaseModel):
+    success: bool
+    message: str
