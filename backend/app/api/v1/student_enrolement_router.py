@@ -1,5 +1,5 @@
 import io
-from turtle import st
+# from turtle import st  # Removed - this was causing import errors
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import intersect
 
