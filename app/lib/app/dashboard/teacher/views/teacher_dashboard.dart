@@ -6,7 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../controllers/teacher_bottom_bar_controller.dart';
 import '../controllers/teacher_dashboard_controller.dart';
 import '../widgets/teacher_bottom_bar.dart';
-import '../../../signin/controllers/signin_controller.dart';
+import '../../../core/services/user_role_service.dart';
+import '../../../core/constants/app_colors.dart';
 
 class TeacherDashboard extends StatefulWidget {
   const TeacherDashboard({super.key});
@@ -39,7 +40,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Get.theme.primaryColor, Get.theme.primaryColorLight],
+                  colors: [AppColors.primary, AppColors.primaryLight],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -50,7 +51,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  "Hi\n${Get.find<SignInController>().teacherData.value.teacherName}",
+                  Get.find<UserRoleService>().getGreetingMessage(),
                   style: GoogleFonts.openSans(
                     fontSize: 30,
                     color: Colors.white,
@@ -64,7 +65,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  Get.find<SignInController>().teacherData.value.teacherId,
+                  Get.find<UserRoleService>().userId,
                   style: GoogleFonts.openSans(
                     fontSize: 16,
                     color: Colors.white,

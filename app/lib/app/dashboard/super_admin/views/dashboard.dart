@@ -1,12 +1,13 @@
 import 'package:app/app/dashboard/super_admin/views/faculities.dart';
-import 'package:app/app/signin/controllers/signin_controller.dart';
+import 'package:app/app/core/services/user_role_service.dart';
+import 'package:app/app/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Dashboard extends StatelessWidget {
   Dashboard({super.key});
-  final SignInController signInController = Get.find<SignInController>();
+  final UserRoleService roleService = Get.find<UserRoleService>();
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class Dashboard extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Get.theme.primaryColor, Get.theme.primaryColorLight],
+                colors: [AppColors.primary, AppColors.primaryLight],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -26,14 +27,28 @@ class Dashboard extends StatelessWidget {
           Positioned(
             top: Get.size.height * 0.1,
             child: Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Text(
-                "Welcome \n${signInController.userData.value.userName}",
-                style: GoogleFonts.openSans(
-                  fontSize: 30,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+              padding: EdgeInsets.only(left: 16, right: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    roleService.getGreetingMessage(),
+                    style: GoogleFonts.openSans(
+                      fontSize: 32,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'System Administrator',
+                    style: GoogleFonts.openSans(
+                      fontSize: 16,
+                      color: Colors.white.withOpacity(0.9),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

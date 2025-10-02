@@ -9,7 +9,7 @@ import 'base_controller.dart';
 /// - Field management
 /// - Auto-disposal of controllers
 abstract class BaseFormController extends BaseController {
-  final formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final List<TextEditingController> _controllers = [];
   final Map<String, RxString> _fieldErrors = {};
   
@@ -54,6 +54,12 @@ abstract class BaseFormController extends BaseController {
     }
     clearFieldErrors();
     clearError();
+  }
+  
+  /// Reset the form key (useful for permanent controllers)
+  /// Call this when you need to reuse the form in a new widget tree
+  void resetFormKey() {
+    formKey = GlobalKey<FormState>();
   }
   
   /// Validate form

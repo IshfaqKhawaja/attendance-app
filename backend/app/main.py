@@ -18,7 +18,6 @@ from app.api.v1.student_enrolement_router import router as student_enrolement_ro
 # from app.core.security import get_current_user
 # Add CORS Middleware:
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
-from starlette.middleware.cors import CORSMiddleware as StarletteCORSMiddleware # type:
 
 from fastapi import FastAPI # type: ignore
 app = FastAPI(

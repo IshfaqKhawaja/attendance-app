@@ -1,11 +1,14 @@
 
 
+import '../../core/enums/user_role.dart';
+
 class UserModel {
   final String userId;
   final String userName;
   final String type;
   String? deptId;
   String? factId;
+  
   UserModel({
     required this.userId,
     required this.userName,
@@ -13,6 +16,7 @@ class UserModel {
     this.deptId,
     this.factId,
   });
+  
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       userId: json['user_id'],
@@ -22,6 +26,9 @@ class UserModel {
       factId: json['fact_id'],
     );
   }
+  
+  /// Get user role as enum
+  UserRole get role => UserRole.fromString(type);
 
   Map<String, dynamic> toJson() {
     return {

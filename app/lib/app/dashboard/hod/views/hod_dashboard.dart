@@ -6,7 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 // Local Imports:::
 import '../controllers/hod_dashboard_controller.dart' show HodDashboardController;
 import '../widgets/hod_bottom_bar.dart';
-import '../../../signin/controllers/signin_controller.dart';
+import '../../../core/services/user_role_service.dart';
+import '../../../core/constants/app_colors.dart';
 
 class HodDashboard extends StatefulWidget {
   const HodDashboard({super.key});
@@ -43,7 +44,7 @@ class _HodDashboardState extends State<HodDashboard> {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Get.theme.primaryColor, Get.theme.primaryColorLight],
+                colors: [AppColors.primary, AppColors.primaryLight],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -53,13 +54,39 @@ class _HodDashboardState extends State<HodDashboard> {
             top: Get.size.height * 0.1,
             child: Padding(
               padding: EdgeInsets.only(left: 10),
-              child: Text(
-                "Welcome \n${Get.find<SignInController>().userData.value.userName}",
-                style: GoogleFonts.openSans(
-                  fontSize: 30,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    Get.find<UserRoleService>().getGreetingMessage(),
+                    style: GoogleFonts.openSans(
+                      fontSize: 30,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (Get.find<UserRoleService>().isSuperAdmin) ...<Widget>[
+                    SizedBox(height: 8),
+                    if (hodDashboardController.departmentName != null)
+                      Text(
+                        "Department: ${hodDashboardController.departmentName}",
+                        style: GoogleFonts.openSans(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    if (hodDashboardController.facultyName != null)
+                      Text(
+                        "Faculty: ${hodDashboardController.facultyName}",
+                        style: GoogleFonts.openSans(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                  ],
+                ],
               ),
             ),
           ),

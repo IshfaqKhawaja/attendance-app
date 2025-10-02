@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../controllers/course_by_sem_id_controller.dart';
 import '../widgets/add_course.dart';
 import 'display_students.dart';
+import '../../core/services/user_role_service.dart';
 
 class CourseBySemesterId extends StatefulWidget {
   const CourseBySemesterId({super.key});
@@ -59,7 +60,7 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
             },
           ),
 
-          // Show Student List Button
+          // Show Student List Button (available for all)
           IconButton(
             icon: Icon(Icons.list),
             onPressed: () {
@@ -83,17 +84,19 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
               );
             },
           ),
-          // Add Student Input Button
-          IconButton(
-            icon: Icon(Icons.upload_file),
-            onPressed: () {
-              courseController.selectAndUploadCSVFile(semesterId);
-            },
-          ),
-          // Add button to create new course
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
+          // Add Student Input Button (only for CRUD users)
+          if (Get.find<UserRoleService>().canPerformCrud)
+            IconButton(
+              icon: Icon(Icons.upload_file),
+              onPressed: () {
+                courseController.selectAndUploadCSVFile(semesterId);
+              },
+            ),
+          // Add button to create new course (only for CRUD users)
+          if (Get.find<UserRoleService>().canPerformCrud)
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
               Get.dialog(
                 barrierDismissible: true,
                 Dialog(
@@ -120,17 +123,19 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
               trailing: IntrinsicWidth(
                 child: Row(
                   children: [
-                    // Generate Report Button
+                    // Generate Report Button (available for all users)
                     ElevatedButton(
                       onPressed: (){
                       courseController.showReportDatePicker(context, course.courseId);
                     }, 
                     child: Text("Generate Report", style: textStyle.copyWith(fontSize: 12,),),),
-                    // Edit Button
-                    IconButton(onPressed: (){
-                    }, icon: Icon(Icons.edit, size: 20, color: Get.theme.colorScheme.primary,)),
-                    // Delete Button
-                    IconButton(onPressed: (){
+                    // Edit Button (only for CRUD users)
+                    if (Get.find<UserRoleService>().canPerformCrud)
+                      IconButton(onPressed: (){
+                      }, icon: Icon(Icons.edit, size: 20, color: Get.theme.colorScheme.primary,)),
+                    // Delete Button (only for CRUD users)
+                    if (Get.find<UserRoleService>().canPerformCrud)
+                      IconButton(onPressed: (){
                       // Confirm Deletion
                       Get.dialog(
                         AlertDialog(

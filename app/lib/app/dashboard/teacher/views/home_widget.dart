@@ -12,30 +12,35 @@ class HomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return ListView.builder(
-        padding: EdgeInsets.only(top: 10),
-        itemCount: dashboardController.teacherCourses.length + 1,
-        itemBuilder: (_, index) {
-          if (index == 0) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(
-                "Your Courses",
-                style: GoogleFonts.openSansCondensed(
-                  fontSize: 24,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+      return RefreshIndicator(
+        onRefresh: () => dashboardController.refreshCourses(),
+        color: Get.theme.primaryColor,
+        backgroundColor: Colors.white,
+        child: ListView.builder(
+          padding: EdgeInsets.only(top: 10),
+          itemCount: dashboardController.teacherCourses.length + 1,
+          itemBuilder: (_, index) {
+            if (index == 0) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "Your Courses",
+                  style: GoogleFonts.openSansCondensed(
+                    fontSize: 24,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            );
-          }
-          if (!dashboardController.isCoursesLoaded.value) {
-            return SizedBox.shrink();
-          }
-          index = index - 1;
-          final d = dashboardController.teacherCourses[index];
-          return CardWidget(course: d);
-        },
+              );
+            }
+            if (!dashboardController.isCoursesLoaded.value) {
+              return SizedBox.shrink();
+            }
+            index = index - 1;
+            final d = dashboardController.teacherCourses[index];
+            return CardWidget(course: d);
+          },
+        ),
       );
     });
   }

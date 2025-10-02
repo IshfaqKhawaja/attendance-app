@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/network/endpoints.dart';
+import '../../../core/enums/teacher_type.dart';
 import '../../../signin/controllers/signin_controller.dart';
 
 class AddTeacherController extends GetxController {
   var emailController = TextEditingController().obs;
   var nameController = TextEditingController().obs;
-  var teacherType = ['PERMANENT', 'GUEST', 'CONTRACT'].obs;
+  var teacherType = TeacherType.allValues.obs;
   var selectedTeacherType = ''.obs;
   final SignInController signInController = Get.find<SignInController>();
 

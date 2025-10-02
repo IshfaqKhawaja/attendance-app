@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/manage_teachers_controller.dart';
 import '../widgets/add_teacher_dialog.dart';
+import '../../../core/services/user_role_service.dart';
 
 class ManageTeachers extends StatelessWidget {
   ManageTeachers({super.key});
@@ -88,28 +89,30 @@ class ManageTeachers extends StatelessWidget {
                   ),
                 ),
       
-            Positioned(
-              bottom: height * 0.001,
-              right: width * 0.05,
-              child: IconButton(
-                onPressed: () async {
-                  // Show dialog to add teacher
-                 final updated =  await showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AddTeacherDialog();
-                    },
-                  );
-                  if (updated == true) {
-                    manageTeachersController.loadTeachers();
-                  }
-                },
-                icon: Icon(
-                  Icons.add,color: Get.theme.primaryColor,
+            // Only show Add button for users with CRUD permissions
+            if (Get.find<UserRoleService>().canPerformCrud)
+              Positioned(
+                bottom: height * 0.001,
+                right: width * 0.05,
+                child: IconButton(
+                  onPressed: () async {
+                    // Show dialog to add teacher
+                   final updated =  await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AddTeacherDialog();
+                      },
+                    );
+                    if (updated == true) {
+                      manageTeachersController.loadTeachers();
+                    }
+                  },
+                  icon: Icon(
+                    Icons.add,color: Get.theme.primaryColor,
+                    ),
+                  iconSize: 50,
                   ),
-                iconSize: 50,
-                ),
-              )
+                )
              ],
             );
     }

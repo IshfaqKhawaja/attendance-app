@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../services/services.dart';
+import '../services/user_role_service.dart';
 
 import '../../signin/controllers/signin_controller.dart';
 import '../../loading/controllers/loading_controller.dart';
@@ -60,6 +61,9 @@ class DependencyInjection {
     
     // Sign-in controller (authentication state)
     Get.put(SignInController(), permanent: true);
+    
+    // User role service (depends on SignInController)
+    Get.put(UserRoleService(), permanent: true);
     
     // Loading controller (app-wide loading state)
     Get.put(LoadingController(), permanent: true);

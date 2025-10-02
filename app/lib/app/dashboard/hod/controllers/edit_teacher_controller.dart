@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class EditTeacherController  extends GetxController{
   var teacherId = ''.obs;
   var teacherName = ''.obs;
-  var teacherType = ['PERMANENT', 'GUEST', 'CONTRACT'].obs;
+  var teacherType = TeacherType.allValues.obs;
   var selectedTeacherType = ''.obs;
 
   final ApiClient client = ApiClient();

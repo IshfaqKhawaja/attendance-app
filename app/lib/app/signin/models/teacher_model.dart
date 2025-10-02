@@ -1,8 +1,11 @@
+import '../../core/enums/teacher_type.dart';
+
 class TeacherModel {
   final String teacherId;
   final String teacherName;
   final String type;
   final String deptId;
+  
   TeacherModel({
     required this.teacherId,
     required this.teacherName,
@@ -18,6 +21,9 @@ class TeacherModel {
       deptId: json["dept_id"],
     );
   }
+  
+  /// Get teacher type as enum
+  TeacherType get employmentType => TeacherType.fromString(type);
   Map<String, dynamic> toJson() {
     return {
       "teacher_id": teacherId,

@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../routes/app_routes.dart';
+import '../../core/services/user_role_service.dart';
 class SemesterDashboard extends StatelessWidget {
    SemesterDashboard({super.key});
   final SemesterController semesterController = Get.put(
@@ -30,9 +31,11 @@ class SemesterDashboard extends StatelessWidget {
           title: Text(progName, style: textStyle.copyWith(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: ()  async {
+          // Only show Add button for users with CRUD permissions
+          if (Get.find<UserRoleService>().canPerformCrud)
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: ()  async {
             var added = await showDialog(
                 context: context,
                 builder: (context) {
@@ -71,14 +74,16 @@ class SemesterDashboard extends StatelessWidget {
                         onTap: (){
                           Get.toNamed(Routes.COURSEBYSEM, arguments: {'semesterId': semester.semId, 'semesterName': semester.semName});
                         },
-                        trailing: SizedBox(
-                          width: width * 0.25,
-                          child: Row(
-                            children: [
-                              // Edit Button
-                              IconButton(
-                                icon: Icon(Icons.edit, color: Colors.blue),
-                                onPressed: () async {
+                        trailing: Get.find<UserRoleService>().isViewOnly
+                            ? null  // No actions for view-only users
+                            : SizedBox(
+                                width: width * 0.25,
+                                child: Row(
+                                  children: [
+                                    // Edit Button
+                                    IconButton(
+                                      icon: Icon(Icons.edit, color: Colors.blue),
+                                      onPressed: () async {
                                   var updated = await showDialog(context: context, builder: (context) {
                                     return Dialog(
                                       child: EditSemesterButton(
@@ -96,12 +101,11 @@ class SemesterDashboard extends StatelessWidget {
                                 },
                               ),
 
-                              // Delete Button
-                              DeleteSemesterButton(semId: semester.semId),
-                            ],
-                             
-                        ),
-                        ),
+                                    // Delete Button
+                                    DeleteSemesterButton(semId: semester.semId),
+                                  ],
+                                ),
+                              ),
                         title: Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Text(semester.semName, style: textStyle.copyWith(fontSize: 16,),),

@@ -42,6 +42,8 @@ class HodDashboardController extends BaseController {
       programs.value = _loadingController.programs
           .where((program) => program.deptId == deptId)
           .toList();
+      isLoading.value = false;
+
     });
   }
 
@@ -68,4 +70,31 @@ class HodDashboardController extends BaseController {
 
   /// Get programs count
   int get programsCount => programs.length;
+  
+  /// Check if current user is super admin
+  bool get isSuperAdmin => _signInController.isSuperAdmin;
+  
+  /// Get department name for current department
+  String? get departmentName {
+    final deptId = currentDeptId;
+    if (deptId == null) return null;
+    
+    final dept = _loadingController.departments
+        .firstWhereOrNull((d) => d.deptId == deptId);
+    return dept?.deptName;
+  }
+  
+  /// Get faculty name for current department
+  String? get facultyName {
+    final deptId = currentDeptId;
+    if (deptId == null) return null;
+    
+    final dept = _loadingController.departments
+        .firstWhereOrNull((d) => d.deptId == deptId);
+    if (dept == null) return null;
+    
+    final faculty = _loadingController.faculities
+        .firstWhereOrNull((f) => f.factId == dept.factId);
+    return faculty?.factName;
+  }
 }

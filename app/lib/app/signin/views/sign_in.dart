@@ -92,25 +92,50 @@ class _SignInState extends State<SignIn> {
                         sizedBox,
                         // OTP Form
                         if (controller.otpReady.value)
-                          TextFormField(
-                            controller: controller.otpController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'OTP',
-                              prefixIcon: const Icon(Icons.email),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              TextFormField(
+                                controller: controller.otpController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'OTP',
+                                  prefixIcon: const Icon(Icons.lock),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter otp';
+                                  }
+                                  if (value.length != 6) {
+                                    return 'Please enter 6 digit otp';
+                                  }
+                                  return null;
+                                },
                               ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter otp';
-                              }
-                              if (value.length != 6) {
-                                return 'Please enter 6 digit otp';
-                              }
-                              return null;
-                            },
+                              const SizedBox(height: 8),
+                              // Resend OTP Button
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton.icon(
+                                  onPressed: controller.resendCooldown.value > 0
+                                      ? null
+                                      : controller.resendOtp,
+                                  icon: const Icon(Icons.refresh, size: 18),
+                                  label: Text(
+                                    controller.resendCooldown.value > 0
+                                        ? 'Resend in ${controller.resendCooldown.value}s'
+                                        : 'Resend OTP',
+                                    style: textStyle.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         sizedBox,
                         SizedBox(

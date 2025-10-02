@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../models/teacher_model.dart';
 import '../controllers/manage_teachers_controller.dart';
+import '../../../core/services/user_role_service.dart';
 
 class TeacherCard extends StatelessWidget {
   final Teacher teacher;
@@ -60,12 +61,14 @@ class TeacherCard extends StatelessWidget {
                 ),
             ],
           ),
-          trailing: IntrinsicWidth(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Edit Button
-                IconButton(
+          trailing: Get.find<UserRoleService>().isViewOnly
+              ? null // No actions for view-only users (super admin)
+              : IntrinsicWidth(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Edit Button
+                      IconButton(
                   onPressed: () async {
                     editTeacherController.updateData(
                       id: teacher.teacher_id,
@@ -166,11 +169,11 @@ class TeacherCard extends StatelessWidget {
                       controller.loadTeachers();
                     }
                   },
-                  icon: Icon(Icons.delete, color: Colors.redAccent),
+                      icon: Icon(Icons.delete, color: Colors.redAccent),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
         ),
         );
   }

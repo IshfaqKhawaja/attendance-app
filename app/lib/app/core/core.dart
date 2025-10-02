@@ -12,5 +12,8 @@ export 'repositories/auth_repository.dart';
 export 'repositories/teacher_repository.dart';
 export 'utils/result.dart';
 export 'services/services.dart';
+export 'services/user_role_service.dart';
 export 'mixins/mixins.dart';
 export 'widgets/widgets.dart';
+export 'enums/user_role.dart';
+export 'enums/teacher_type.dart';

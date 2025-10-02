@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +16,9 @@ class SignInController extends BaseFormController {
   late final TextEditingController emailController;
   late final TextEditingController otpController;
   final otpReady = false.obs;
+  final resendCooldown = 0.obs; // Cooldown timer in seconds
+  Timer? _resendTimer;
+  
   Rx<TeacherModel> teacherData = TeacherModel(
     teacherId: "",
     teacherName: "",
@@ -55,10 +59,33 @@ class SignInController extends BaseFormController {
         print("OTP Sent: $maybeOtp");
         showSuccessSnackbar("OTP sent to: $email");
         otpReady.value = true;
+        _startResendCooldown();
       } else {
         throw Exception(res['message']?.toString() ?? 'Failed to send OTP');
       }
     });
+  }
+  
+  /// Start cooldown timer for resend OTP (60 seconds)
+  void _startResendCooldown() {
+    resendCooldown.value = 60;
+    _resendTimer?.cancel();
+    _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (resendCooldown.value > 0) {
+        resendCooldown.value--;
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+  
+  /// Resend OTP (reuses sendOtp logic)
+  Future<void> resendOtp() async {
+    if (resendCooldown.value > 0) {
+      showInfoSnackbar("Please wait ${resendCooldown.value} seconds before resending");
+      return;
+    }
+    await sendOtp();
   }
 
   Future<void> verifyOtp() async {
@@ -102,7 +129,10 @@ class SignInController extends BaseFormController {
   /// Clear all form fields and reset to initial state
   void clearForm() {
     clearFormFields(); // Use base controller method
+    resetFormKey(); // Reset the GlobalKey to avoid duplicate key errors in navigation
     otpReady.value = false;
+    resendCooldown.value = 0;
+    _resendTimer?.cancel();
   }
 
   /// Reset user data to initial state
@@ -122,9 +152,13 @@ class SignInController extends BaseFormController {
     );
     isUserLoggedIn.value = false;
   }
+  
+  /// Check if current user is super admin
+  bool get isSuperAdmin => userData.value.type.toLowerCase() == 'super_admin';
 
   @override
   void onClose() {
+    _resendTimer?.cancel();
     // Base form controller handles controller disposal
     super.onClose();
   }
