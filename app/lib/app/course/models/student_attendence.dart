@@ -58,12 +58,15 @@ class StudentAttendance {
   final String courseId;
   final DateTime date;
   final bool present;
+  final int? slotNumber; // Slot number for multiple attendance per day (1, 2, 3...)
+  
   StudentAttendance({
     required this.studentId,
     required this.studentName,
     required this.courseId,
     required this.date,
     required this.present,
+    this.slotNumber,
   });
 
   factory StudentAttendance.fromJson(Map<String, dynamic> json) {
@@ -73,16 +76,24 @@ class StudentAttendance {
       courseId: json['courseId'],
       date: DateTime.parse(json['date']),
       present: json['present'],
+      slotNumber: json['slot_number'],
     );
   }
   Map<String, dynamic> toJson() {
-    return {
+    final Map<String, dynamic> json = {
       'student_id': studentId,
       'student_name': studentName,
       'course_id': courseId,
       'date': date.toIso8601String(),
       'present': present,
     };
+    
+    // Only include slot_number if it's not null
+    if (slotNumber != null) {
+      json['slot_number'] = slotNumber;
+    }
+    
+    return json;
   }
   
 

@@ -8,14 +8,23 @@ import '../widgets/drop_down_widget.dart';
 import '../../constants/text_styles.dart';
 
 class Attendence extends StatefulWidget {
-   const Attendence({super.key});
+  final String courseId;
+  
+  const Attendence({super.key, required this.courseId});
 
   @override
   State<Attendence> createState() => _AttendenceState();
 }
 
 class _AttendenceState extends State<Attendence> {
-  final CourseController courseController = Get.find<CourseController>();
+  late final CourseController courseController;
+  
+  @override
+  void initState() {
+    super.initState();
+    // Find controller using the course-specific tag
+    courseController = Get.find<CourseController>(tag: widget.courseId);
+  }
   @override
   void dispose() {
     super.dispose();
@@ -31,24 +40,29 @@ class _AttendenceState extends State<Attendence> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
+          Container(
             height: height * 0.04,
             width: width,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Date : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}",
-                  style: textStyle.copyWith(fontSize: 14),
+                Flexible(
+                  child: Text(
+                    "Date : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}",
+                    style: textStyle.copyWith(fontSize: 14),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
+                SizedBox(width: 8),
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       "Counted As : ",
                       style: textStyle.copyWith(fontSize: 14),
                     ),
-                    DropDownWidget(),
+                    DropDownWidget(courseId: widget.courseId),
                   ],
                 ),
               ],
@@ -61,7 +75,10 @@ class _AttendenceState extends State<Attendence> {
             color: Colors.black12.withOpacity(0.1),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              child: AttendenceWidget(),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: AttendenceWidget(courseId: widget.courseId),
+              ),
             ),
           ),
 
@@ -77,6 +94,7 @@ class _AttendenceState extends State<Attendence> {
                 ),
                 onPressed: () {
                   courseController.addAttendence();
+                  // print(courseController.courseId);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

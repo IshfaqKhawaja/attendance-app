@@ -1,14 +1,12 @@
 import io
-# from turtle import st  # Removed - this was causing import errors
-from fastapi import APIRouter, HTTPException
-from sqlalchemy import Delete, intersect
+from fastapi import APIRouter, HTTPException # type: ignore
 
 from app.db.crud.student import add_students_in_bulk
 from app.db.crud.student_enrolement import add_student_enrolled_in_sem, add_students_enrolled_in_sem_bulk, delete_student_enrollment, display_students_by_sem_id, fetch_students_by_course_id
 from app.db.models.student_enrolement_model import BulkStudentEnrolementModel, DeleteStudentEnrollment, DeleteStudentEnrollmentResponseModel, DisplayStudentsBySemIdResponseModel, StudentEnrolementModel, StudentEnrollmentDetailsModel
-from fastapi import File, UploadFile
-from fastapi import Form
-import pandas as pd
+from fastapi import File, UploadFile # type: ignore
+from fastapi import Form # type: ignore
+import pandas as pd # type: ignore
 
 from app.db.models.student_model import BulkStudentIn
 

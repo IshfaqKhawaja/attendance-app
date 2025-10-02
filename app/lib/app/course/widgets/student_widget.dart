@@ -14,7 +14,7 @@ class StudentWidget extends StatelessWidget {
     //   elevation: WidgetStateProperty.all<double>(0.1),
     //   shadowColor: WidgetStateProperty.all<Color>(Colors.white),
     // );
-    final rowWidth = Get.size.width * 0.3;
+    final rowWidth = Get.size.width * 0.8;
     return Card(
       color: Get.theme.primaryColor.withOpacity(0.7),
       elevation: 10,

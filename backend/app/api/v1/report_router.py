@@ -1,5 +1,4 @@
 import os
-from click import File
 from app.db.models.attendence_model import ReportBySemId, ReportInput
 from app.db.models.report_by_course_id_model import ReportByCourseId
 from fastapi import APIRouter # type: ignore

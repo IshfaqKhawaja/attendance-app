@@ -5,20 +5,25 @@ import '../../constants/text_styles.dart';
 import '../controllers/course_controller.dart';
 
 class AttendenceWidget extends StatefulWidget {
-  const AttendenceWidget({super.key});
+  final String courseId;
+  
+  const AttendenceWidget({super.key, required this.courseId});
 
   @override
   State<AttendenceWidget> createState() => _AttendenceWidgetState();
 }
 
 class _AttendenceWidgetState extends State<AttendenceWidget> {
-  final CourseController courseController = Get.find<CourseController>();
-
+  late final CourseController courseController;
+  
   @override
   void initState() {
     super.initState();
+    // Find controller using the course-specific tag
+    courseController = Get.find<CourseController>(tag: widget.courseId);
   }
 
+  
   @override
   Widget build(BuildContext context) {
     final headerStyle = textStyle.copyWith(fontSize: 14);

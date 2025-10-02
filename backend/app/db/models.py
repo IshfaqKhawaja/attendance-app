@@ -53,7 +53,7 @@ statements = [
     );
     """,
 
-    # program → department (factid is redundant as it can be found via department)
+    # program → department
     """
     CREATE TABLE IF NOT EXISTS program (
         prog_id   VARCHAR(255) PRIMARY KEY,
@@ -73,7 +73,7 @@ statements = [
     );
     """,
 
-    # teacher (faculty member) → department
+    # teacher → department
     """
     CREATE TABLE IF NOT EXISTS teachers (
         teacher_id   VARCHAR(255) PRIMARY KEY,
@@ -83,7 +83,7 @@ statements = [
     );
     """,
 
-    # student → department (program/semester info is now in the enrollment table)
+    # student → semester
     """
     CREATE TABLE IF NOT EXISTS students (
         student_id   VARCHAR(255) PRIMARY KEY,
@@ -93,7 +93,7 @@ statements = [
     );
     """,
 
-    # course → semester (other IDs are redundant)
+    # course → semester
     """
     CREATE TABLE IF NOT EXISTS course (
         course_id    VARCHAR(255) PRIMARY KEY,
@@ -102,7 +102,7 @@ statements = [
     );
     """,
 
-    # [NEW] student_enrollment: links a student to a specific semester
+    # student_enrollment
     """
     CREATE TABLE IF NOT EXISTS student_enrollment (
         student_id   VARCHAR(255) NOT NULL REFERENCES students(student_id) ON DELETE CASCADE,
@@ -111,7 +111,7 @@ statements = [
     );
     """,
 
-    # teacher_course: junction table for a many-to-many relationship
+    # teacher_course
     """
     CREATE TABLE IF NOT EXISTS teacher_course (
         teacher_id   VARCHAR(255) NOT NULL REFERENCES teachers(teacher_id) ON DELETE CASCADE,
@@ -120,7 +120,7 @@ statements = [
     );
     """,
 
-    # course_student: junction table for courses a student is taking in a semester
+    # course_student
     """
     CREATE TABLE IF NOT EXISTS course_student (
         student_id   VARCHAR(255) NOT NULL REFERENCES students(student_id) ON DELETE CASCADE,
@@ -129,17 +129,32 @@ statements = [
     );
     """,
 
-    # attendance → student, course (other IDs are redundant)
+    # attendance → student, course
+    # NO unique constraint needed - application logic handles the course-date locking
     """
     CREATE TABLE IF NOT EXISTS attendance (
+        attendance_id SERIAL PRIMARY KEY,
         student_id      VARCHAR(255) NOT NULL REFERENCES students(student_id) ON DELETE CASCADE,
         course_id       VARCHAR(255) NOT NULL REFERENCES course(course_id) ON DELETE CASCADE,
-        "date"         DATE NOT NULL,
-        present        BOOLEAN NOT NULL DEFAULT FALSE
+        date           DATE NOT NULL,
+        present        BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """,
 
-    # users → department (factid is redundant)
+    # Add index for better query performance on course-date lookups
+    """
+    CREATE INDEX IF NOT EXISTS idx_attendance_course_date 
+    ON attendance(course_id, date);
+    """,
+    
+    # Add index for student-course lookups (for summaries)
+    """
+    CREATE INDEX IF NOT EXISTS idx_attendance_student_course 
+    ON attendance(student_id, course_id);
+    """,
+
+    # users → department
     """
     CREATE TABLE IF NOT EXISTS users (
         user_id       VARCHAR(255) PRIMARY KEY,
@@ -148,5 +163,5 @@ statements = [
         dept_id       VARCHAR(255) REFERENCES department(dept_id) ON DELETE SET NULL,
         fact_id       VARCHAR(255) REFERENCES faculty(fact_id) ON DELETE SET NULL
     );
-    """
-] 
+    """,
+]

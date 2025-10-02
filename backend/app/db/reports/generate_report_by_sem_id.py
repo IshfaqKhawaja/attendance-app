@@ -1,5 +1,5 @@
-import pandas as pd
-import psycopg
+import pandas as pd # type: ignore
+import psycopg  # type: ignore
 import re
 import os
 from app.db.connection import connection_to_db # Assuming this is your connection module
@@ -61,8 +61,23 @@ def generate_semester_attendance_report_xls(sem_id: str, output_path: str):
             print(f"Writing data to Excel file: {output_path}")
 
             # Group the entire DataFrame by course to create a sheet for each one.
-            for (course_id, course_name), course_df in df.groupby(['course_id', 'course_name']):
-                
+            for key, course_df in df.groupby(['course_id', 'course_name']):
+                # key may be a tuple (course_id, course_name) or a single value depending on pandas internals.
+                if isinstance(key, tuple):
+                    course_id, course_name = key
+                else:
+                    course_id = key
+                    # attempt to recover course_name from the grouped frame if possible
+                    if 'course_name' in course_df.columns and not course_df['course_name'].isnull().all():
+                        course_name = course_df['course_name'].iloc[0]
+                    else:
+                        course_name = str(course_id)
+
+                # ensure we have a usable string for sheet naming
+                if pd.isna(course_name):
+                    course_name = str(course_id)
+                course_name = str(course_name)
+
                 # CHANGED: The pivot now uses 'date' and 'lecture_num' for columns.
                 pivot_df = course_df.pivot_table(
                     index=['student_id', 'student_name'], 
@@ -74,10 +89,15 @@ def generate_semester_attendance_report_xls(sem_id: str, output_path: str):
 
                 # CHANGED: Format the new multi-level columns into a single, readable header.
                 if isinstance(pivot_df.columns, pd.MultiIndex):
-                    pivot_df.columns = [
-                        f"{date.strftime('%Y-%m-%d')} (Lec {lec_num})" 
-                        for date, lec_num in pivot_df.columns
-                    ]
+                    new_cols = []
+                    for date_val, lec_num in pivot_df.columns:
+                        # handle various types (Timestamp, datetime, string, etc.)
+                        try:
+                            date_str = pd.to_datetime(date_val).strftime('%Y-%m-%d')
+                        except Exception:
+                            date_str = str(date_val)
+                        new_cols.append(f"{date_str} (Lec {lec_num})")
+                    pivot_df.columns = new_cols
                 
                 pivot_df.reset_index(inplace=True)
                 

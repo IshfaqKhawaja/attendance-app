@@ -61,7 +61,9 @@ class CourseController extends GetxController {
           courseId: attendance.courseId,
           date: attendance.date,
           present: attendance.marked[i],
+          slotNumber: countedAs.value > 1 ? (i + 1) : null, // Add slot number only when multiple slots
         ));
+        print(attendance.courseId);
       }
     }
     return list;
@@ -76,6 +78,11 @@ class CourseController extends GetxController {
       });
       if (res["success"]) {
         Get.snackbar("Success", res["message"], colorText: Colors.green);
+        
+        // Reset all controllers after successful submission
+        clearAttendence();
+        // Regenerate fresh attendance list with default countedAs value
+        await getStudentsForAttendence();
       } else {
           Get.snackbar("ERROR", res["message"], colorText: Colors.red);
         }
@@ -168,5 +175,7 @@ void clearAttendence() {
   attendenceMarked.clear();
   countedAs.value = 1;
 }
+
+  
 
 }

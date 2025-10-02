@@ -29,7 +29,11 @@ void loadStudentsData() async{
  @override
  void initState() {
     super.initState();
-    courseController = Get.put(CourseController(courseId: course.courseId), permanent: true);
+    // Use course.courseId as a unique tag to create separate controller instances for each course
+    courseController = Get.put(
+      CourseController(courseId: course.courseId), 
+      tag: course.courseId, // Each course gets its own controller instance
+    );
     loadStudentsData();
   }
   @override
@@ -113,7 +117,7 @@ void loadStudentsData() async{
                 color: Colors.white,
                 borderRadius: BorderRadius.only(),
               ),
-              child: Attendence(),
+              child: Attendence(courseId: course.courseId),
             ),
           ),
         ],

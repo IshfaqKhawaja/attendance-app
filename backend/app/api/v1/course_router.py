@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Body
-from httpx import delete # type: ignore
+from fastapi import APIRouter, Body # type: ignore
 
 from app.db.crud.course import *
 
