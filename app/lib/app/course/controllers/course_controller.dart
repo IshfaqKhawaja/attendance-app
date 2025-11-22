@@ -63,7 +63,6 @@ class CourseController extends GetxController {
           present: attendance.marked[i],
           slotNumber: countedAs.value > 1 ? (i + 1) : null, // Add slot number only when multiple slots
         ));
-        print(attendance.courseId);
       }
     }
     return list;
@@ -176,6 +175,106 @@ void clearAttendence() {
   countedAs.value = 1;
 }
 
-  
+// Student CRUD operations
+void addStudent(String studentId, String studentName, String phoneNumber, String semId) async {
+  if (studentId.isEmpty || studentName.isEmpty || phoneNumber.isEmpty) {
+    Get.snackbar("Error", "Please fill all fields");
+    return;
+  }
+
+  try {
+    // Parse phone number to int, default to 0 if invalid
+    int phoneNumberInt = int.tryParse(phoneNumber) ?? 0;
+
+    // First add the student to the students table (includes sem_id)
+    var res = await client.postJson(Endpoints.addStudent, {
+      "student_id": studentId,
+      "student_name": studentName,
+      "phone_number": phoneNumberInt,
+      "sem_id": semId,
+    });
+
+    if (res["success"] == true) {
+      // Then add the student enrollment for this semester
+      var enrollRes = await client.postJson(Endpoints.addStudentEnrollment, {
+        "student_id": studentId,
+        "sem_id": semId,
+      });
+
+      if (enrollRes["success"] == true) {
+        Get.snackbar("Success", "Student Added Successfully");
+        await getStudentsList(); // Refresh the list
+      } else {
+        Get.snackbar("Error", enrollRes["message"]?.toString() ?? "Failed to enroll student");
+      }
+    } else {
+      // If student already exists, still try to enroll them
+      if (res["message"]?.toString().contains("already exists") == true) {
+        var enrollRes = await client.postJson(Endpoints.addStudentEnrollment, {
+          "student_id": studentId,
+          "sem_id": semId,
+        });
+
+        if (enrollRes["success"] == true) {
+          Get.snackbar("Success", "Student Enrolled Successfully");
+          await getStudentsList();
+        } else {
+          Get.snackbar("Error", enrollRes["message"]?.toString() ?? "Failed to enroll student");
+        }
+      } else {
+        Get.snackbar("Error", res["message"]?.toString() ?? "Failed to add student");
+      }
+    }
+  } catch (e) {
+    Get.snackbar("Error", "Failed to add student: $e");
+  }
+}
+
+void editStudent(String studentId, String studentName, String phoneNumber, String semId) async {
+  if (studentName.isEmpty || phoneNumber.isEmpty) {
+    Get.snackbar("Error", "Please fill all fields");
+    return;
+  }
+
+  try {
+    // Parse phone number to int, default to 0 if invalid
+    int phoneNumberInt = int.tryParse(phoneNumber) ?? 0;
+
+    var res = await client.postJson(Endpoints.editStudent, {
+      "student_id": studentId,
+      "student_name": studentName,
+      "phone_number": phoneNumberInt,
+    });
+
+    if (res["success"] == true) {
+      Get.snackbar("Success", "Student Updated Successfully");
+      await getStudentsList(); // Refresh the list
+    } else {
+      Get.snackbar("Error", res["message"]?.toString() ?? "Failed to update student");
+    }
+  } catch (e) {
+    Get.snackbar("Error", "Failed to update student: $e");
+  }
+}
+
+void deleteStudentFromCourse(String studentId, String semId) async {
+  try {
+    var res = await client.postJson(Endpoints.deleteStudentById, {
+      "student_id": studentId,
+      "sem_id": semId,
+    });
+
+    if (res["success"] == true) {
+      Get.snackbar("Success", "Student Removed Successfully");
+      await getStudentsList(); // Refresh the list
+    } else {
+      Get.snackbar("Error", res["message"]?.toString() ?? "Failed to remove student");
+    }
+  } catch (e) {
+    Get.snackbar("Error", "Failed to remove student: $e");
+  }
+}
+
+
 
 }

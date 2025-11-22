@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/course_by_sem_id_controller.dart';
 import '../widgets/add_course.dart';
+import '../widgets/edit_course.dart';
 import 'display_students.dart';
 import '../../core/services/user_role_service.dart';
 
@@ -69,6 +70,7 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
                   title: Text("Student List", style: textStyle.copyWith(fontSize: 18,  fontWeight: FontWeight.bold),),
                   content: SizedBox(
                     width: double.maxFinite,
+                    height: Get.height * 0.6, // Add height for proper display
                     child: DisplayStudents(
                       semId: semesterId,
                     ),
@@ -132,6 +134,15 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
                     // Edit Button (only for CRUD users)
                     if (Get.find<UserRoleService>().canPerformCrud)
                       IconButton(onPressed: (){
+                        Get.dialog(
+                          barrierDismissible: true,
+                          Dialog(
+                            child: EditCourse(
+                              semesterId: semesterId,
+                              course: course,
+                            ),
+                          ),
+                        );
                       }, icon: Icon(Icons.edit, size: 20, color: Get.theme.colorScheme.primary,)),
                     // Delete Button (only for CRUD users)
                     if (Get.find<UserRoleService>().canPerformCrud)

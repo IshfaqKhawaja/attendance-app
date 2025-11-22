@@ -1,33 +1,64 @@
+import '../../config/environment.dart';
+
 class Endpoints {
   Endpoints._();
 
+  // Get base URL from environment configuration
+  static String get baseUrl => AppConfig.current.apiBaseUrl;
 
-  static const String baseUrl = "http://localhost:8000";
+  // Authentication endpoints
+  static const String sendOtp = '/authenticate/send_otp';
+  static const String verifyOtp = '/authenticate/verify_otp';
+  static const String registerTeacher = '/authenticate/register_teacher';
+  static const String checkUser = '/authenticate/check_user';
 
-  // Group endpoints here
-  static String deleteSemester(String semId) => "$baseUrl/semester/delete/$semId";
-  static String displaySemesterByProgramId(String progId) => "$baseUrl/semester/display_semester_by_program_id/$progId";
-  static const String getAllData = "$baseUrl/initial/get_all_data";
-  static const String addSemester = "$baseUrl/semester/add";
-  static String editSemester(String semId) => "$baseUrl/semester/edit/$semId";
-  static String displayTeacherByDeptId(String deptId) => "$baseUrl/teacher/display/$deptId";
-  static String addTeacher = "$baseUrl/teacher/add";
-  static String deleteTeacher =  "$baseUrl/teacher/delete";
-  static String editTeacher = "$baseUrl/teacher/edit";
-  static String addCourse = "$baseUrl/course/add";
-  static String displayCoursesBySemesterId(String semId) => "$baseUrl/course/display_courses_by_semester_id/$semId";
-  static String deleteCourseById(String courseId) => "$baseUrl/course/delete/$courseId";
-  static String addStudentsFromFile = "$baseUrl/student_enrollment/upload_bulk_enrollment_file";
-  static String getStudentsBySemId(String semId) => "$baseUrl/student_enrollment/display_by_sem_id/$semId";
-  static String getTeachersByDeptId(String deptId) => "$baseUrl/teacher/display/$deptId";
-  static String teacherCourses(String teacherId) => "$baseUrl/teacher_course/display/$teacherId";
-  static String getStudentsByCourseId(String courseId) => "$baseUrl/student_enrollment/fetch_students/$courseId";
-  static String addAttendanceBulk = "$baseUrl/attendance/add_attendence_bulk";
-  // Reports endpoints
-  static String generateCourseReport = "$baseUrl/reports/generate_course_report_xls";
-  static String generateAttendanceReport = "$baseUrl/reports/generate_course_report_pdf";
-  static String generateAttendanceReportBySemId = "$baseUrl/reports/generate_report_by_sem_id_xls";
-  static String deleteStudentById = "$baseUrl/student_enrollment/delete_student_enrollment";
+  // Initial/Setup endpoints
+  static const String getAllData = '/initial/get_all_data';
 
+  // Semester endpoints
+  static String deleteSemester(String semId) => '$baseUrl/semester/delete/$semId';
+  static String displaySemesterByProgramId(String progId) => '$baseUrl/semester/display_semester_by_program_id/$progId';
+  static const String addSemester = '/semester/add';
+  static String editSemester(String semId) => '$baseUrl/semester/edit/$semId';
+
+  // Teacher endpoints
+  static String displayTeacherByDeptId(String deptId) => '$baseUrl/teacher/display/$deptId';
+  static String getTeachersByDeptId(String deptId) => '$baseUrl/teacher/display/$deptId';
+  static const String addTeacher = '/teacher/add';
+  static const String deleteTeacher = '/teacher/delete';
+  static const String editTeacher = '/teacher/edit';
+
+  // Course endpoints
+  static const String addCourse = '/course/add';
+  static const String editCourse = '/course/edit';
+  static String displayCoursesBySemesterId(String semId) => '$baseUrl/course/display_courses_by_semester_id/$semId';
+  static String deleteCourseById(String courseId) => '$baseUrl/course/delete/$courseId';
+
+  // Teacher-Course endpoints
+  static String teacherCourses(String teacherId) => '$baseUrl/teacher_course/display/$teacherId';
+
+  // Student enrollment endpoints
+  static const String addStudentsFromFile = '/student_enrollment/upload_bulk_enrollment_file';
+  static String getStudentsBySemId(String semId) => '$baseUrl/student_enrollment/display_by_sem_id/$semId';
+  static String getStudentsByCourseId(String courseId) => '$baseUrl/student_enrollment/fetch_students/$courseId';
+  static const String deleteStudentById = '/student_enrollment/delete_student_enrollment';
+  static const String addStudent = '/student/add';
+  static const String addStudentEnrollment = '/student_enrollment/add';
+  static const String editStudent = '/student/edit';
+
+  // Attendance endpoints
+  static const String addAttendanceBulk = '/attendance/add_attendence_bulk';
+
+  // Report endpoints
+  static const String generateCourseReport = '/reports/generate_course_report_xls';
+  static const String generateAttendanceReport = '/reports/generate_course_report_pdf';
+  static const String generateAttendanceReportBySemId = '/reports/generate_report_by_sem_id_xls';
+
+  // Helper method to get full URL
+  static String fullUrl(String path) {
+    if (path.startsWith('http')) {
+      return path;
+    }
+    return path.startsWith('/') ? '$baseUrl$path' : '$baseUrl/$path';
+  }
 }
-  

@@ -24,6 +24,7 @@ class TeacherModel {
   
   /// Get teacher type as enum
   TeacherType get employmentType => TeacherType.fromString(type);
+
   Map<String, dynamic> toJson() {
     return {
       "teacher_id": teacherId,
@@ -32,4 +33,13 @@ class TeacherModel {
       "dept_id": deptId,
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is TeacherModel && other.teacherId == teacherId;
+  }
+
+  @override
+  int get hashCode => teacherId.hashCode;
 }

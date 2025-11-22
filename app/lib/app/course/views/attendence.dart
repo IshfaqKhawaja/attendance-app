@@ -72,7 +72,7 @@ class _AttendenceState extends State<Attendence> {
           Container(
             height: height * 0.6,
             width: width,
-            color: Colors.black12.withOpacity(0.1),
+            color: Colors.black12.withValues(alpha: 0.1),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: SingleChildScrollView(
@@ -86,7 +86,7 @@ class _AttendenceState extends State<Attendence> {
             height: height * 0.06,
             width: width,
             padding: EdgeInsets.all(4),
-            color: Colors.black12.withOpacity(0.1),
+            color: Colors.black12.withValues(alpha: 0.1),
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Get.theme.primaryColor,

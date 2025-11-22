@@ -192,3 +192,49 @@ def delete_course_by_id(course_id: str) -> CourseCreateResponse:
             success=False,
             message=f"Couldn't delete course: {e}"
         )
+
+
+def update_course_by_id(course_update) -> CourseCreateResponse:
+    """Update course name and/or assigned teacher"""
+    from app.db.models.course_model import CourseUpdate
+    from app.db.crud.teacher_course import update_teacher_course_assignment
+
+    conn = connection_to_db()
+    try:
+        # Update course name if provided
+        if course_update.course_name:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "UPDATE course SET course_name = %s WHERE course_id = %s",
+                    (course_update.course_name, course_update.course_id)
+                )
+                if cur.rowcount == 0:
+                    return CourseCreateResponse(
+                        success=False,
+                        message="Course not found"
+                    )
+
+        # Update teacher assignment if provided
+        if course_update.assigned_teacher_id:
+            result = update_teacher_course_assignment(
+                course_update.course_id,
+                course_update.assigned_teacher_id
+            )
+            if not result.get("success", False):
+                conn.rollback()
+                return CourseCreateResponse(
+                    success=False,
+                    message=f"Failed to update teacher assignment: {result.get('message', 'Unknown error')}"
+                )
+
+        conn.commit()
+        return CourseCreateResponse(
+            success=True,
+            message="Course updated successfully"
+        )
+    except Exception as e:
+        conn.rollback()
+        return CourseCreateResponse(
+            success=False,
+            message=f"Couldn't update course: {e}"
+        )

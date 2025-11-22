@@ -34,7 +34,7 @@ class Faculty extends StatelessWidget {
       child: Material(
         elevation: 4,
         borderRadius: BorderRadius.circular(16),
-        shadowColor: gradientColor.withOpacity(0.3),
+        shadowColor: gradientColor.withValues(alpha: 0.3),
         child: InkWell(
           onTap: () {
             Get.toNamed(
@@ -62,7 +62,7 @@ class Faculty extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -90,14 +90,14 @@ class Faculty extends StatelessWidget {
                             Icon(
                               Icons.badge_outlined,
                               size: 16,
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                             ),
                             SizedBox(width: 6),
                             Text(
                               'ID: $factId',
                               style: GoogleFonts.openSans(
                                 fontSize: 14,
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -109,7 +109,7 @@ class Faculty extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(

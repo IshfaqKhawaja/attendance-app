@@ -16,7 +16,7 @@ class StudentWidget extends StatelessWidget {
     // );
     final rowWidth = Get.size.width * 0.8;
     return Card(
-      color: Get.theme.primaryColor.withOpacity(0.7),
+      color: Get.theme.primaryColor.withValues(alpha: 0.7),
       elevation: 10,
       child: Padding(
         padding: const EdgeInsets.all(8.0),

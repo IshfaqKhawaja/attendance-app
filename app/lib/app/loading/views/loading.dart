@@ -25,7 +25,7 @@ class LoadingScreen extends StatelessWidget {
             gradient: LinearGradient(
               colors: [
                 Get.theme.primaryColor,
-                Get.theme.primaryColor.withOpacity(0.2),
+                Get.theme.primaryColor.withValues(alpha: 0.2),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,

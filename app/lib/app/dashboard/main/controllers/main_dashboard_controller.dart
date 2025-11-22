@@ -42,11 +42,15 @@ class MainDashboardController extends BaseController {
         currentDashboard.value = Routes.SIGN_IN;
         return;
       }
-      
+
+      // First, try to restore user data from storage if not already loaded
+      // This handles the auto-login scenario
+      await _signInController!.restoreUserData();
+
       // Check if user data exists
       final userData = _signInController!.userData.value;
       final teacherData = _signInController!.teacherData.value;
-      
+
       // Determine dashboard based on user type
       if (userData.type == "SUPER_ADMIN") {
         currentDashboard.value = Routes.SUPER_ADMIN_DASHBOARD;

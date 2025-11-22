@@ -1,19 +1,29 @@
 import secrets
 import smtplib
 from email.message import EmailMessage
+import logging
+
+from app.core.settings import settings
+
+logger = logging.getLogger(__name__)
+
 
 def send_mail(
     to_addrs,
-    use_tls: bool = True,
+    use_tls: bool = None,
 ):
     """
     Generates a 6-digit OTP, emails it as HTML, and returns the OTP.
+
+    Args:
+        to_addrs: Email address(es) to send to
+        use_tls: Whether to use TLS (defaults to settings.SMTP_USE_TLS)
+
+    Returns:
+        str: The generated OTP code
     """
-    smtp_host = "smtp.gmail.com"
-    smtp_port = 587      # use 465 and use_tls=False to use SSL instead
-    smtp_email = "ishfaqkhawaja08@gmail.com"
-    smtp_password = "uhdn bafn cucz ejei" 
-  
+    if use_tls is None:
+        use_tls = settings.SMTP_USE_TLS
 
     # 1. Generate a 6-digit OTP
     otp = f"{secrets.randbelow(10**6):06d}"
@@ -42,7 +52,7 @@ def send_mail(
           </p>
           <hr style="margin:24px 0; border:none; border-top:1px solid #ddd;" />
           <p style="color:#888; font-size:12px;">
-            If you didn’t request this, you can safely ignore this email.
+            If you didn't request this, you can safely ignore this email.
           </p>
         </div>
       </body>
@@ -51,8 +61,8 @@ def send_mail(
 
     # 3. Create the email message
     msg = EmailMessage()
-    msg["Subject"] = "no reply"
-    msg["From"] = smtp_email
+    msg["Subject"] = f"{settings.APP_NAME} - Verification Code"
+    msg["From"] = settings.SMTP_EMAIL
     msg["To"] = to_addrs
     # Plain-text fallback
     msg.set_content(f"Your verification code is {otp}")
@@ -60,20 +70,25 @@ def send_mail(
     msg.add_alternative(html_body, subtype="html")
 
     # 4. Send via SMTP
-    if use_tls:
-        server = smtplib.SMTP(smtp_host, smtp_port)
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
-    else:
-        server = smtplib.SMTP_SSL(smtp_host, smtp_port)
-
     try:
-        server.login(smtp_email, smtp_password)
+        if use_tls:
+            server = smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT)
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
+        else:
+            server = smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT)
+
+        server.login(settings.SMTP_EMAIL, settings.SMTP_PASSWORD)
         server.send_message(msg)
-        print(f"Sent OTP to {to_addrs}")
-    finally:
+        logger.info(f"Sent OTP to {to_addrs}")
         server.quit()
+    except smtplib.SMTPException as e:
+        logger.error(f"SMTP error sending email to {to_addrs}: {str(e)}")
+        raise Exception(f"Failed to send email: {str(e)}")
+    except Exception as e:
+        logger.error(f"Unexpected error sending email to {to_addrs}: {str(e)}")
+        raise Exception(f"Failed to send email: {str(e)}")
 
     # 5. Return the generated code
     return otp

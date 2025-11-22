@@ -36,7 +36,7 @@ class _SignInState extends State<SignIn> {
           gradient: LinearGradient(
             colors: [
               Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor.withOpacity(0.6),
+              Theme.of(context).primaryColor.withValues(alpha: 0.6),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

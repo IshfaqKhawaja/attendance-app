@@ -9,7 +9,7 @@ DB_USER = "myuser"
 DB_PASSWORD = "mypassword"
 DB_NAME = "mydb"
 DB_HOST = "localhost"
-DB_PORT = "5432"
+DB_PORT = "5433"
 DOCKER_NAME = "local-postgres"
 
 def run_docker():

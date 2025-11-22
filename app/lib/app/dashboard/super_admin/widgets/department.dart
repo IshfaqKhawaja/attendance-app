@@ -45,7 +45,7 @@ class Department extends StatelessWidget {
       child: Material(
         elevation: 2,
         borderRadius: BorderRadius.circular(12),
-        shadowColor: Colors.grey.withOpacity(0.2),
+        shadowColor: Colors.grey.withValues(alpha: 0.2),
         child: InkWell(
           onTap: () {
             departmentController.navigateToHodDashboard(deptId);
@@ -57,7 +57,7 @@ class Department extends StatelessWidget {
               color: AppColors.cardBackground,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -69,8 +69,8 @@ class Department extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Get.theme.primaryColor.withOpacity(0.8),
-                        Get.theme.primaryColorLight.withOpacity(0.8),
+                        Get.theme.primaryColor.withValues(alpha: 0.8),
+                        Get.theme.primaryColorLight.withValues(alpha: 0.8),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,

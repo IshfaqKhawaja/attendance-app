@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
+import 'endpoints.dart';
 
 typedef UnauthorizedHandler = Future<bool> Function();
 
@@ -22,6 +23,11 @@ class ApiClient {
     this.onUnauthorized,
   }) : _client = client ?? http.Client();
 
+  /// Normalize URL to ensure it's absolute
+  String _normalizeUrl(String url) {
+    return Endpoints.fullUrl(url);
+  }
+
   Future<Map<String, String>> _authHeaders(Map<String, String> headers) async {
     final merged = {...defaultHeaders, ...headers};
     if (tokenProvider != null) {
@@ -34,13 +40,14 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> getJson(String url, {Map<String, String>? headers}) async {
+    final normalizedUrl = _normalizeUrl(url);
     final mergedHeaders = await _authHeaders(headers ?? const {});
-    Future<http.Response> run() => _client.get(Uri.parse(url), headers: mergedHeaders).timeout(timeout);
+    Future<http.Response> run() => _client.get(Uri.parse(normalizedUrl), headers: mergedHeaders).timeout(timeout);
     http.Response res = await run();
     if (res.statusCode == 401 && onUnauthorized != null) {
       if (await onUnauthorized!.call()) {
         final retryHeaders = await _authHeaders(headers ?? const {});
-        res = await _client.get(Uri.parse(url), headers: retryHeaders).timeout(timeout);
+        res = await _client.get(Uri.parse(normalizedUrl), headers: retryHeaders).timeout(timeout);
       }
     }
     if (res.statusCode < 200 || res.statusCode >= 300) {
@@ -53,12 +60,13 @@ class ApiClient {
 
   Future<Map<String, dynamic>> postJson(String url, Map<String, dynamic> body,
       {Map<String, String>? headers}) async {
+    final normalizedUrl = _normalizeUrl(url);
     final mergedHeaders = await _authHeaders({
       'Content-Type': 'application/json',
       ...?headers,
     });
     Future<http.Response> run() => _client
-        .post(Uri.parse(url), headers: mergedHeaders, body: jsonEncode(body))
+        .post(Uri.parse(normalizedUrl), headers: mergedHeaders, body: jsonEncode(body))
         .timeout(timeout);
     http.Response res = await run();
 
@@ -69,7 +77,7 @@ class ApiClient {
           ...?headers,
         });
         res = await _client
-            .post(Uri.parse(url), headers: retryHeaders, body: jsonEncode(body))
+            .post(Uri.parse(normalizedUrl), headers: retryHeaders, body: jsonEncode(body))
             .timeout(timeout);
       }
     }
@@ -83,12 +91,13 @@ class ApiClient {
 
   Future<Uint8List> postBytes(String url, Map<String, dynamic> body,
       {Map<String, String>? headers}) async {
+    final normalizedUrl = _normalizeUrl(url);
     final mergedHeaders = await _authHeaders({
       'Content-Type': 'application/json',
       ...?headers,
     });
     Future<http.Response> run() => _client
-        .post(Uri.parse(url), headers: mergedHeaders, body: jsonEncode(body))
+        .post(Uri.parse(normalizedUrl), headers: mergedHeaders, body: jsonEncode(body))
         .timeout(timeout);
     http.Response res = await run();
     if (res.statusCode == 401 && onUnauthorized != null) {
@@ -98,7 +107,7 @@ class ApiClient {
           ...?headers,
         });
         res = await _client
-            .post(Uri.parse(url), headers: retryHeaders, body: jsonEncode(body))
+            .post(Uri.parse(normalizedUrl), headers: retryHeaders, body: jsonEncode(body))
             .timeout(timeout);
       }
     }
@@ -118,6 +127,7 @@ Future<Map<String, dynamic>> uploadFile(
   Map<String, String> fields, {
   Map<String, String>? headers,
 }) async {
+  final normalizedUrl = _normalizeUrl(url);
   final mergedHeaders = await _authHeaders(headers ?? const {});
   try {
     // 1. Create a FormData object to hold multipart data.
@@ -133,7 +143,7 @@ Future<Map<String, dynamic>> uploadFile(
     final dio = Dio();
     dio.options.headers = mergedHeaders;
     final response = await dio.post(
-      url,
+      normalizedUrl,
       data: formData,
       onSendProgress: (int sent, int total) {
         if (total != 0) {

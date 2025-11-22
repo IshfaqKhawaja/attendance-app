@@ -134,6 +134,47 @@ class CourseBySemesterIdController  extends GetxController{
       }
   }
 
+  // Edit Course Function
+  void editCourse(String courseId, String name, String semId) async {
+      try{
+        if(selectedTeacher.value == null){
+          Get.snackbar("Error", "Please select a teacher",
+            colorText: Colors.red,
+          );
+          return;
+        }
+        if(name.isEmpty){
+          Get.snackbar("Error", "Please enter course name",
+            colorText: Colors.red,
+          );
+          return;
+        }
+        var res = await client.postJson(
+          Endpoints.editCourse,
+          {
+            "course_id": courseId,
+            "course_name": name,
+            "assigned_teacher_id": selectedTeacher.value?.teacherId,
+          },
+        );
+        if(res["success"] == true){
+          Get.snackbar("Success", "Course Updated Successfully",
+            colorText: Colors.green,
+          );
+          getCoursesBySemesterId(semId);
+        } else {
+          Get.snackbar("Error", res["message"] ?? "Failed to update course",
+            colorText: Colors.red,
+          );
+        }
+      }catch(e){
+        print(e);
+        Get.snackbar("Error", "Failed to update course",
+          colorText: Colors.red,
+        );
+      }
+  }
+
 
 
 
@@ -303,6 +344,115 @@ void attendanceForSem(String semId) async {
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to remove student from semester: $e',
+        colorText: Colors.red,
+      );
+    }
+  }
+
+  // Add Student Function
+  void addStudent(String studentId, String studentName, String phoneNumber, String semId) async {
+    try {
+      if (studentId.isEmpty) {
+        Get.snackbar("Error", "Please enter student ID",
+          colorText: Colors.red,
+        );
+        return;
+      }
+      if (studentName.isEmpty) {
+        Get.snackbar("Error", "Please enter student name",
+          colorText: Colors.red,
+        );
+        return;
+      }
+      if (phoneNumber.isEmpty) {
+        Get.snackbar("Error", "Please enter phone number",
+          colorText: Colors.red,
+        );
+        return;
+      }
+
+      // First add student to students table
+      var res = await client.postJson(
+        Endpoints.addStudent,
+        {
+          "student_id": studentId,
+          "student_name": studentName,
+          "phone_number": int.tryParse(phoneNumber) ?? 0,
+          "sem_id": semId,
+        },
+      );
+
+      if (res["success"] == true) {
+        // Then add enrollment
+        var enrollRes = await client.postJson(
+          Endpoints.addStudentEnrollment,
+          {
+            "student_id": studentId,
+            "sem_id": semId,
+          },
+        );
+
+        if (enrollRes["success"] == true) {
+          Get.snackbar("Success", "Student Added Successfully",
+            colorText: Colors.green,
+          );
+          fetchStudentsInThisSem(semId);
+        } else {
+          Get.snackbar("Error", enrollRes["message"] ?? "Failed to enroll student",
+            colorText: Colors.red,
+          );
+        }
+      } else {
+        Get.snackbar("Error", res["message"] ?? "Failed to add student",
+          colorText: Colors.red,
+        );
+      }
+    } catch (e) {
+      print(e);
+      Get.snackbar("Error", "Failed to add student",
+        colorText: Colors.red,
+      );
+    }
+  }
+
+  // Edit Student Function
+  void editStudent(String studentId, String studentName, String phoneNumber, String semId) async {
+    try {
+      if (studentName.isEmpty) {
+        Get.snackbar("Error", "Please enter student name",
+          colorText: Colors.red,
+        );
+        return;
+      }
+      if (phoneNumber.isEmpty) {
+        Get.snackbar("Error", "Please enter phone number",
+          colorText: Colors.red,
+        );
+        return;
+      }
+
+      var res = await client.postJson(
+        Endpoints.editStudent,
+        {
+          "student_id": studentId,
+          "student_name": studentName,
+          "phone_number": int.tryParse(phoneNumber) ?? 0,
+        },
+      );
+
+      if (res["success"] == true) {
+        Get.snackbar("Success", "Student Updated Successfully",
+          colorText: Colors.green,
+        );
+        fetchStudentsInThisSem(semId);
+      } else {
+        Get.snackbar("Error", res["message"] ?? "Failed to update student",
+          colorText: Colors.red,
+        );
+      }
+    } catch (e) {
+      print(e);
+      Get.snackbar("Error", "Failed to update student",
         colorText: Colors.red,
       );
     }

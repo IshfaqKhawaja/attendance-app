@@ -40,7 +40,7 @@ class IndexPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FaIcon(
-                      FontAwesomeIcons.checkCircle,
+                      FontAwesomeIcons.circleCheck,
                       size: 80,
                       color: Colors.green,
                     ),
@@ -71,7 +71,7 @@ class IndexPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FaIcon(
-                      FontAwesomeIcons.edit,
+                      FontAwesomeIcons.penToSquare,
                       size: 80,
                       color: const Color.fromARGB(255, 221, 122, 60),
                     ),

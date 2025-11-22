@@ -104,14 +104,17 @@ class SignInController extends BaseFormController {
           res["access_token"],
           res["refresh_token"],
         );
-        
+
+        // Save user data for auto-login
+        await AccessController.saveUserData(res);
+
         // Set user data based on role
         if (isSuperAdmin || isHod) {
           userData.value = UserModel.fromJson(res);
         } else if (isRegistered) {
           teacherData.value = TeacherModel.fromJson(res);
         }
-        
+
         // Navigate to main dashboard if user is registered, otherwise show registration message
         if (isSuperAdmin || isHod || isRegistered) {
           clearForm(); // Clear form after successful login
@@ -151,6 +154,22 @@ class SignInController extends BaseFormController {
       deptId: "",
     );
     isUserLoggedIn.value = false;
+  }
+
+  /// Restore user data from secure storage (used during auto-login)
+  Future<void> restoreUserData() async {
+    final savedData = await AccessController.getUserData();
+    if (savedData != null) {
+      final isSuperAdmin = savedData["is_super_admin"] == true;
+      final isHod = savedData["is_hod"] == true;
+
+      if (isSuperAdmin || isHod) {
+        userData.value = UserModel.fromJson(savedData);
+      } else {
+        teacherData.value = TeacherModel.fromJson(savedData);
+      }
+      isUserLoggedIn.value = true;
+    }
   }
   
   /// Check if current user is super admin

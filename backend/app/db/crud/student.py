@@ -136,3 +136,50 @@ def fetch_students_by_student_ids(student_ids: list) -> dict:
         "success": True,
         "students": data
     }
+
+
+def update_student_by_id(student_update) -> dict:
+    """Update student name and/or phone number"""
+    from app.db.models.student_model import StudentUpdate
+
+    conn = connection_to_db()
+    try:
+        updates = []
+        params = []
+
+        if student_update.student_name:
+            updates.append("student_name = %s")
+            params.append(student_update.student_name)
+
+        if student_update.phone_number:
+            updates.append("phone_number = %s")
+            params.append(student_update.phone_number)
+
+        if not updates:
+            return {
+                "success": False,
+                "message": "No fields to update"
+            }
+
+        params.append(student_update.student_id)
+        query = f"UPDATE students SET {', '.join(updates)} WHERE student_id = %s"
+
+        with conn.cursor() as cur:
+            cur.execute(query, params)
+            if cur.rowcount == 0:
+                return {
+                    "success": False,
+                    "message": "Student not found"
+                }
+
+        conn.commit()
+        return {
+            "success": True,
+            "message": "Student updated successfully"
+        }
+    except Exception as e:
+        conn.rollback()
+        return {
+            "success": False,
+            "message": f"Couldn't update student: {e}"
+        }

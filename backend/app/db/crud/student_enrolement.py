@@ -10,18 +10,18 @@ def add_student_enrolled_in_sem(student : StudentEnrolementModel):
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO student_enrolement (student_id, sem_id) VALUES (%s, %s)",
+                "INSERT INTO student_enrollment (student_id, sem_id) VALUES (%s, %s) ON CONFLICT (student_id, sem_id) DO NOTHING",
                 (student.student_id, student.sem_id)
             )
             conn.commit()
         return {
             "success": True,
-            "message": "Student Enrolement Added Successfully"
+            "message": "Student Enrollment Added Successfully"
         }
     except Exception as e:
         return {
             "success": False,
-            "message": f"Couldn't add student enrolement: {e}"
+            "message": f"Couldn't add student enrollment: {e}"
         }
         
 

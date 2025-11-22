@@ -161,3 +161,28 @@ def display_all() -> list:
         }
         for row in rows
     ]
+
+
+def update_teacher_course_assignment(course_id: str, new_teacher_id: str) -> dict:
+    """
+    Update the teacher assignment for a course.
+    Deletes old assignment and creates new one.
+    """
+    conn = connection_to_db()
+    try:
+        with conn.cursor() as cur:
+            # Delete old teacher assignment
+            cur.execute(
+                "DELETE FROM teacher_course WHERE course_id = %s",
+                (course_id,)
+            )
+            # Add new teacher assignment
+            cur.execute(
+                "INSERT INTO teacher_course (teacher_id, course_id) VALUES (%s, %s)",
+                (new_teacher_id, course_id)
+            )
+        conn.commit()
+        return {"success": True, "message": "Teacher assignment updated"}
+    except Exception as e:
+        conn.rollback()
+        return {"success": False, "message": f"Failed to update teacher assignment: {e}"}

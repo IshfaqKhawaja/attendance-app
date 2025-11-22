@@ -31,3 +31,8 @@ class BulkCourseCreateResponse(BaseModel):
     inserted_count: int
     skipped_count: int
     message: Optional[str] = None
+
+class CourseUpdate(BaseModel):
+    course_id: str
+    course_name: Optional[str] = None
+    assigned_teacher_id: Optional[str] = None

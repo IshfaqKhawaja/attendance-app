@@ -9,7 +9,7 @@ class TeacherBottomBar extends StatelessWidget {
   final TeacherBottomBarController controller = Get.put(TeacherBottomBarController());
   @override
   Widget build(BuildContext context) {
-    final selectedColor = Get.theme.primaryColor.withOpacity(1);
+    final selectedColor = Get.theme.primaryColor;
     final unSelectedColor = Get.theme.unselectedWidgetColor;
     return Obx(() {
       return BottomAppBar(
@@ -18,7 +18,7 @@ class TeacherBottomBar extends StatelessWidget {
           children: [
             IconButton(
               icon: FaIcon(
-                FontAwesomeIcons.homeUser,
+                FontAwesomeIcons.houseUser,
                 // 5) Use the reactive value to change color/state
                 color: controller.currentIndex.value == 0
                     ? selectedColor
@@ -28,7 +28,7 @@ class TeacherBottomBar extends StatelessWidget {
             ),
             IconButton(
               icon: FaIcon(
-                FontAwesomeIcons.cog,
+                FontAwesomeIcons.gear,
                 color: controller.currentIndex.value == 1
                     ? selectedColor
                     : unSelectedColor,

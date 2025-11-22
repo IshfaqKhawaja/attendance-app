@@ -15,7 +15,7 @@ class CardWidget extends StatelessWidget {
         Get.toNamed(Routes.COURSE, arguments: {"course": course});
       },
       child: Card(
-        color: Get.theme.primaryColor.withOpacity(0.7),
+        color: Get.theme.primaryColor.withValues(alpha: 0.7),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

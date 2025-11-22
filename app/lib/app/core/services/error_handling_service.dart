@@ -64,7 +64,7 @@ class ErrorHandlingService extends BaseService {
       'Error',
       error,
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Get.theme.colorScheme.error.withOpacity(0.8),
+      backgroundColor: Get.theme.colorScheme.error.withValues(alpha: 0.8),
       colorText: Get.theme.colorScheme.onError,
     );
   }

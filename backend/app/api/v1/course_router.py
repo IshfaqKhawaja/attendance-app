@@ -8,6 +8,7 @@ from app.db.models.course_model import (
     CourseDetailResponse,
     BulkCourseCreate,
     BulkCourseCreateResponse,
+    CourseUpdate,
 )
 
 router = APIRouter(
@@ -51,3 +52,12 @@ def display_courses_by_semester_id(sem_id: str) -> CourseDetailResponse:
 @router.get("/delete/{course_id}", response_model=CourseCreateResponse, summary="Delete a Course")
 def delete_course(course_id: str) -> CourseCreateResponse:
     return delete_course_by_id(course_id)
+
+
+@router.post("/edit", response_model=CourseCreateResponse, summary="Update a Course")
+def edit_course(course_update: CourseUpdate) -> CourseCreateResponse:
+    """
+    Update course name and/or assigned teacher.
+    Expects JSON payload: { "course_id": "...", "course_name": "...", "assigned_teacher_id": "..." }
+    """
+    return update_course_by_id(course_update)
