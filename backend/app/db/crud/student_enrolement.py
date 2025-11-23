@@ -9,8 +9,21 @@ def add_student_enrolled_in_sem(student : StudentEnrolementModel):
     conn = connection_to_db()
     try:
         with conn.cursor() as cur:
+            # Insert into student_enrollment
             cur.execute(
                 "INSERT INTO student_enrollment (student_id, sem_id) VALUES (%s, %s) ON CONFLICT (student_id, sem_id) DO NOTHING",
+                (student.student_id, student.sem_id)
+            )
+
+            # Also enroll the student in all courses for this semester
+            cur.execute(
+                """
+                INSERT INTO course_students (student_id, course_id)
+                SELECT %s, course_id
+                FROM course
+                WHERE sem_id = %s
+                ON CONFLICT (student_id, course_id) DO NOTHING
+                """,
                 (student.student_id, student.sem_id)
             )
             conn.commit()
@@ -29,6 +42,7 @@ def add_students_enrolled_in_sem_bulk(students: BulkStudentEnrolementModel) -> d
     """
     Inserts multiple students in one transaction.
     Skips students whose `student_id` already exists in the DB.
+    Also enrolls students in all courses within the semester.
     """
     conn = connection_to_db()
     records = []
@@ -47,10 +61,24 @@ def add_students_enrolled_in_sem_bulk(students: BulkStudentEnrolementModel) -> d
             }
     try:
         with conn.cursor() as cur:
+            # Insert into student_enrollment
             cur.executemany(
                 "INSERT INTO student_enrollment (student_id, sem_id) VALUES (%s, %s) ON CONFLICT (student_id, sem_id) DO NOTHING",
                 records
             )
+
+            # For each student-semester pair, also enroll them in all courses for that semester
+            for student_id, sem_id in records:
+                cur.execute(
+                    """
+                    INSERT INTO course_students (student_id, course_id)
+                    SELECT %s, course_id
+                    FROM course
+                    WHERE sem_id = %s
+                    ON CONFLICT (student_id, course_id) DO NOTHING
+                    """,
+                    (student_id, sem_id)
+                )
         conn.commit()
         return {
             "success": True,
@@ -96,18 +124,17 @@ def display_students_by_sem_id(sem_id: str) -> DisplayStudentsBySemIdResponseMod
     
 def fetch_students_by_course_id(course_id: str) -> StudentEnrollmentDetailsModel:
     """
-    Fetches the Students enrolled in a particular course using JOIN.
+    Fetches the Students enrolled in a particular course using JOIN with course_students table.
     """
     conn = connection_to_db()
     data = []
     with conn.cursor() as cur:
         cur.execute(
             """
-            SELECT s.student_id, s.student_name, s.phone_number, s.sem_id
+            SELECT s.student_id, s.student_name, s.phone_number
             FROM students s
-            INNER JOIN student_enrollment se ON s.student_id = se.student_id
-            INNER JOIN course c ON se.sem_id = c.sem_id
-            WHERE c.course_id = %s
+            INNER JOIN course_students cs ON s.student_id = cs.student_id
+            WHERE cs.course_id = %s
             ORDER BY s.student_name ASC
             """,
             (course_id,)
@@ -130,10 +157,24 @@ def fetch_students_by_course_id(course_id: str) -> StudentEnrollmentDetailsModel
 def delete_student_enrollment(student_id: str, sem_id: str) -> DeleteStudentEnrollmentResponseModel:
     """
     Deletes a student's enrollment in a semester.
+    Also deletes the student from all courses in that semester.
     """
     conn = connection_to_db()
     try:
         with conn.cursor() as cur:
+            # First, delete from course_students for all courses in this semester
+            cur.execute(
+                """
+                DELETE FROM course_students
+                WHERE student_id = %s
+                AND course_id IN (
+                    SELECT course_id FROM course WHERE sem_id = %s
+                )
+                """,
+                (student_id, sem_id)
+            )
+
+            # Then delete from student_enrollment
             cur.execute(
                 "DELETE FROM student_enrollment WHERE student_id = %s AND sem_id = %s",
                 (student_id, sem_id)

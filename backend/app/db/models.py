@@ -144,8 +144,25 @@ statements = [
 
     # Add index for better query performance on course-date lookups
     """
-    CREATE INDEX IF NOT EXISTS idx_attendance_course_date 
+    CREATE INDEX IF NOT EXISTS idx_attendance_course_date
     ON attendance(course_id, date);
+    """,
+
+    # otp_storage - for storing OTPs with expiration
+    """
+    CREATE TABLE IF NOT EXISTS otp_storage (
+        email          VARCHAR(255) PRIMARY KEY,
+        otp            VARCHAR(6) NOT NULL,
+        created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        expires_at     TIMESTAMP NOT NULL,
+        attempts       INTEGER DEFAULT 0
+    );
+    """,
+
+    # Add index for cleaning up expired OTPs
+    """
+    CREATE INDEX IF NOT EXISTS idx_otp_expires_at
+    ON otp_storage(expires_at);
     """,
     
     # Add index for student-course lookups (for summaries)

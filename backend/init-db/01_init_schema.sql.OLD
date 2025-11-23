@@ -1,0 +1,265 @@
+-- =====================================================
+-- Attendance Management System - Database Initialization
+-- =====================================================
+-- This script creates all required tables and enums
+-- It will be automatically executed when Docker container starts
+-- =====================================================
+
+-- Create custom enum types
+-- =====================================================
+
+-- Teacher type enum
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'teacher_type') THEN
+    CREATE TYPE teacher_type AS ENUM ('PERMANENT', 'GUEST', 'CONTRACT');
+  END IF;
+END $$;
+
+-- User type enum
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_type') THEN
+    CREATE TYPE user_type AS ENUM ('NORMAL', 'HOD', 'SUPER_ADMIN');
+  END IF;
+END $$;
+
+-- Create tables in dependency order
+-- =====================================================
+
+-- 1. Faculty table (top-level entity)
+CREATE TABLE IF NOT EXISTS faculty (
+  factid   VARCHAR(255) PRIMARY KEY,
+  name     VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Department table (references faculty)
+CREATE TABLE IF NOT EXISTS department (
+  deptid   VARCHAR(255) PRIMARY KEY,
+  name     VARCHAR(255) NOT NULL,
+  factid   VARCHAR(255) NOT NULL
+             REFERENCES faculty(factid)
+             ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 3. Program table (references department and faculty)
+CREATE TABLE IF NOT EXISTS program (
+  progid   VARCHAR(255) PRIMARY KEY,
+  name     VARCHAR(255) NOT NULL,
+  deptid   VARCHAR(255) NOT NULL
+             REFERENCES department(deptid)
+             ON DELETE CASCADE,
+  factid   VARCHAR(255) NOT NULL
+             REFERENCES faculty(factid)
+             ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 4. Semester table (references program)
+CREATE TABLE IF NOT EXISTS semester (
+  semid       VARCHAR(255) PRIMARY KEY,
+  name        VARCHAR(100) NOT NULL,
+  startdate   DATE NOT NULL,
+  enddate     DATE NOT NULL,
+  progid      VARCHAR(255) NOT NULL
+               REFERENCES program(progid)
+               ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 5. Teachers table (references department)
+CREATE TABLE IF NOT EXISTS teachers (
+  teacherid   VARCHAR(255) PRIMARY KEY,
+  name        VARCHAR(255) NOT NULL,
+  type        teacher_type NOT NULL,
+  deptid      VARCHAR(255) NOT NULL
+              REFERENCES department(deptid)
+              ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 6. Students table (references program, semester, department)
+CREATE TABLE IF NOT EXISTS students (
+  studentid   VARCHAR(255) PRIMARY KEY,
+  name        VARCHAR(255) NOT NULL,
+  phonenumber BIGINT,
+  progid      VARCHAR(255) NOT NULL
+               REFERENCES program(progid)
+               ON DELETE SET NULL,
+  semid       VARCHAR(255) NOT NULL
+               REFERENCES semester(semid)
+               ON DELETE SET NULL,
+  deptid      VARCHAR(255) NOT NULL
+              REFERENCES department(deptid)
+              ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 7. Student Enrollment table (many-to-many: students and semesters)
+CREATE TABLE IF NOT EXISTS student_enrollment (
+  student_id  VARCHAR(255) NOT NULL
+              REFERENCES students(studentid)
+              ON DELETE CASCADE,
+  sem_id      VARCHAR(255) NOT NULL
+              REFERENCES semester(semid)
+              ON DELETE CASCADE,
+  enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (student_id, sem_id)
+);
+
+-- 8. Course table (references semester, program, department, faculty)
+CREATE TABLE IF NOT EXISTS course (
+  courseid    VARCHAR(255) PRIMARY KEY,
+  name        VARCHAR(255) NOT NULL,
+  semid       VARCHAR(255) NOT NULL
+              REFERENCES semester(semid)
+              ON DELETE CASCADE,
+  progid      VARCHAR(255) NOT NULL
+              REFERENCES program(progid)
+              ON DELETE CASCADE,
+  deptid      VARCHAR(255) NOT NULL
+              REFERENCES department(deptid)
+              ON DELETE CASCADE,
+  factid      VARCHAR(255) NOT NULL
+              REFERENCES faculty(factid)
+              ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 9. Teacher-Course mapping (many-to-many)
+CREATE TABLE IF NOT EXISTS teacher_course (
+  teacherid  VARCHAR(255) NOT NULL
+             REFERENCES teachers(teacherid)
+             ON DELETE CASCADE,
+  courseid   VARCHAR(255) NOT NULL
+             REFERENCES course(courseid)
+             ON DELETE CASCADE,
+  semid      VARCHAR(255) NOT NULL
+             REFERENCES semester(semid)
+             ON DELETE CASCADE,
+  deptid     VARCHAR(255) NOT NULL
+             REFERENCES department(deptid)
+             ON DELETE CASCADE,
+  progid     VARCHAR(255) NOT NULL
+             REFERENCES program(progid)
+             ON DELETE CASCADE,
+  factid     VARCHAR(255) NOT NULL
+             REFERENCES faculty(factid)
+             ON DELETE CASCADE,
+  assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (teacherid, courseid, semid, factid)
+);
+
+-- 10. Course-Students mapping (many-to-many)
+CREATE TABLE IF NOT EXISTS course_students (
+  studentid   VARCHAR(255) NOT NULL
+              REFERENCES students(studentid)
+              ON DELETE CASCADE,
+  courseid    VARCHAR(255) NOT NULL
+              REFERENCES course(courseid)
+              ON DELETE CASCADE,
+  progid      VARCHAR(255) NOT NULL
+              REFERENCES program(progid)
+              ON DELETE CASCADE,
+  semid       VARCHAR(255) NOT NULL
+              REFERENCES semester(semid)
+              ON DELETE CASCADE,
+  deptid      VARCHAR(255) NOT NULL
+              REFERENCES department(deptid)
+              ON DELETE CASCADE,
+  enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (studentid, courseid)
+);
+
+-- 11. Attendance table (references students and courses)
+CREATE TABLE IF NOT EXISTS attendance (
+  attendanceid   VARCHAR(255) PRIMARY KEY,
+  studentid      VARCHAR(255) NOT NULL
+                  REFERENCES students(studentid)
+                  ON DELETE CASCADE,
+  courseid       VARCHAR(255) NOT NULL
+                  REFERENCES course(courseid)
+                  ON DELETE CASCADE,
+  date           DATE NOT NULL,
+  present        BOOLEAN NOT NULL DEFAULT FALSE,
+  semid          VARCHAR(255) NOT NULL
+                 REFERENCES semester(semid)
+                 ON DELETE CASCADE,
+  deptid         VARCHAR(255) NOT NULL
+                 REFERENCES department(deptid)
+                 ON DELETE CASCADE,
+  progid         VARCHAR(255) NOT NULL
+                 REFERENCES program(progid)
+                 ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 12. Users table (for authentication and authorization)
+CREATE TABLE IF NOT EXISTS users (
+  userid       VARCHAR(255) PRIMARY KEY,
+  name         VARCHAR(255) NOT NULL,
+  type         user_type NOT NULL,
+  deptid       VARCHAR(255)
+               REFERENCES department(deptid)
+               ON DELETE CASCADE,
+  factid       VARCHAR(255)
+               REFERENCES faculty(factid)
+               ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 13. OTP Storage table (for authentication)
+CREATE TABLE IF NOT EXISTS otp_storage (
+  email          VARCHAR(255) PRIMARY KEY,
+  otp            VARCHAR(6) NOT NULL,
+  created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  expires_at     TIMESTAMP NOT NULL,
+  attempts       INTEGER DEFAULT 0
+);
+
+-- Create indexes for better query performance
+-- =====================================================
+
+-- Indexes for foreign key lookups
+CREATE INDEX IF NOT EXISTS idx_department_factid ON department(factid);
+CREATE INDEX IF NOT EXISTS idx_program_deptid ON program(deptid);
+CREATE INDEX IF NOT EXISTS idx_program_factid ON program(factid);
+CREATE INDEX IF NOT EXISTS idx_semester_progid ON semester(progid);
+CREATE INDEX IF NOT EXISTS idx_teachers_deptid ON teachers(deptid);
+CREATE INDEX IF NOT EXISTS idx_students_progid ON students(progid);
+CREATE INDEX IF NOT EXISTS idx_students_semid ON students(semid);
+CREATE INDEX IF NOT EXISTS idx_students_deptid ON students(deptid);
+CREATE INDEX IF NOT EXISTS idx_course_semid ON course(semid);
+CREATE INDEX IF NOT EXISTS idx_course_progid ON course(progid);
+CREATE INDEX IF NOT EXISTS idx_course_deptid ON course(deptid);
+CREATE INDEX IF NOT EXISTS idx_course_factid ON course(factid);
+CREATE INDEX IF NOT EXISTS idx_attendance_studentid ON attendance(studentid);
+CREATE INDEX IF NOT EXISTS idx_attendance_courseid ON attendance(courseid);
+CREATE INDEX IF NOT EXISTS idx_attendance_date ON attendance(date);
+CREATE INDEX IF NOT EXISTS idx_users_deptid ON users(deptid);
+CREATE INDEX IF NOT EXISTS idx_users_factid ON users(factid);
+
+-- Index for OTP cleanup queries
+CREATE INDEX IF NOT EXISTS idx_otp_expires_at ON otp_storage(expires_at);
+
+-- Composite indexes for common queries
+CREATE INDEX IF NOT EXISTS idx_attendance_course_date ON attendance(courseid, date);
+CREATE INDEX IF NOT EXISTS idx_attendance_student_course ON attendance(studentid, courseid);
+CREATE INDEX IF NOT EXISTS idx_teacher_course_teacher ON teacher_course(teacherid);
+CREATE INDEX IF NOT EXISTS idx_teacher_course_course ON teacher_course(courseid);
+CREATE INDEX IF NOT EXISTS idx_course_students_course ON course_students(courseid);
+CREATE INDEX IF NOT EXISTS idx_course_students_student ON course_students(studentid);
+
+-- Success message
+SELECT 'Database schema initialized successfully!' AS status;

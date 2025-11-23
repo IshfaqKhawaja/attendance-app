@@ -34,9 +34,12 @@ class HodDashboardController extends BaseController {
   Future<void> loadPrograms() async {
     await handleAsync(() async {
       final deptId = routeDeptId ?? _signInController.userData.value.deptId;
-      
+
       if (deptId == null || deptId.isEmpty) {
-        throw Exception('Department ID not found');
+        // Clear programs and return silently during sign-out or when dept ID is not available
+        programs.clear();
+        isLoading.value = false;
+        return;
       }
 
       programs.value = _loadingController.programs

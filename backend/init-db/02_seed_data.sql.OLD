@@ -1,0 +1,105 @@
+-- =====================================================
+-- Attendance Management System - Seed Data
+-- =====================================================
+-- This script inserts initial/sample data for testing
+-- Comment out this file if you don't want sample data
+-- =====================================================
+
+-- Insert sample faculty
+INSERT INTO faculty (factid, name) VALUES
+  ('FACT001', 'Faculty of Engineering'),
+  ('FACT002', 'Faculty of Sciences')
+ON CONFLICT (factid) DO NOTHING;
+
+-- Insert sample departments
+INSERT INTO department (deptid, name, factid) VALUES
+  ('DEPT001', 'Computer Science', 'FACT001'),
+  ('DEPT002', 'Electrical Engineering', 'FACT001'),
+  ('DEPT003', 'Mathematics', 'FACT002')
+ON CONFLICT (deptid) DO NOTHING;
+
+-- Insert sample programs
+INSERT INTO program (progid, name, deptid, factid) VALUES
+  ('PROG001', 'Bachelor of Computer Science', 'DEPT001', 'FACT001'),
+  ('PROG002', 'Bachelor of Electrical Engineering', 'DEPT002', 'FACT001'),
+  ('PROG003', 'Bachelor of Mathematics', 'DEPT003', 'FACT002')
+ON CONFLICT (progid) DO NOTHING;
+
+-- Insert sample semesters (adjust dates as needed)
+INSERT INTO semester (semid, name, startdate, enddate, progid) VALUES
+  ('SEM001', 'Fall 2024', '2024-09-01', '2024-12-20', 'PROG001'),
+  ('SEM002', 'Spring 2025', '2025-01-15', '2025-05-30', 'PROG001'),
+  ('SEM003', 'Fall 2024', '2024-09-01', '2024-12-20', 'PROG002')
+ON CONFLICT (semid) DO NOTHING;
+
+-- Insert sample teachers
+INSERT INTO teachers (teacherid, name, type, deptid) VALUES
+  ('TEACH001', 'Dr. John Smith', 'PERMANENT', 'DEPT001'),
+  ('TEACH002', 'Prof. Sarah Johnson', 'PERMANENT', 'DEPT001'),
+  ('TEACH003', 'Mr. Michael Brown', 'GUEST', 'DEPT002'),
+  ('TEACH004', 'Dr. Emily Davis', 'CONTRACT', 'DEPT003')
+ON CONFLICT (teacherid) DO NOTHING;
+
+-- Insert sample users (HOD and Super Admin)
+INSERT INTO users (userid, name, type, deptid, factid) VALUES
+  ('admin@example.com', 'Super Administrator', 'SUPER_ADMIN', NULL, NULL),
+  ('hod.cs@example.com', 'CS Department HOD', 'HOD', 'DEPT001', 'FACT001'),
+  ('TEACH001', 'Dr. John Smith', 'NORMAL', 'DEPT001', 'FACT001')
+ON CONFLICT (userid) DO NOTHING;
+
+-- Insert sample students
+INSERT INTO students (studentid, name, phonenumber, progid, semid, deptid) VALUES
+  ('STU001', 'Alice Williams', 1234567890, 'PROG001', 'SEM001', 'DEPT001'),
+  ('STU002', 'Bob Martinez', 1234567891, 'PROG001', 'SEM001', 'DEPT001'),
+  ('STU003', 'Charlie Garcia', 1234567892, 'PROG001', 'SEM001', 'DEPT001'),
+  ('STU004', 'Diana Rodriguez', 1234567893, 'PROG001', 'SEM002', 'DEPT001'),
+  ('STU005', 'Edward Lopez', 1234567894, 'PROG002', 'SEM003', 'DEPT002')
+ON CONFLICT (studentid) DO NOTHING;
+
+-- Insert student enrollments
+INSERT INTO student_enrollment (student_id, sem_id) VALUES
+  ('STU001', 'SEM001'),
+  ('STU002', 'SEM001'),
+  ('STU003', 'SEM001'),
+  ('STU004', 'SEM002'),
+  ('STU005', 'SEM003')
+ON CONFLICT (student_id, sem_id) DO NOTHING;
+
+-- Insert sample courses
+INSERT INTO course (courseid, name, semid, progid, deptid, factid) VALUES
+  ('COURSE001', 'Data Structures', 'SEM001', 'PROG001', 'DEPT001', 'FACT001'),
+  ('COURSE002', 'Algorithms', 'SEM001', 'PROG001', 'DEPT001', 'FACT001'),
+  ('COURSE003', 'Database Systems', 'SEM002', 'PROG001', 'DEPT001', 'FACT001'),
+  ('COURSE004', 'Digital Logic', 'SEM003', 'PROG002', 'DEPT002', 'FACT001')
+ON CONFLICT (courseid) DO NOTHING;
+
+-- Assign teachers to courses
+INSERT INTO teacher_course (teacherid, courseid, semid, deptid, progid, factid) VALUES
+  ('TEACH001', 'COURSE001', 'SEM001', 'DEPT001', 'PROG001', 'FACT001'),
+  ('TEACH002', 'COURSE002', 'SEM001', 'DEPT001', 'PROG001', 'FACT001'),
+  ('TEACH001', 'COURSE003', 'SEM002', 'DEPT001', 'PROG001', 'FACT001'),
+  ('TEACH003', 'COURSE004', 'SEM003', 'DEPT002', 'PROG002', 'FACT001')
+ON CONFLICT (teacherid, courseid, semid, factid) DO NOTHING;
+
+-- Enroll students in courses
+INSERT INTO course_students (studentid, courseid, progid, semid, deptid) VALUES
+  ('STU001', 'COURSE001', 'PROG001', 'SEM001', 'DEPT001'),
+  ('STU001', 'COURSE002', 'PROG001', 'SEM001', 'DEPT001'),
+  ('STU002', 'COURSE001', 'PROG001', 'SEM001', 'DEPT001'),
+  ('STU002', 'COURSE002', 'PROG001', 'SEM001', 'DEPT001'),
+  ('STU003', 'COURSE001', 'PROG001', 'SEM001', 'DEPT001'),
+  ('STU004', 'COURSE003', 'PROG001', 'SEM002', 'DEPT001'),
+  ('STU005', 'COURSE004', 'PROG002', 'SEM003', 'DEPT002')
+ON CONFLICT (studentid, courseid) DO NOTHING;
+
+-- Success message
+SELECT 'Sample data seeded successfully!' AS status;
+SELECT
+  (SELECT COUNT(*) FROM faculty) AS faculties,
+  (SELECT COUNT(*) FROM department) AS departments,
+  (SELECT COUNT(*) FROM program) AS programs,
+  (SELECT COUNT(*) FROM semester) AS semesters,
+  (SELECT COUNT(*) FROM teachers) AS teachers,
+  (SELECT COUNT(*) FROM students) AS students,
+  (SELECT COUNT(*) FROM course) AS courses,
+  (SELECT COUNT(*) FROM users) AS users;

@@ -176,7 +176,7 @@ void clearAttendence() {
 }
 
 // Student CRUD operations
-void addStudent(String studentId, String studentName, String phoneNumber, String semId) async {
+Future<void> addStudent(String studentId, String studentName, String phoneNumber, String semId) async {
   if (studentId.isEmpty || studentName.isEmpty || phoneNumber.isEmpty) {
     Get.snackbar("Error", "Please fill all fields");
     return;
@@ -204,6 +204,7 @@ void addStudent(String studentId, String studentName, String phoneNumber, String
       if (enrollRes["success"] == true) {
         Get.snackbar("Success", "Student Added Successfully");
         await getStudentsList(); // Refresh the list
+        await getStudentsForAttendence(); // Refresh attendance list
       } else {
         Get.snackbar("Error", enrollRes["message"]?.toString() ?? "Failed to enroll student");
       }
@@ -218,6 +219,7 @@ void addStudent(String studentId, String studentName, String phoneNumber, String
         if (enrollRes["success"] == true) {
           Get.snackbar("Success", "Student Enrolled Successfully");
           await getStudentsList();
+          await getStudentsForAttendence(); // Refresh attendance list
         } else {
           Get.snackbar("Error", enrollRes["message"]?.toString() ?? "Failed to enroll student");
         }
@@ -230,7 +232,7 @@ void addStudent(String studentId, String studentName, String phoneNumber, String
   }
 }
 
-void editStudent(String studentId, String studentName, String phoneNumber, String semId) async {
+Future<void> editStudent(String studentId, String studentName, String phoneNumber, String semId) async {
   if (studentName.isEmpty || phoneNumber.isEmpty) {
     Get.snackbar("Error", "Please fill all fields");
     return;
@@ -249,6 +251,7 @@ void editStudent(String studentId, String studentName, String phoneNumber, Strin
     if (res["success"] == true) {
       Get.snackbar("Success", "Student Updated Successfully");
       await getStudentsList(); // Refresh the list
+      await getStudentsForAttendence(); // Refresh attendance list
     } else {
       Get.snackbar("Error", res["message"]?.toString() ?? "Failed to update student");
     }
@@ -257,7 +260,7 @@ void editStudent(String studentId, String studentName, String phoneNumber, Strin
   }
 }
 
-void deleteStudentFromCourse(String studentId, String semId) async {
+Future<void> deleteStudentFromCourse(String studentId, String semId) async {
   try {
     var res = await client.postJson(Endpoints.deleteStudentById, {
       "student_id": studentId,
@@ -267,6 +270,7 @@ void deleteStudentFromCourse(String studentId, String semId) async {
     if (res["success"] == true) {
       Get.snackbar("Success", "Student Removed Successfully");
       await getStudentsList(); // Refresh the list
+      await getStudentsForAttendence(); // Refresh attendance list
     } else {
       Get.snackbar("Error", res["message"]?.toString() ?? "Failed to remove student");
     }

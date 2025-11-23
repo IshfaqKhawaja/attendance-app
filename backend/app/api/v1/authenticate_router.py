@@ -7,7 +7,7 @@ from fastapi import APIRouter, Body, HTTPException
 from app.db.crud.authenticate import check_if_teacher_exists
 from app.core.mail import send_mail
 from app.db.models.teacher_model import TeacherCreate
-from app.utils.otp_verifier import save_otp, get_otp
+from app.utils.otp_verifier_db import save_otp, verify_otp as verify_otp_db, delete_otp
 from app.db.crud.teacher import add_teacher_to_db
 from app.db.crud.user import check_if_user_exists
 from app.core.security import create_access_token, create_refresh_token
@@ -55,17 +55,12 @@ def verify_otp(
     Verify OTP and authenticate user.
     Returns access and refresh tokens on success.
     """
-    stored = get_otp(email_id)
-
-    if stored is None:
-        logger.warning(f"OTP verification failed: OTP not found for {email_id}")
-        raise HTTPException(status_code=404, detail="OTP not found or expired")
-
     logger.debug(f"Verifying OTP for {email_id}")
 
-    if otp != stored["otp"]:
-        logger.warning(f"OTP verification failed: Invalid OTP for {email_id}")
-        return {"success": False, "isRegistered": False, "message": "Invalid OTP"}
+    # Verify OTP using database-backed verification
+    if not verify_otp_db(email_id, otp):
+        logger.warning(f"OTP verification failed for {email_id}")
+        return {"success": False, "isRegistered": False, "message": "Invalid or expired OTP"}
 
     # Generate tokens
     access_token = create_access_token(email_id)

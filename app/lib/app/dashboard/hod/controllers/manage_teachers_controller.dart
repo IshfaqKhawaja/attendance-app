@@ -19,6 +19,16 @@ class ManageTeachersController extends GetxController {
   final SignInController signInController = Get.find<SignInController>();
 
   Future<void> loadTeachers() async {
+    // Update deptId from current userData
+    deptId.value = signInController.userData.value.deptId ?? '';
+
+    // If department ID is not available (e.g., during sign-out), clear teachers and return
+    if (deptId.value.isEmpty) {
+      teachers.clear();
+      isLoading.value = false;
+      return;
+    }
+
     isLoading.value = true;
     try {
       final res = await client.getJson(Endpoints.displayTeacherByDeptId(deptId.value));
@@ -30,7 +40,7 @@ class ManageTeachersController extends GetxController {
       } else {
         errorMessage.value = res['message'] ?? 'Failed to load teachers';
       }
-      
+
     } catch (e) {
       errorMessage.value = 'Failed to load teachers';
     } finally {

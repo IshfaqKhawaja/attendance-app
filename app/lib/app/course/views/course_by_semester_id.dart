@@ -66,22 +66,41 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
             icon: Icon(Icons.list),
             onPressed: () {
               Get.dialog(
-                AlertDialog(
-                  title: Text("Student List", style: textStyle.copyWith(fontSize: 18,  fontWeight: FontWeight.bold),),
-                  content: SizedBox(
-                    width: double.maxFinite,
-                    height: Get.height * 0.6, // Add height for proper display
-                    child: DisplayStudents(
-                      semId: semesterId,
+                Dialog(
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxHeight: Get.height * 0.8,
+                      maxWidth: Get.width * 0.9,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Student List",
+                                style: textStyle.copyWith(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () => Get.back(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(height: 1),
+                        Expanded(
+                          child: DisplayStudents(semId: semesterId),
+                        ),
+                      ],
                     ),
                   ),
-                  actions: [
-
-                    TextButton(
-                      onPressed: () => Get.back(),
-                      child: Text("Close"),
-                    ),
-                  ],
                 ),
               );
             },

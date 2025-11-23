@@ -7,8 +7,6 @@ import 'package:path_provider/path_provider.dart';
 import '../../core/core.dart';
 import '../../models/student_model.dart';
 import '../models/student_attendence.dart';
-import '../../core/network/api_client.dart';
-import '../../core/network/endpoints.dart';
 
 /// Enhanced Course Controller using new architecture patterns
 /// 

@@ -256,7 +256,7 @@ Future<void> selectAndUploadCSVFile(String semId) async {
 
 
 
-void fetchStudentsInThisSem(String semId) async {
+Future<void> fetchStudentsInThisSem(String semId) async {
     studentsInThisSem.clear();
     try {
       var res = await client.getJson(
@@ -323,7 +323,7 @@ void attendanceForSem(String semId) async {
     }
   }
 
-  void deleteStudentFromSem(String studentId, String semId) async {
+  Future<void> deleteStudentFromSem(String studentId, String semId) async {
     try {
       final res = await client.postJson(
         Endpoints.deleteStudentById,
@@ -336,7 +336,7 @@ void attendanceForSem(String semId) async {
         Get.snackbar('Success', 'Student removed from semester successfully',
           colorText: Colors.green,
         );
-        fetchStudentsInThisSem(semId);
+        await fetchStudentsInThisSem(semId);
       } else {
         Get.snackbar('Error', res['message']?.toString() ?? 'Failed to remove student from semester',
           colorText: Colors.red,
@@ -350,7 +350,7 @@ void attendanceForSem(String semId) async {
   }
 
   // Add Student Function
-  void addStudent(String studentId, String studentName, String phoneNumber, String semId) async {
+  Future<void> addStudent(String studentId, String studentName, String phoneNumber, String semId) async {
     try {
       if (studentId.isEmpty) {
         Get.snackbar("Error", "Please enter student ID",
@@ -396,7 +396,7 @@ void attendanceForSem(String semId) async {
           Get.snackbar("Success", "Student Added Successfully",
             colorText: Colors.green,
           );
-          fetchStudentsInThisSem(semId);
+          await fetchStudentsInThisSem(semId);
         } else {
           Get.snackbar("Error", enrollRes["message"] ?? "Failed to enroll student",
             colorText: Colors.red,
@@ -416,7 +416,7 @@ void attendanceForSem(String semId) async {
   }
 
   // Edit Student Function
-  void editStudent(String studentId, String studentName, String phoneNumber, String semId) async {
+  Future<void> editStudent(String studentId, String studentName, String phoneNumber, String semId) async {
     try {
       if (studentName.isEmpty) {
         Get.snackbar("Error", "Please enter student name",
@@ -444,7 +444,7 @@ void attendanceForSem(String semId) async {
         Get.snackbar("Success", "Student Updated Successfully",
           colorText: Colors.green,
         );
-        fetchStudentsInThisSem(semId);
+        await fetchStudentsInThisSem(semId);
       } else {
         Get.snackbar("Error", res["message"] ?? "Failed to update student",
           colorText: Colors.red,

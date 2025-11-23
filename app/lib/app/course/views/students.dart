@@ -112,9 +112,9 @@ class _StudentsState extends State<Students> {
                                         child: Text("Cancel"),
                                       ),
                                       TextButton(
-                                        onPressed: () {
+                                        onPressed: () async {
                                           Get.back();
-                                          courseController.deleteStudentFromCourse(student.studentId, semId);
+                                          await courseController.deleteStudentFromCourse(student.studentId, semId);
                                         },
                                         child: Text("Remove", style: TextStyle(color: Colors.red)),
                                       ),

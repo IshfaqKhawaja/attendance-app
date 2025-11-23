@@ -34,32 +34,77 @@ abstract class BaseController extends GetxController {
   void showErrorSnackbar(String message) {
     Get.snackbar(
       'Error',
-      message,
-      colorText: Colors.red,
+      '',
+      titleText: Text(
+        'Error',
+        style: TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+      messageText: Text(
+        message,
+        style: TextStyle(color: Colors.red),
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+      ),
       backgroundColor: Colors.white,
       snackPosition: SnackPosition.TOP,
+      duration: const Duration(seconds: 4),
+      margin: const EdgeInsets.all(10),
     );
   }
-  
+
   /// Show success snackbar
   void showSuccessSnackbar(String message) {
     Get.snackbar(
       'Success',
-      message,
-      colorText: Colors.green,
+      '',
+      titleText: Text(
+        'Success',
+        style: TextStyle(
+          color: Colors.green,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+      messageText: Text(
+        message,
+        style: TextStyle(color: Colors.green),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
       backgroundColor: Colors.white,
       snackPosition: SnackPosition.TOP,
+      duration: const Duration(seconds: 3),
+      margin: const EdgeInsets.all(10),
     );
   }
-  
+
   /// Show info snackbar
   void showInfoSnackbar(String message) {
     Get.snackbar(
       'Info',
-      message,
-      colorText: Colors.blue,
+      '',
+      titleText: Text(
+        'Info',
+        style: TextStyle(
+          color: Colors.blue,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+      messageText: Text(
+        message,
+        style: TextStyle(color: Colors.blue),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
       backgroundColor: Colors.white,
       snackPosition: SnackPosition.TOP,
+      duration: const Duration(seconds: 3),
+      margin: const EdgeInsets.all(10),
     );
   }
   

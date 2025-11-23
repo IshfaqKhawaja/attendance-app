@@ -80,14 +80,24 @@ class _EditStudentInCourseState extends State<EditStudentInCourse> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              onPressed: () {
-                controller.editStudent(
-                  widget.student.studentId,
-                  studentNameController.text,
-                  phoneNumberController.text,
-                  widget.semesterId,
-                );
-                Get.back();
+              onPressed: () async {
+                final navigator = Navigator.of(context);
+                try {
+                  await controller.editStudent(
+                    widget.student.studentId,
+                    studentNameController.text,
+                    phoneNumberController.text,
+                    widget.semesterId,
+                  );
+                } catch (e) {
+                  print('Error updating student: $e');
+                } finally {
+                  try {
+                    navigator.pop();
+                  } catch (e) {
+                    print('Error closing dialog: $e');
+                  }
+                }
               },
               child: Text(
                 'Update Student',

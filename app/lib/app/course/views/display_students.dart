@@ -94,9 +94,9 @@ class _DisplayStudentsState extends State<DisplayStudents> {
                                       child: Text("Cancel"),
                                     ),
                                     TextButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         Get.back();
-                                        courseController.deleteStudentFromSem(student.studentId, widget.semId);
+                                        await courseController.deleteStudentFromSem(student.studentId, widget.semId);
                                       },
                                       child: Text("Remove", style: TextStyle(color: Colors.red)),
                                     ),
