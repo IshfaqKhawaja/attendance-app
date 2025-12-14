@@ -143,10 +143,10 @@ def insert_initial_users(conn):
     try:
         cur = conn.cursor()
 
-        # User 1: HOD for Computer Engineering Department
+        # User 1: HOD for Computer Engineering Department (D028, F006)
         user1 = {
             "user_id": "cs@test.com",
-            "user_name": "Computer Engineering",
+            "user_name": "Computer Engineering HOD",
             "type": "HOD",
             "dept_id": "D028",  # Department of Computer Engineering
             "fact_id": "F006"   # Faculty of Engineering & Technology
@@ -175,6 +175,8 @@ def insert_initial_users(conn):
             if cur.rowcount > 0:
                 inserted += 1
                 print(f"  ✓ Created user: {user['user_name']} ({user['user_id']}) as {user['type']}")
+                if user["dept_id"]:
+                    print(f"    - Assigned to: Department {user['dept_id']}, Faculty {user['fact_id']}")
             else:
                 print(f"  - User already exists: {user['user_id']}")
 
