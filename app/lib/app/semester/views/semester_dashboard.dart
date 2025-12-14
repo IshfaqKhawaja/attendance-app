@@ -58,8 +58,7 @@ class SemesterDashboard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             SizedBox(
-              height: Get.size.height * 0.8,
+             Expanded(
               child: Obx(() {
                 if (semesterController.semesters.isEmpty) {
                   return Center(child: Text("No semesters found for this program.", style: textStyle.copyWith(fontSize: 18,)));

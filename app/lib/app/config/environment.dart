@@ -28,7 +28,7 @@ class AppConfig {
   /// Development configuration
   static const AppConfig development = AppConfig(
     environment: Environment.development,
-    apiBaseUrl: 'http://localhost:8000',
+    apiBaseUrl: 'http://172.105.41.86',
     enableLogging: true,
     enableDebugMode: true,
     apiTimeout: 30,
@@ -38,7 +38,7 @@ class AppConfig {
   /// Staging configuration
   static const AppConfig staging = AppConfig(
     environment: Environment.staging,
-    apiBaseUrl: 'https://staging-api.yourdomain.com',
+    apiBaseUrl: 'http://172.105.41.86',
     enableLogging: true,
     enableDebugMode: false,
     apiTimeout: 20,
@@ -48,7 +48,7 @@ class AppConfig {
   /// Production configuration
   static const AppConfig production = AppConfig(
     environment: Environment.production,
-    apiBaseUrl: 'https://api.yourdomain.com',
+    apiBaseUrl: 'http://172.105.41.86',
     enableLogging: false,
     enableDebugMode: false,
     apiTimeout: 15,

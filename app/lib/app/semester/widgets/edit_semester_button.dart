@@ -51,26 +51,57 @@ class _EditSemesterButtonState extends State<EditSemesterButton> {
                     ),
                     sizedBox,
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                          Text('Start Date: ${DateFormat('dd/MM/yyyy').format(editSemesterController.startDate.value.value ?? widget.startDate)}', style: textStyle.copyWith(fontSize: 12),),
-                          Text('End Date: ${DateFormat('dd/MM/yyyy').format(editSemesterController.endDate.value.value ?? widget.endDate)}', style: textStyle.copyWith(fontSize: 12),),
+                        Expanded(
+                          child: Text(
+                            'Start: ${DateFormat('dd/MM/yy').format(editSemesterController.startDate.value.value ?? widget.startDate)}',
+                            style: textStyle.copyWith(fontSize: 11),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'End: ${DateFormat('dd/MM/yy').format(editSemesterController.endDate.value.value ?? widget.endDate)}',
+                            style: textStyle.copyWith(fontSize: 11),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ],
                     ),
                     sizedBox,
                     // Select Start/End Date Button
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ElevatedButton(onPressed: () async {
-                                await editSemesterController.selectStartDate(context);
-                                }, 
-                                child: Text("Edit Start Date"),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await editSemesterController.selectStartDate(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                            ),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text("Edit Start", textAlign: TextAlign.center),
+                            ),
+                          ),
                         ),
-                
-                        ElevatedButton(onPressed: () async {
-                          await editSemesterController.selectEndDate(context);
-                        }, child: Text("Edit End Date"),),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await editSemesterController.selectEndDate(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                            ),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text("Edit End", textAlign: TextAlign.center),
+                            ),
+                          ),
+                        ),
                       ],
                     ), 
                     sizedBox,
