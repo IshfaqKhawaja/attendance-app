@@ -143,13 +143,30 @@ def insert_initial_users(conn):
     try:
         cur = conn.cursor()
 
-        # User 1: HOD for Computer Engineering Department (D028, F006)
+        # Check if D028 and F006 exist
+        cur.execute("SELECT EXISTS(SELECT 1 FROM department WHERE dept_id='D028')")
+        d028_exists = cur.fetchone()[0]
+
+        cur.execute("SELECT EXISTS(SELECT 1 FROM faculty WHERE fact_id='F006')")
+        f006_exists = cur.fetchone()[0]
+
+        if d028_exists and f006_exists:
+            print("Found D028 and F006 in database")
+            dept_id = "D028"
+            fact_id = "F006"
+        else:
+            print(f"WARNING: D028 exists={d028_exists}, F006 exists={f006_exists}")
+            print("Using NULL for dept_id and fact_id (will be updated when proper data is loaded)")
+            dept_id = None
+            fact_id = None
+
+        # User 1: HOD for Computer Engineering Department
         user1 = {
             "user_id": "cs@test.com",
             "user_name": "Computer Engineering HOD",
             "type": "HOD",
-            "dept_id": "D028",  # Department of Computer Engineering
-            "fact_id": "F006"   # Faculty of Engineering & Technology
+            "dept_id": dept_id,
+            "fact_id": fact_id
         }
 
         # User 2: Super Admin (no department/faculty association)
@@ -177,6 +194,8 @@ def insert_initial_users(conn):
                 print(f"  ✓ Created user: {user['user_name']} ({user['user_id']}) as {user['type']}")
                 if user["dept_id"]:
                     print(f"    - Assigned to: Department {user['dept_id']}, Faculty {user['fact_id']}")
+                else:
+                    print(f"    - No department assigned (will be assigned when proper data is loaded)")
             else:
                 print(f"  - User already exists: {user['user_id']}")
 
