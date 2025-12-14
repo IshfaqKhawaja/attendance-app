@@ -46,6 +46,10 @@ COPY --chown=appuser:appuser ./app ./app
 COPY --chown=appuser:appuser ./json_data ./json_data
 COPY --chown=appuser:appuser ./pyproject.toml ./
 
+# Copy entrypoint script
+COPY --chown=appuser:appuser ./docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
 # Switch to non-root user
 USER appuser
 
@@ -53,8 +57,11 @@ USER appuser
 EXPOSE 8000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+
+# Set entrypoint
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
 # Run the application with Gunicorn
 CMD ["gunicorn", "app.main:app", \
