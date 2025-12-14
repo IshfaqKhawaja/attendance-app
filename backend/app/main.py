@@ -5,8 +5,8 @@ Includes all routers, middleware, and startup configuration.
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI #type: ignore
+from fastapi.middleware.cors import CORSMiddleware #type: ignore
 
 # Import settings and logging
 from app.core.settings import settings
