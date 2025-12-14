@@ -218,7 +218,15 @@ def main():
     try:
         # Check if already initialized
         if check_if_initialized(conn):
-            print("Database already initialized. Skipping setup.")
+            print("Database already initialized.")
+            print("Checking and inserting users if missing...")
+
+            # Still try to insert users even if DB is initialized
+            insert_initial_users(conn)
+
+            print("=" * 60)
+            print("User check completed!")
+            print("=" * 60)
             return
 
         print("Initializing database for the first time...")
