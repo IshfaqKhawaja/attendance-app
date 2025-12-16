@@ -1,10 +1,11 @@
 import logging
+import os
 from twilio.rest import Client # type: ignore
 from twilio.base.exceptions import TwilioRestException # type: ignore
 
-# load these from your environment (e.g. via .env + python-dotenv or your deployment system)
-TWILIO_ACCOUNT_SID = 'ACf1666848ed1ef5560c2e7eae5493a26e'
-TWILIO_AUTH_TOKEN  = '095206d1eacf920f224950ca418e906d'
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER', '+18125545086')
 
 _client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
@@ -28,7 +29,7 @@ def send_sms(to: str, body: str) -> dict:
         msg = _client.messages.create(
             body=body,
             to=to,
-            from_='+18125545086',
+            from_=TWILIO_PHONE_NUMBER,
         )
         return {"success": True, "sid": msg.sid}
     except TwilioRestException as e:
