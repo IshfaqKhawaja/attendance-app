@@ -54,6 +54,9 @@ class Endpoints {
   static const String generateAttendanceReport = '/reports/generate_course_report_pdf';
   static const String generateAttendanceReportBySemId = '/reports/generate_report_by_sem_id_xls';
 
+  // Notification endpoints
+  static const String sendAttendanceSms = '/attendance_notifier/notify';
+
   // Helper method to get full URL
   static String fullUrl(String path) {
     if (path.startsWith('http')) {

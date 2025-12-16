@@ -1,4 +1,3 @@
-import 'package:app/app/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../signin/controllers/signin_controller.dart';
@@ -18,29 +17,22 @@ class LoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Get.theme.primaryColor,
-                Get.theme.primaryColor.withValues(alpha: 0.2),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Center(
-            child: loadingController.isDataLoaded.value
-                ? Text(
-                    "Redirecting...",
-                    style: textStyle.copyWith(color: Colors.white),
-                  )
-                : CircularProgressIndicator(color: Colors.white70),
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Get.theme.primaryColor,
+              Get.theme.primaryColor.withValues(alpha: 0.2),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-      );
-    });
+        child: const Center(
+          child: CircularProgressIndicator(color: Colors.white70),
+        ),
+      ),
+    );
   }
 }
