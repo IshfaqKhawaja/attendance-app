@@ -23,14 +23,16 @@ void main() async {
 void _configureSystemUI() {
   // Enable edge-to-edge display
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  
+
   // Configure system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
-    systemNavigationBarColor: Colors.transparent,
+    // Use scaffold background color (light grey) to avoid green showing through
+    systemNavigationBarColor: Color(0xFFF5F5F7),
     statusBarIconBrightness: Brightness.light,
     statusBarBrightness: Brightness.dark,
-    systemNavigationBarIconBrightness: Brightness.light,
+    // Dark icons for light background
+    systemNavigationBarIconBrightness: Brightness.dark,
   ));
 }
 

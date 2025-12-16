@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../controllers/hod_dashboard_controller.dart' show HodDashboardController;
 import '../widgets/hod_bottom_bar.dart';
 import '../../../core/services/user_role_service.dart';
-import '../../../core/constants/app_colors.dart';
+import '../../../core/widgets/dashboard_scaffold.dart';
 
 class HodDashboard extends StatefulWidget {
   const HodDashboard({super.key});
@@ -25,95 +25,60 @@ class _HodDashboardState extends State<HodDashboard> {
   final HodBottomBarController hodBottomBarController = Get.put(
     HodBottomBarController(),
   );
-  
+
   String? deptId;
-  
+
   @override
   void initState() {
     super.initState();
     deptId = Get.parameters['deptId'];
     hodDashboardController.init(deptId: deptId);
   }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return Scaffold(
-        extendBodyBehindAppBar: true,
-        body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.primary, AppColors.primaryLight],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-          ),
-          Positioned(
-            top: Get.size.height * 0.1,
-            child: Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    Get.find<UserRoleService>().getGreetingMessage(),
-                    style: GoogleFonts.openSans(
-                      fontSize: 30,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  if (Get.find<UserRoleService>().isSuperAdmin) ...<Widget>[
-                    SizedBox(height: 8),
-                    if (hodDashboardController.departmentName != null)
-                      Text(
-                        "Department: ${hodDashboardController.departmentName}",
-                        style: GoogleFonts.openSans(
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    if (hodDashboardController.facultyName != null)
-                      Text(
-                        "Faculty: ${hodDashboardController.facultyName}",
-                        style: GoogleFonts.openSans(
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: Get.size.height * 0.25,
-            child: Container(
-              height: Get.size.height * 0.01,
-              width: Get.size.width,
-              decoration: BoxDecoration(
+      return DashboardScaffold(
+        headerContent: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              Get.find<UserRoleService>().getGreetingMessage(),
+              style: GoogleFonts.openSans(
+                fontSize: 28,
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-
-          // Widget by bottom Bar:
-          hodBottomBarController.screens[hodBottomBarController.currentIndex.value],  
-        ],
+            if (Get.find<UserRoleService>().isSuperAdmin) ...<Widget>[
+              const SizedBox(height: 8),
+              if (hodDashboardController.departmentName != null)
+                Text(
+                  "Department: ${hodDashboardController.departmentName}",
+                  style: GoogleFonts.openSans(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              if (hodDashboardController.facultyName != null)
+                Text(
+                  "Faculty: ${hodDashboardController.facultyName}",
+                  style: GoogleFonts.openSans(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+            ],
+          ],
         ),
+        bodyContent:
+            hodBottomBarController.screens[hodBottomBarController.currentIndex.value],
         bottomNavigationBar: HODBottomBar(),
-        );
-    }
-  );
-
+      );
+    });
   }
 }
   

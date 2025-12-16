@@ -120,9 +120,9 @@ statements = [
     );
     """,
 
-    # course_student
+    # course_students
     """
-    CREATE TABLE IF NOT EXISTS course_student (
+    CREATE TABLE IF NOT EXISTS course_students (
         student_id   VARCHAR(255) NOT NULL REFERENCES students(student_id) ON DELETE CASCADE,
         course_id    VARCHAR(255) NOT NULL REFERENCES course(course_id) ON DELETE CASCADE,
         PRIMARY KEY (student_id, course_id)

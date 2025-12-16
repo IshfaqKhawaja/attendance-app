@@ -22,7 +22,12 @@ def generate_course_report_xls(course_model: ReportByCourseId) -> FileResponse:
             media_type="text/plain",
         )
 
-    output_path = course_model.file_path or "attendance_report.xlsx"
+    # Always use server-side path, ignore client file_path (which may be a device path)
+    output_dir = "reports"
+    os.makedirs(output_dir, exist_ok=True)
+    filename = f"attendance_report_{course_model.course_id}.xlsx"
+    output_path = os.path.join(output_dir, filename)
+
     excel_file = generate_attendance_excel(data, output_path)
 
     if not excel_file:
@@ -31,10 +36,10 @@ def generate_course_report_xls(course_model: ReportByCourseId) -> FileResponse:
             filename="",
             media_type="text/plain",
         )
-    # Return the generated Excel file as a response and success message
+    # Return the generated Excel file as a response
     return FileResponse(
         path=excel_file,
-        filename=output_path,
+        filename=filename,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 

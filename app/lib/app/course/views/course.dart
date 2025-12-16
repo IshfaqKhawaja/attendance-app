@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/constants/typography.dart';
+import '../../core/widgets/dashboard_scaffold.dart';
 import '../../routes/app_routes.dart';
 import '../controllers/course_controller.dart';
 import 'attendence.dart';
@@ -18,110 +19,80 @@ class Course extends StatefulWidget {
 class _CourseState extends State<Course> {
   final TeacherCourseModel course = Get.arguments["course"];
 
- late CourseController courseController;
+  late CourseController courseController;
 
+  void loadStudentsData() async {
+    await courseController.getStudentsList();
+    await courseController.getStudentsForAttendence();
+  }
 
-void loadStudentsData() async{
-  await courseController.getStudentsList();
-  await courseController.getStudentsForAttendence();
-}
- 
- @override
- void initState() {
+  @override
+  void initState() {
     super.initState();
     // Use course.courseId as a unique tag to create separate controller instances for each course
     courseController = Get.put(
-      CourseController(courseId: course.courseId), 
+      CourseController(courseId: course.courseId),
       tag: course.courseId, // Each course gets its own controller instance
     );
     loadStudentsData();
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    return DashboardScaffold(
+      headerContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Get.theme.primaryColor, Get.theme.primaryColorLight],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-          ),
-          Positioned(
-            top: Get.size.height * 0.085,
-            child: Container(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              width: Get.size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Course Info",
-                    style: GoogleFonts.openSans(
-                      fontSize: 26,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                child: Text(
+                  "Course Info",
+                  style: GoogleFonts.openSans(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                  // Students List Button
-                  ElevatedButton(
-                    child: Text("Students", style: textStyle.copyWith(fontSize: 13,),),
-                    onPressed: (){
-                      Get.toNamed(Routes.STUDENTS, arguments: {"course": course});
-                      },                   
-                  ),
-                ElevatedButton(
-                  onPressed: (){
-                    courseController.showDateRangeDialog(context, course.courseName!);
-                      },                   
-                    child: Text("Report",style: textStyle.copyWith(fontSize: 13,),),)
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: Get.size.height * 0.13,
-            child: Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Text(
-                "Course Name: ${course.courseName}\nCourse ID : ${course.courseId}\nSem ID : ${course.semName}",
-                style: GoogleFonts.openSans(fontSize: 14, color: Colors.white),
-              ),
-            ),
-          ),          
-          Positioned(
-            top: Get.size.height * 0.25,
-            child: Container(
-              height: Get.size.height * 0.01,
-              width: Get.size.width,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
                 ),
               ),
-            ),
-          ),
-
-          Positioned(
-            top: Get.size.height * 0.26,
-            child: Container(
-              height: Get.size.height * 0.739,
-              width: Get.size.width,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ElevatedButton(
+                    child: Text(
+                      "Students",
+                      style: textStyle.copyWith(fontSize: 13),
+                    ),
+                    onPressed: () {
+                      Get.toNamed(Routes.STUDENTS, arguments: {"course": course});
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      courseController.showDateRangeDialog(
+                          context, course.courseName!);
+                    },
+                    child: Text(
+                      "Report",
+                      style: textStyle.copyWith(fontSize: 13),
+                    ),
+                  ),
+                ],
               ),
-              child: Attendence(courseId: course.courseId),
-            ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "Course Name: ${course.courseName}\nCourse ID : ${course.courseId}\nSem ID : ${course.semName}",
+            style: GoogleFonts.openSans(fontSize: 14, color: Colors.white),
           ),
         ],
       ),
+      bodyContent: Attendence(courseId: course.courseId),
     );
   }
 }

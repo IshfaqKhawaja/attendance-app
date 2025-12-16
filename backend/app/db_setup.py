@@ -5,7 +5,7 @@ Run this directly on the server to initialize/populate the database.
 Usage:
     python -m app.db_setup
 """
-import psycopg2
+import psycopg
 import json
 import os
 import sys
@@ -21,7 +21,7 @@ def connect_db():
     """Connect to the database."""
     print(f"Connecting to database at {DB_HOST}:{DB_PORT}...")
     try:
-        conn = psycopg2.connect(
+        conn = psycopg.connect(
             dbname=DB_NAME,
             user=DB_USER,
             password=DB_PASSWORD,
@@ -39,58 +39,69 @@ def get_table_statements():
     import importlib.util
     models_path = os.path.join(os.path.dirname(__file__), "db/models.py")
     spec = importlib.util.spec_from_file_location("models", models_path)
-    models = importlib.util.module_from_spec(spec)
+    models = importlib.util.module_from_spec(spec) 
     spec.loader.exec_module(models)
     return models.statements
 
+def extract_object_name(stmt):
+    """Extract table/index/enum name from SQL statement."""
+    stmt_upper = stmt.upper().strip()
+    stmt_clean = stmt.strip()
+
+    # Check for CREATE TYPE (enum)
+    if "CREATE TYPE" in stmt_upper:
+        import re
+        match = re.search(r"CREATE TYPE\s+(\w+)", stmt_clean, re.IGNORECASE)
+        if match:
+            return f"enum: {match.group(1)}"
+
+    # Check for CREATE TABLE
+    if "CREATE TABLE" in stmt_upper:
+        import re
+        match = re.search(r"CREATE TABLE\s+(?:IF NOT EXISTS\s+)?(\w+)", stmt_clean, re.IGNORECASE)
+        if match:
+            return f"table: {match.group(1)}"
+
+    # Check for CREATE INDEX
+    if "CREATE INDEX" in stmt_upper:
+        import re
+        match = re.search(r"CREATE INDEX\s+(?:IF NOT EXISTS\s+)?(\w+)", stmt_clean, re.IGNORECASE)
+        if match:
+            return f"index: {match.group(1)}"
+
+    return "statement"
+
 def create_tables(conn):
-    """Create all database tables."""
-    print("\nCreating database tables...")
+    """Create all database tables using statements from models.py."""
+    print("\nCreating database tables and enums...")
     cur = conn.cursor()
     try:
-        # Create teacher_type enum first
-        cur.execute("""
-        DO $$
-        BEGIN
-            IF NOT EXISTS (
-                SELECT 1 FROM pg_type WHERE typname = 'teacher_type'
-            ) THEN
-                CREATE TYPE teacher_type AS ENUM (
-                    'PERMANENT',
-                    'GUEST',
-                    'CONTRACT'
-                );
-            END IF;
-        END
-        $$;
-        """)
-        print("  ✓ Created teacher_type enum")
-
-        # Create user_type enum
-        cur.execute("""
-        DO $$
-        BEGIN
-            IF NOT EXISTS (
-                SELECT 1 FROM pg_type WHERE typname = 'user_type'
-            ) THEN
-                CREATE TYPE user_type AS ENUM (
-                    'NORMAL',
-                    'HOD',
-                    'SUPER_ADMIN'
-                );
-            END IF;
-        END
-        $$;
-        """)
-        print("  ✓ Created user_type enum")
-
-        # Create tables
+        # Get all statements from models.py (includes enums and tables)
         statements = get_table_statements()
+        created_objects = {"enum": [], "table": [], "index": []}
+
         for i, stmt in enumerate(statements, 1):
             cur.execute(stmt)
-            print(f"  ✓ Created table {i}/{len(statements)}")
+            obj_name = extract_object_name(stmt)
+            print(f"  ✓ [{i}/{len(statements)}] Created {obj_name}")
+
+            # Track created objects
+            if obj_name.startswith("enum:"):
+                created_objects["enum"].append(obj_name.split(": ")[1])
+            elif obj_name.startswith("table:"):
+                created_objects["table"].append(obj_name.split(": ")[1])
+            elif obj_name.startswith("index:"):
+                created_objects["index"].append(obj_name.split(": ")[1])
 
         conn.commit()
+
+        # Print summary of created objects
+        print("\n" + "-" * 40)
+        print("Created Objects Summary:")
+        print(f"  Enums ({len(created_objects['enum'])}): {', '.join(created_objects['enum'])}")
+        print(f"  Tables ({len(created_objects['table'])}): {', '.join(created_objects['table'])}")
+        print(f"  Indexes ({len(created_objects['index'])}): {', '.join(created_objects['index'])}")
+        print("-" * 40)
         print("✓ All tables created successfully!")
     except Exception as e:
         conn.rollback()

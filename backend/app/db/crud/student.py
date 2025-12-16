@@ -1,5 +1,8 @@
+import logging
 from app.db.connection import connection_to_db
 from app.db.models.student_model import BulkStudentIn, StudentIn
+
+logger = logging.getLogger(__name__)
 
 
 def add_student_to_db(
@@ -101,7 +104,7 @@ def add_students_in_bulk(
         }
     except Exception as e:
         conn.rollback()
-        print("Bulk insert failed:", e)
+        logger.error(f"Bulk insert failed: {e}")
         return {
             "success": False,
             "message": f"Couldn't add students in bulk: {e}"

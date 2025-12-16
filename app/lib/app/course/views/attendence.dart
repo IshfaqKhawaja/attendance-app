@@ -32,69 +32,72 @@ class _AttendenceState extends State<Attendence> {
   }
   @override
   Widget build(BuildContext context) {
-    final height = Get.size.height;
-    final width = Get.size.width;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: height * 0.04,
-            width: width,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Text(
-                    "Date : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}",
-                    style: textStyle.copyWith(fontSize: 14),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+          // Header row - uses intrinsic height
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Text(
+                  "Date : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}",
+                  style: textStyle.copyWith(fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(width: 8),
-                Row(
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      "Counted As : ",
-                      style: textStyle.copyWith(fontSize: 14),
+                    Flexible(
+                      child: Text(
+                        "Counted As : ",
+                        style: textStyle.copyWith(fontSize: 14),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     DropDownWidget(courseId: widget.courseId),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           Divider(thickness: 2, color: Get.theme.primaryColor),
-          Container(
-            height: height * 0.6,
-            width: width,
-            color: Colors.black12.withValues(alpha: 0.1),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
+          // Main content area - expands to fill available space
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              color: Colors.black12.withValues(alpha: 0.1),
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: AttendenceWidget(courseId: widget.courseId),
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: AttendenceWidget(courseId: widget.courseId),
+                ),
               ),
             ),
           ),
-
+          // Button area - fixed minimum height with padding
           Container(
-            height: height * 0.06,
-            width: width,
-            padding: EdgeInsets.all(4),
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             color: Colors.black12.withValues(alpha: 0.1),
-            child: ElevatedButton(
+            child: SafeArea(
+              top: false,
+              child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Get.theme.primaryColor,
-                  padding: EdgeInsets.all(2), // Adjust size
+                  minimumSize: const Size(double.infinity, 48),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
                 onPressed: () {
                   courseController.addAttendence();
-                  // print(courseController.courseId);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -106,11 +109,12 @@ class _AttendenceState extends State<Attendence> {
                         fontSize: 16,
                       ),
                     ),
-                    SizedBox(width: 10),
-                    Icon(Icons.save_as, color: Colors.white, size: 30),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.save_as, color: Colors.white, size: 24),
                   ],
                 ),
               ),
+            ),
           ),
         ],
       ),

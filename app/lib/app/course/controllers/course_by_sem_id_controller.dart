@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:app/app/signin/controllers/signin_controller.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 // http not needed after refactor
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../core/network/endpoints.dart';
 import '../../core/network/api_client.dart';
@@ -27,7 +29,19 @@ class CourseBySemesterIdController  extends GetxController{
 
   void getCourseReport(String courseId, startDate, endDate) async  {
     try{
-      final dir = await getApplicationDocumentsDirectory();
+      // Show loading indicator
+      Get.snackbar("Please wait", "Generating report...",
+        colorText: Colors.blue,
+        duration: const Duration(seconds: 2),
+      );
+
+      // Use external storage for better file sharing with other apps
+      Directory? dir;
+      if (Platform.isAndroid) {
+        dir = await getExternalStorageDirectory();
+      }
+      dir ??= await getApplicationDocumentsDirectory();
+
       String filePath = "${dir.path}/course_report_$courseId${DateTime.now().millisecondsSinceEpoch}.xlsx";
       final bytes = await client.postBytes(
         Endpoints.generateCourseReport,
@@ -35,17 +49,60 @@ class CourseBySemesterIdController  extends GetxController{
           'course_id': courseId,
           'start_date': startDate,
           'end_date': endDate,
-          'file_path': filePath,
         },
       );
 
+      if (bytes.isEmpty) {
+        Get.snackbar("No Data", "No attendance records found for the selected date range. Please check if attendance has been marked.",
+          colorText: Colors.orange,
+          duration: const Duration(seconds: 4),
+        );
+        return;
+      }
 
       final file = File(filePath);
       await file.writeAsBytes(bytes);
-      await OpenFile.open(filePath);
-    } catch (e) {
-      Get.snackbar("Error", "Failed to generate report",
+
+      // Try to open the file, fallback to share if no app available
+      final result = await OpenFile.open(filePath);
+      if (result.type == ResultType.done) {
+        Get.snackbar("Success", "Report opened successfully",
+          colorText: Colors.green,
+        );
+      } else {
+        // Fallback: Use share to let user choose how to handle the file
+        Get.snackbar("Info", "Opening share options. You can save or open the file with any spreadsheet app.",
+          colorText: Colors.blue,
+          duration: const Duration(seconds: 3),
+        );
+        await Share.shareXFiles(
+          [XFile(filePath)],
+          text: 'Course Attendance Report',
+        );
+      }
+    } on SocketException {
+      Get.snackbar("Network Error", "Unable to connect to server. Please check your internet connection.",
         colorText: Colors.red,
+        duration: const Duration(seconds: 4),
+      );
+    } on TimeoutException {
+      Get.snackbar("Timeout", "Server took too long to respond. Please try again later.",
+        colorText: Colors.red,
+        duration: const Duration(seconds: 4),
+      );
+    } catch (e) {
+      debugPrint("Error generating course report: $e");
+      String errorMessage = "Something went wrong while generating the report.";
+      if (e.toString().contains("401")) {
+        errorMessage = "Session expired. Please log in again.";
+      } else if (e.toString().contains("404")) {
+        errorMessage = "Course not found. It may have been deleted.";
+      } else if (e.toString().contains("500")) {
+        errorMessage = "Server error. Please try again later or contact support.";
+      }
+      Get.snackbar("Error", errorMessage,
+        colorText: Colors.red,
+        duration: const Duration(seconds: 4),
       );
     }
   }
@@ -302,23 +359,79 @@ void fetchTeachersInThisDept() async {
 
 
 void attendanceForSem(String semId) async {
-    final dir = await getApplicationDocumentsDirectory();
-    String filePath = "${dir.path}/attendance_report_$semId${DateTime.now().millisecondsSinceEpoch}.xlsx";
-    final bytes = await client.postBytes(
-      Endpoints.generateAttendanceReportBySemId,
-      {
-        'sem_id': semId,     
-      },
-      
-    );
-    try{
+    try {
+      // Show loading indicator
+      Get.snackbar("Please wait", "Generating semester report...",
+        colorText: Colors.blue,
+        duration: const Duration(seconds: 2),
+      );
+
+      // Use external storage for better file sharing with other apps
+      Directory? dir;
+      if (Platform.isAndroid) {
+        dir = await getExternalStorageDirectory();
+      }
+      dir ??= await getApplicationDocumentsDirectory();
+
+      String filePath = "${dir.path}/attendance_report_$semId${DateTime.now().millisecondsSinceEpoch}.xlsx";
+      final bytes = await client.postBytes(
+        Endpoints.generateAttendanceReportBySemId,
+        {
+          'sem_id': semId,
+        },
+      );
+
+      if (bytes.isEmpty) {
+        Get.snackbar("No Data", "No attendance records found for this semester. Please check if attendance has been marked for any course.",
+          colorText: Colors.orange,
+          duration: const Duration(seconds: 4),
+        );
+        return;
+      }
+
       final file = File(filePath);
       await file.writeAsBytes(bytes);
-      await OpenFile.open(filePath);
-      
-    } catch (e) {
-      Get.snackbar("Error", "Failed to generate report",
+
+      // Try to open the file, fallback to share if no app available
+      final result = await OpenFile.open(filePath);
+      if (result.type == ResultType.done) {
+        Get.snackbar("Success", "Report opened successfully",
+          colorText: Colors.green,
+        );
+      } else {
+        // Fallback: Use share to let user choose how to handle the file
+        Get.snackbar("Info", "Opening share options. You can save or open the file with any spreadsheet app.",
+          colorText: Colors.blue,
+          duration: const Duration(seconds: 3),
+        );
+        await Share.shareXFiles(
+          [XFile(filePath)],
+          text: 'Semester Attendance Report',
+        );
+      }
+    } on SocketException {
+      Get.snackbar("Network Error", "Unable to connect to server. Please check your internet connection.",
         colorText: Colors.red,
+        duration: const Duration(seconds: 4),
+      );
+    } on TimeoutException {
+      Get.snackbar("Timeout", "Server took too long to respond. Please try again later.",
+        colorText: Colors.red,
+        duration: const Duration(seconds: 4),
+      );
+    } catch (e) {
+      debugPrint("Error generating semester report: $e");
+      String errorMessage = "Something went wrong while generating the report.";
+      if (e.toString().contains("401")) {
+        errorMessage = "Session expired. Please log in again.";
+      } else if (e.toString().contains("404")) {
+        errorMessage = "Semester not found. It may have been deleted.";
+      } else if (e.toString().contains("500")) {
+        errorMessage = "Server error. Please try again later or contact support.";
+      }
+      Get.snackbar("Error", errorMessage,
+        colorText: Colors.red,
+        duration: const Duration(seconds: 4),
       );
     }
   }

@@ -1,6 +1,3 @@
-
-
-
 import 'package:app/app/dashboard/hod/widgets/teacher_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,105 +14,89 @@ class ManageTeachers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = Get.size.width;
-    final height = Get.size.height;
-    return Obx((){
+    return Obx(() {
       if (manageTeachersController.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       }
-     
-      return  Stack(
-              children: [
-                if (manageTeachersController.errorMessage.isNotEmpty)
-                  Positioned(
-                    top: height * 0.26,
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        "Can't load teachers",
-                        style: GoogleFonts.openSans(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                
 
-                Positioned(
-                  top: height * 0.26,
-                  child: Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.all(10),
-                    width: Get.size.width,
-                    child: Text(
-                      "Teachers",
-                      style: GoogleFonts.openSans(
-                        fontSize: 20,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold,
-                      ),
+      return Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (manageTeachersController.errorMessage.isNotEmpty)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    "Can't load teachers",
+                    style: GoogleFonts.openSans(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-            Positioned(
-              top: Get.size.height * 0.3,
-              child: Container(
-                color: Colors.white,
-                width: Get.size.width,
-                height: Get.size.height * 0.7,
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  "Teachers",
+                  style: GoogleFonts.openSans(
+                    fontSize: 20,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async {
                     await manageTeachersController.loadTeachers();
                   },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: ListView.builder(
-                          padding: EdgeInsets.only(top: 10, bottom: 20),
-                          itemCount: manageTeachersController.teachers.length,
-                          itemBuilder: (context, index) {
-                            final teacher = manageTeachersController.teachers[index];
-                            return TeacherCard(teacher: teacher);
-                          },
-                        ),
-                      ),
+                      padding: const EdgeInsets.only(top: 10, bottom: 80),
+                      itemCount: manageTeachersController.teachers.length,
+                      itemBuilder: (context, index) {
+                        final teacher = manageTeachersController.teachers[index];
+                        return TeacherCard(teacher: teacher);
+                      },
                     ),
                   ),
                 ),
-      
-            // Only show Add button for users with CRUD permissions
-            if (Get.find<UserRoleService>().canPerformCrud)
-              Positioned(
-                bottom: height * 0.001,
-                right: width * 0.05,
-                child: IconButton(
-                  onPressed: () async {
-                    // Show dialog to add teacher
-                   final updated =  await showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AddTeacherDialog();
-                      },
-                    );
-                    if (updated == true) {
-                      manageTeachersController.loadTeachers();
-                    }
-                  },
-                  icon: Icon(
-                    Icons.add,color: Get.theme.primaryColor,
-                    ),
-                  iconSize: 50,
-                  ),
-                )
-             ],
-            );
-    }
-    );
+              ),
+            ],
+          ),
+          // Only show Add button for users with CRUD permissions
+          if (Get.find<UserRoleService>().canPerformCrud)
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: FloatingActionButton(
+                onPressed: () async {
+                  final updated = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AddTeacherDialog();
+                    },
+                  );
+                  if (updated == true) {
+                    manageTeachersController.loadTeachers();
+                  }
+                },
+                backgroundColor: Get.theme.primaryColor,
+                child: const Icon(Icons.add, color: Colors.white),
+              ),
+            ),
+        ],
+      );
+    });
   }
 }

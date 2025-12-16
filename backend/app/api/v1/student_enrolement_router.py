@@ -1,4 +1,5 @@
 import io
+import logging
 from fastapi import APIRouter, HTTPException # type: ignore
 
 from app.db.crud.student import add_students_in_bulk
@@ -9,6 +10,8 @@ from fastapi import Form # type: ignore
 import pandas as pd # type: ignore
 
 from app.db.models.student_model import BulkStudentIn
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -56,26 +59,9 @@ async def upload_bulk_enrolement_file(
             raise HTTPException(status_code=400, detail="Invalid file type. Please upload a CSV or Excel file.")
 
         # Now you can work with the DataFrame
-        print("File read successfully. DataFrame head:")
+        logger.info(f"File read successfully. Processing {len(df)} rows from uploaded file")
         columns = ["student_id", "student_name", "phone_number"]
         students = []
-        # if set(columns).intersection(set(df.columns)) != set(columns):
-        #     print(set(df.columns))
-        #     return {
-        #         "success": False,
-        #         "message": f"File must contain the following columns: {columns}"
-        #     }
-        #  Add Students to DB
-        # for _, row in df.iterrows():
-        #     student = {
-        #         "student_id": str(row["student_id"]),
-        #         "student_name": row["student_name"],
-        #         "phone_number": str(row["phone_number"]),
-        #         "sem_id": sem_id
-        #     }
-        #     students.append(student)
-        # print(students)
-        print(df.head())
         
         # For now just read the columns
         students = []
@@ -98,13 +84,14 @@ async def upload_bulk_enrolement_file(
         # Add Bulk Students to DB
         bulk_students = BulkStudentIn(students=students)
         details = add_students_in_bulk(bulk_students)
-        print(f"Students added: {details}")
+        logger.info(f"Bulk student insertion result: {details['message']}")
         if not details["success"]:
+            logger.error(f"Failed to add students to DB: {details['message']}")
             return {
                 "success": False,
                 "message": "Failed to add students to DB."
             }
-        
+
         # Add Bulk Student Enrollment to DB
         details =  add_students_enrolled_in_sem_bulk(
             BulkStudentEnrolementModel(enrolements=[
@@ -114,7 +101,7 @@ async def upload_bulk_enrolement_file(
                 ) for st in students
             ])
         )
-        print(f"Enrollments added: {details}")
+        logger.info(f"Bulk enrollment result: {details.get('message', 'Completed')}")
         return details
         
     except Exception as e:

@@ -58,15 +58,33 @@ class _SignInState extends State<SignIn> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        // JMI Logo
+                        ClipOval(
+                          child: Image.asset(
+                            'assets/images/logo.png',
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
                         Text(
-                          'Sign In to Continue',
+                          'JMI Attendance',
                           style: textStyle.copyWith(
-                            fontSize: 22,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Sign In to Continue',
+                          style: textStyle.copyWith(
+                            fontSize: 16,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
                         // Email Input:
                         TextFormField(
                           controller: controller.emailController,
