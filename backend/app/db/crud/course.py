@@ -14,23 +14,41 @@ from app.db.models.teacher_course_model import TeacherCourseIn
 def add_course_to_db(course: CourseCreate) -> CourseCreateResponse:
     conn = connection_to_db()
     try:
-        # Add Teacher to teacher_course table
         with conn.cursor() as cur:
+            # 1. Create the course
             cur.execute(
                 "INSERT INTO course (course_id, course_name, sem_id) "
                 "VALUES (%s, %s, %s)",
                 (course.course_id, course.course_name, course.sem_id)
             )
+
+            # 2. Auto-enroll all students already in this semester to the new course
+            cur.execute(
+                """
+                INSERT INTO course_students (student_id, course_id)
+                SELECT se.student_id, %s
+                FROM student_enrollment se
+                WHERE se.sem_id = %s
+                ON CONFLICT (student_id, course_id) DO NOTHING
+                """,
+                (course.course_id, course.sem_id)
+            )
+            enrolled_count = cur.rowcount
+
         conn.commit()
-        # If successful, add to teacher_course
+
+        # 3. Assign teacher to course
         details = add_teacher_course_to_db(TeacherCourseIn(teacher_id=course.assigned_teacher_id, course_id=course.course_id))
         if not details.get("success", False):
             conn.rollback()
             return CourseCreateResponse(
                 success=False,
                 message=f"Couldn't add course: {details.get('message', 'Failed to assign teacher to course')}"
-            )            
-        return CourseCreateResponse(success=True, message="Course added to DB")
+            )
+        return CourseCreateResponse(
+            success=True,
+            message=f"Course added to DB. {enrolled_count} existing student(s) auto-enrolled."
+        )
     except Exception as e:
         conn.rollback()
         return CourseCreateResponse(
