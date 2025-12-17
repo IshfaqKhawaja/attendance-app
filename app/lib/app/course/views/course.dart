@@ -93,6 +93,13 @@ class _CourseState extends State<Course> {
         ],
       ),
       bodyContent: Attendence(courseId: course.courseId),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          courseController.addAttendence();
+        },
+        backgroundColor: Get.theme.primaryColor,
+        child: const Icon(Icons.save, color: Colors.white),
+      ),
     );
   }
 }

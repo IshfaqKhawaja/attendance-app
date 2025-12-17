@@ -43,8 +43,8 @@ class AppConfig {
   /// Staging configuration
   static const AppConfig staging = AppConfig(
     environment: Environment.staging,
-    apiBaseUrl: 'http://10.0.2.2:8000',  // Android Emulator
-    // apiBaseUrl: 'http://172.105.41.86',
+    // apiBaseUrl: 'http://10.0.2.2:8000',  // Android Emulator
+    apiBaseUrl: 'http://172.105.41.86',
     enableLogging: true,
     enableDebugMode: false,
     apiTimeout: 20,

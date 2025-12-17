@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../widgets/drop_down_widget.dart';
-import '../../constants/text_styles.dart';
+import '../../constants/text_styles.dart' show textStyle;
 
 class Attendence extends StatefulWidget {
   final String courseId;
@@ -79,39 +79,6 @@ class _AttendenceState extends State<Attendence> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: AttendenceWidget(courseId: widget.courseId),
-                ),
-              ),
-            ),
-          ),
-          // Button area - fixed minimum height with padding
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-            color: Colors.black12.withValues(alpha: 0.1),
-            child: SafeArea(
-              top: false,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Get.theme.primaryColor,
-                  minimumSize: const Size(double.infinity, 48),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-                onPressed: () {
-                  courseController.addAttendence();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Add Attendance",
-                      style: textStyle.copyWith(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    const Icon(Icons.save_as, color: Colors.white, size: 24),
-                  ],
                 ),
               ),
             ),

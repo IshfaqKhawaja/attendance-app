@@ -23,9 +23,8 @@ class HODBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
             icon: iconFunction(Icons.home, 0),
@@ -37,12 +36,6 @@ class HODBottomBar extends StatelessWidget {
             icon: iconFunction(Icons.person, 1),
             onPressed: () {
               onPressed(1);
-            },
-          ),
-          IconButton(
-            icon: iconFunction(Icons.settings, 2),
-            onPressed: () {
-              onPressed(2);
             },
           ),
         ],

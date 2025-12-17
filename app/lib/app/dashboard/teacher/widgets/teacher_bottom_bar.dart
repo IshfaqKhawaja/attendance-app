@@ -10,34 +10,19 @@ class TeacherBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedColor = Get.theme.primaryColor;
-    final unSelectedColor = Get.theme.unselectedWidgetColor;
-    return Obx(() {
-      return BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons.houseUser,
-                // 5) Use the reactive value to change color/state
-                color: controller.currentIndex.value == 0
-                    ? selectedColor
-                    : unSelectedColor,
-              ),
-              onPressed: () => controller.changeIndex(0),
+    return BottomAppBar(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            icon: FaIcon(
+              FontAwesomeIcons.houseUser,
+              color: selectedColor,
             ),
-            IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons.gear,
-                color: controller.currentIndex.value == 1
-                    ? selectedColor
-                    : unSelectedColor,
-              ),
-              onPressed: () => controller.changeIndex(1),
-            ),
-          ],
-        ),
-      );
-    });
+            onPressed: () => controller.changeIndex(0),
+          ),
+        ],
+      ),
+    );
   }
 }

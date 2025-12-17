@@ -69,24 +69,92 @@ class CourseController extends GetxController {
   }
 
 
+  // Check if any attendance has been marked
+  bool hasAnyAttendanceMarked() {
+    for (var attendance in attendenceMarked) {
+      for (var marked in attendance.marked) {
+        if (marked) return true;
+      }
+    }
+    return false;
+  }
+
   void addAttendence() async {
+    // Check if there are students to mark attendance for
+    if (attendenceMarked.isEmpty) {
+      Get.snackbar(
+        "No Students",
+        "There are no students in this course to mark attendance for.",
+        colorText: Colors.orange,
+        backgroundColor: Colors.orange.withValues(alpha: 0.1),
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 3),
+      );
+      return;
+    }
+
+    // Check if any attendance has been marked
+    if (!hasAnyAttendanceMarked()) {
+      Get.snackbar(
+        "No Attendance Marked",
+        "Please mark at least one student as present before saving.",
+        colorText: Colors.orange,
+        backgroundColor: Colors.orange.withValues(alpha: 0.1),
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 3),
+      );
+      return;
+    }
+
     try {
-  
-      var res = await client.postJson(Endpoints.addAttendanceBulk,{
+      var res = await client.postJson(Endpoints.addAttendanceBulk, {
         'attendances': prepareAttendenceData().map((e) => e.toJson()).toList(),
       });
       if (res["success"]) {
-        Get.snackbar("Success", res["message"], colorText: Colors.green);
-        
+        Get.snackbar(
+          "Success",
+          res["message"] ?? "Attendance saved successfully!",
+          colorText: Colors.green,
+          backgroundColor: Colors.green.withValues(alpha: 0.1),
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 3),
+        );
+
         // Reset all controllers after successful submission
         clearAttendence();
         // Regenerate fresh attendance list with default countedAs value
         await getStudentsForAttendence();
       } else {
-          Get.snackbar("ERROR", res["message"], colorText: Colors.red);
-        }
+        Get.snackbar(
+          "Error",
+          res["message"] ?? "Failed to save attendance",
+          colorText: Colors.red,
+          backgroundColor: Colors.red.withValues(alpha: 0.1),
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 3),
+        );
+      }
     } catch (e) {
-      Get.snackbar("ERROR", "$e", colorText: Colors.red);
+      String errorMessage = "Something went wrong. Please try again.";
+
+      // Parse error message for better user feedback
+      String errorString = e.toString().toLowerCase();
+      if (errorString.contains("already") || errorString.contains("409")) {
+        errorMessage = "Attendance has already been recorded for this course today. You cannot submit again.";
+      } else if (errorString.contains("connection") || errorString.contains("network")) {
+        errorMessage = "Network error. Please check your internet connection.";
+      } else if (errorString.contains("timeout")) {
+        errorMessage = "Request timed out. Please try again.";
+      }
+
+      Get.snackbar(
+        "Error",
+        errorMessage,
+        colorText: Colors.red,
+        backgroundColor: Colors.red.withValues(alpha: 0.1),
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 4),
+      );
     }
   }
 

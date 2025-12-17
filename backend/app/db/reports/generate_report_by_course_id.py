@@ -84,16 +84,36 @@ def generate_report_by_course_id_pdf(report: ReportInput) -> List:
         report (ReportInput): Pydantic model with course_id, start_date, and end_date.
 
     Returns:
-        List of tuples: (student_id, student_name, present_days, total_days).
+        List of tuples: (student_id, student_name, present_days, total_classes).
     """
     with connection_to_db() as conn:
         with conn.cursor() as cur:
+            # Get total number of classes held for this course in the date range
+            # Total classes = maximum attendance records for any student
+            # This represents the actual number of class sessions held
+            total_classes_query = """
+                SELECT COALESCE(MAX(student_attendance_count), 0)
+                FROM (
+                    SELECT COUNT(*) as student_attendance_count
+                    FROM attendance
+                    WHERE course_id = %s
+                      AND date BETWEEN %s AND %s
+                    GROUP BY student_id
+                ) AS student_counts;
+            """
+
+            cur.execute(total_classes_query, (
+                report.course_id, report.start_date, report.end_date
+            ))
+            total_classes = cur.fetchone()[0] or 0
+
+            # Now get per-student attendance with the fixed total for all students
             query = """
                 SELECT
                   s.student_id,
                   s.student_name,
                   COUNT(*) FILTER (WHERE a.present = true) AS present_days,
-                  COUNT(*) AS total_days
+                  %s AS total_classes
                 FROM attendance a
                 JOIN students s ON a.student_id = s.student_id
                 WHERE a.course_id = %s
@@ -101,7 +121,7 @@ def generate_report_by_course_id_pdf(report: ReportInput) -> List:
                 GROUP BY s.student_id, s.student_name
                 ORDER BY s.student_name;
             """
-            cur.execute(query, (report.course_id, report.start_date, report.end_date))
+            cur.execute(query, (total_classes, report.course_id, report.start_date, report.end_date))
             rows = cur.fetchall()
-    
+
     return rows
