@@ -10,12 +10,14 @@ class Department extends StatelessWidget {
   final String deptName;
   final String deptId;
   final int index;
+  final bool useMargin;
 
   Department({
     super.key,
     required this.deptName,
     required this.deptId,
     required this.index,
+    this.useMargin = true,
   });
   
   final DepartmentController departmentController = Get.find<DepartmentController>();
@@ -41,7 +43,7 @@ class Department extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 12),
+      margin: useMargin ? EdgeInsets.only(bottom: 12) : EdgeInsets.zero,
       child: Material(
         elevation: 2,
         borderRadius: BorderRadius.circular(12),
@@ -88,30 +90,37 @@ class Department extends StatelessWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         deptName,
                         style: GoogleFonts.openSans(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
                           color: Colors.black87,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 4),
                       Row(
                         children: [
                           Icon(
                             Icons.badge_outlined,
-                            size: 14,
+                            size: 13,
                             color: Colors.grey[600],
                           ),
                           SizedBox(width: 4),
-                          Text(
-                            'ID: $deptId',
-                            style: GoogleFonts.openSans(
-                              fontSize: 13,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w400,
+                          Expanded(
+                            child: Text(
+                              'ID: $deptId',
+                              style: GoogleFonts.openSans(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w400,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],

@@ -1,7 +1,6 @@
-
-
 import 'package:app/app/core/constants/typography.dart';
 import 'package:app/app/dashboard/hod/controllers/add_teacher_controller.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,63 +15,81 @@ class _AddTeacherDialogState extends State<AddTeacherDialog> {
   final AddTeacherController addTeacherController = Get.put(
     AddTeacherController(),
   );
+
+  // Max width for dialog on web
+  static const double maxDialogWidth = 400;
+
   @override
   void initState() {
     super.initState();
     addTeacherController.clearFields();
   }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title: Text("Add Teacher"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: "ID"),
-              controller: addTeacherController.emailController.value,
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: "Name"),
-              controller: addTeacherController.nameController.value,
-            ),
-            Obx(() {
-              return DropdownButtonFormField<String>(
-                value: addTeacherController.teacherType.isNotEmpty
-                    ? addTeacherController.teacherType.first
-                    : null,
-                items: addTeacherController.teacherType
-                    .map((type) => DropdownMenuItem(
-                          value: type,
-                          child: Text(type),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    addTeacherController.selectedTeacherType.value = value;
-                  }
-                },
-                decoration: InputDecoration(labelText: "Type"),
-              );
-            }),
-           
-          ],
+      contentPadding: EdgeInsets.zero,
+      content: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
+          minWidth: kIsWeb ? maxDialogWidth : 280,
         ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              final added = await addTeacherController.addTeacher();
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Add Teacher", style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 16),
+              TextField(
+                decoration: InputDecoration(labelText: "ID"),
+                controller: addTeacherController.emailController.value,
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: "Name"),
+                controller: addTeacherController.nameController.value,
+              ),
+              Obx(() {
+                return DropdownButtonFormField<String>(
+                  value: addTeacherController.teacherType.isNotEmpty
+                      ? addTeacherController.teacherType.first
+                      : null,
+                  items: addTeacherController.teacherType
+                      .map((type) => DropdownMenuItem(
+                            value: type,
+                            child: Text(type),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      addTeacherController.selectedTeacherType.value = value;
+                    }
+                  },
+                  decoration: InputDecoration(labelText: "Type"),
+                );
+              }),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+          child: Text("Cancel", style: textStyle.copyWith(fontSize: 16)),
+        ),
+        TextButton(
+          onPressed: () async {
+            final added = await addTeacherController.addTeacher();
+            if (context.mounted) {
               Navigator.of(context).pop(added);
-            },
-            child: Text("Add", style: textStyle.copyWith(fontSize: 16,),),
-          ),
-           TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-            child: Text("Cancel", style: textStyle.copyWith(fontSize: 16,),),
-          ),
-        ],
-      );
+            }
+          },
+          child: Text("Add", style: textStyle.copyWith(fontSize: 16)),
+        ),
+      ],
+    );
   }
 }

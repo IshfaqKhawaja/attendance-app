@@ -9,37 +9,38 @@ import '../controllers/hod_bottom_bar_controller.dart';
 
 class HODBottomBar extends StatelessWidget {
   HODBottomBar({super.key});
-  final HodBottomBarController controller = Get.put(HodBottomBarController());
 
-  Icon iconFunction(IconData iconData, int  index) {
-    return Icon(
-      iconData, size: 30, 
-      color: controller.currentIndex.value == index ? Get.theme.primaryColor : Colors.grey,
-    );
-  }
- void onPressed(int index) {
-    controller.changeIndex(index);
-  }
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
+    // Get the controller - it's guaranteed to be initialized by HodDashboard
+    final controller = Get.find<HodBottomBarController>();
+
+    return Obx(() => BottomAppBar(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
-            icon: iconFunction(Icons.home, 0),
-            onPressed: () {
-              onPressed(0);
-            },
+            icon: Icon(
+              Icons.home,
+              size: 30,
+              color: controller.currentIndex.value == 0
+                  ? Get.theme.primaryColor
+                  : Colors.grey,
+            ),
+            onPressed: () => controller.changeIndex(0),
           ),
           IconButton(
-            icon: iconFunction(Icons.person, 1),
-            onPressed: () {
-              onPressed(1);
-            },
+            icon: Icon(
+              Icons.person,
+              size: 30,
+              color: controller.currentIndex.value == 1
+                  ? Get.theme.primaryColor
+                  : Colors.grey,
+            ),
+            onPressed: () => controller.changeIndex(1),
           ),
         ],
       ),
-    );
+    ));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:app/app/dashboard/super_admin/widgets/faculty.dart';
 import 'package:app/app/loading/controllers/loading_controller.dart';
 import 'package:app/app/core/constants/app_colors.dart';
+import 'package:app/app/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,12 +12,26 @@ class Facilities extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = ResponsiveUtils.isDesktop(context);
+    final crossAxisCount = ResponsiveUtils.value(
+      context: context,
+      mobile: 1,
+      tablet: 2,
+      desktop: 2,
+      largeDesktop: 3,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Header Section
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+          padding: EdgeInsets.fromLTRB(
+            isDesktop ? 24 : 20,
+            20,
+            isDesktop ? 24 : 20,
+            16,
+          ),
           child: Row(
             children: [
               Container(
@@ -38,7 +53,7 @@ class Facilities extends StatelessWidget {
                   Text(
                     "Faculties",
                     style: GoogleFonts.openSans(
-                      fontSize: 26,
+                      fontSize: isDesktop ? 28 : 26,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
@@ -55,7 +70,7 @@ class Facilities extends StatelessWidget {
             ],
           ),
         ),
-        // Faculties List
+        // Faculties Grid/List
         Expanded(
           child: Obx(() {
             if (loadingController.faculities.isEmpty) {
@@ -76,6 +91,34 @@ class Facilities extends StatelessWidget {
                 ),
               );
             }
+
+            // Use grid on larger screens for better web appearance
+            if (crossAxisCount > 1) {
+              return GridView.builder(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isDesktop ? 24 : 16,
+                  vertical: 8,
+                ),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 2.5, // Wider cards for grid
+                ),
+                itemCount: loadingController.faculities.length,
+                itemBuilder: (context, index) {
+                  final faculty = loadingController.faculities[index];
+                  return Faculty(
+                    factName: faculty.factName,
+                    factId: faculty.factId,
+                    index: index,
+                    useMargin: false, // No margin in grid layout
+                  );
+                },
+              );
+            }
+
+            // Use list on mobile
             return ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               itemCount: loadingController.faculities.length,

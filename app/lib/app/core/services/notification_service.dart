@@ -43,14 +43,22 @@ class AppNotification {
 class NotificationService extends BaseService {
   static NotificationService get to => Get.find();
 
-  late final notif_impl.NotificationServiceImpl _impl;
+  notif_impl.NotificationServiceImpl? _impl;
+  bool _initialized = false;
   final RxList<AppNotification> notificationHistory = <AppNotification>[].obs;
 
   @override
   Future<void> initialize() async {
+    // Prevent double initialization
+    if (_initialized) {
+      Get.log('NotificationService already initialized, skipping');
+      return;
+    }
+
     try {
       _impl = notif_impl.NotificationServiceImpl();
-      await _impl.initialize();
+      await _impl!.initialize();
+      _initialized = true;
       Get.log('NotificationService initialized (Platform: ${PlatformUtils.platformName})');
     } catch (e) {
       Get.log('Failed to initialize NotificationService: $e');
@@ -59,7 +67,7 @@ class NotificationService extends BaseService {
   }
 
   Future<bool> requestPermissions() async {
-    return await _impl.requestPermissions();
+    return await _impl?.requestPermissions() ?? false;
   }
 
   /// Show immediate notification
@@ -71,7 +79,7 @@ class NotificationService extends BaseService {
     NotificationChannel channel = NotificationChannel.general,
     NotificationPriority priority = NotificationPriority.normal,
   }) async {
-    await _impl.showNotification(
+    await _impl?.showNotification(
       id: id,
       title: title,
       body: body,
@@ -101,7 +109,7 @@ class NotificationService extends BaseService {
     NotificationChannel channel = NotificationChannel.general,
     NotificationPriority priority = NotificationPriority.normal,
   }) async {
-    await _impl.scheduleNotification(
+    await _impl?.scheduleNotification(
       id: id,
       title: title,
       body: body,
@@ -176,13 +184,13 @@ class NotificationService extends BaseService {
 
   /// Cancel notification
   Future<void> cancelNotification(int id) async {
-    await _impl.cancelNotification(id);
+    await _impl?.cancelNotification(id);
     Get.log('Notification cancelled: $id');
   }
 
   /// Cancel all notifications
   Future<void> cancelAllNotifications() async {
-    await _impl.cancelAllNotifications();
+    await _impl?.cancelAllNotifications();
     Get.log('All notifications cancelled');
   }
 

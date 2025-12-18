@@ -51,7 +51,8 @@ class AttendanceApp extends StatelessWidget {
       getPages: Pages.routes,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.system,
+      // Force light theme on web for consistency, use system on mobile
+      themeMode: kIsWeb ? ThemeMode.light : ThemeMode.system,
       debugShowCheckedModeBanner: false,
       // Add scroll behavior for web (enables mouse scroll)
       scrollBehavior: kIsWeb

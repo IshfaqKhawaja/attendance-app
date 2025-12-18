@@ -3,6 +3,7 @@
 
 
 import 'package:app/app/core/network/endpoints.dart';
+import 'package:app/app/dashboard/hod/controllers/hod_dashboard_controller.dart';
 import 'package:get/get.dart';
 import '../../../core/network/api_client.dart';
 import '../../../models/teacher_model.dart';
@@ -18,9 +19,22 @@ class ManageTeachersController extends GetxController {
 
   final SignInController signInController = Get.find<SignInController>();
 
+  /// Get the effective department ID (from route parameter or signed-in user)
+  String? get _effectiveDeptId {
+    // First check if HodDashboardController has a route-based deptId (for SuperAdmin)
+    if (Get.isRegistered<HodDashboardController>()) {
+      final hodController = Get.find<HodDashboardController>();
+      if (hodController.routeDeptId != null && hodController.routeDeptId!.isNotEmpty) {
+        return hodController.routeDeptId;
+      }
+    }
+    // Fall back to signed-in user's deptId
+    return signInController.userData.value.deptId;
+  }
+
   Future<void> loadTeachers() async {
-    // Update deptId from current userData
-    deptId.value = signInController.userData.value.deptId ?? '';
+    // Update deptId from effective source (route or userData)
+    deptId.value = _effectiveDeptId ?? '';
 
     // If department ID is not available (e.g., during sign-out), clear teachers and return
     if (deptId.value.isEmpty) {
@@ -68,7 +82,7 @@ class ManageTeachersController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    deptId.value = signInController.userData.value.deptId ?? '';
+    deptId.value = _effectiveDeptId ?? '';
     loadTeachers();
     ever(signInController.userData, (_) {
         loadTeachers();

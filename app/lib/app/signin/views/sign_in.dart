@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +14,9 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   late final SignInController controller;
+
+  // Max width for the sign-in card on web
+  static const double maxCardWidth = 420;
 
   @override
   void initState() {
@@ -46,7 +50,11 @@ class _SignInState extends State<SignIn> {
           return Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Card(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? maxCardWidth : double.infinity,
+                ),
+                child: Card(
                 elevation: 8,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -197,6 +205,7 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
+            ),
             ),
           );
         }),

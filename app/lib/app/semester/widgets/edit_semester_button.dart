@@ -1,4 +1,5 @@
 import 'package:app/app/semester/controllers/edit_semester_controller.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +20,10 @@ class EditSemesterButton extends StatefulWidget {
 
 class _EditSemesterButtonState extends State<EditSemesterButton> {
   late EditSemesterController editSemesterController =  Get.put(EditSemesterController());
+
+  // Max width for dialog on web
+  static const double maxDialogWidth = 400;
+
   @override
   void initState() {
     super.initState();
@@ -32,12 +37,15 @@ class _EditSemesterButtonState extends State<EditSemesterButton> {
   }
   @override
   Widget build(BuildContext context) {
-    final height = Get.size.height * 0.4;
     final sizedBox = SizedBox(height: 20);
     return Obx(() {
       return Container(
               padding: const EdgeInsets.all(10.0),
-              height: height,
+              width: kIsWeb ? null : Get.width * 0.9,
+              constraints: BoxConstraints(
+                maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
+                maxHeight: Get.size.height * 0.5,
+              ),
               child: ListView(
                   children: [
                     Text(

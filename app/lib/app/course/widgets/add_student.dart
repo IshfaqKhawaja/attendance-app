@@ -1,4 +1,5 @@
 import 'package:app/app/constants/text_styles.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +19,9 @@ class _AddStudentState extends State<AddStudent> {
   final TextEditingController studentNameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
 
+  // Max width for dialog on web
+  static const double maxDialogWidth = 400;
+
   @override
   void dispose() {
     studentIdController.dispose();
@@ -30,8 +34,11 @@ class _AddStudentState extends State<AddStudent> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      height: Get.height * 0.45,
-      width: Get.width,
+      width: kIsWeb ? null : Get.width * 0.9,
+      constraints: BoxConstraints(
+        maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
+        maxHeight: Get.height * 0.5,
+      ),
       child: Form(
         child: ListView(
           children: [

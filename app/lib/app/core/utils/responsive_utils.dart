@@ -237,3 +237,43 @@ class ResponsiveGridView extends StatelessWidget {
     );
   }
 }
+
+/// Web content wrapper that constrains width and centers content
+/// Use this to wrap page content for better web appearance
+class WebContentWrapper extends StatelessWidget {
+  final Widget child;
+  final double maxWidth;
+  final EdgeInsets? padding;
+  final Color? backgroundColor;
+
+  const WebContentWrapper({
+    super.key,
+    required this.child,
+    this.maxWidth = 1200,
+    this.padding,
+    this.backgroundColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWideScreen = screenWidth > Breakpoints.mobile;
+
+    if (!isWideScreen) {
+      // On mobile, just return the child as-is
+      return child;
+    }
+
+    return Container(
+      color: backgroundColor,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: padding != null
+              ? Padding(padding: padding!, child: child)
+              : child,
+        ),
+      ),
+    );
+  }
+}

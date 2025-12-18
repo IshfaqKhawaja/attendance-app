@@ -13,6 +13,10 @@ class EnhancedCourseView extends GetView<EnhancedCourseController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Get.back(),
+        ),
         title: const Text('Course Management'),
         elevation: 0,
         actions: [

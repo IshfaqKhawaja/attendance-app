@@ -1,4 +1,5 @@
 import 'package:app/app/constants/text_styles.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +18,9 @@ class EditCourse extends StatefulWidget {
 
 class _EditCourseState extends State<EditCourse> {
   final CourseBySemesterIdController courseController = Get.find<CourseBySemesterIdController>();
+
+  // Max width for dialog on web
+  static const double maxDialogWidth = 400;
 
   @override
   void initState() {
@@ -44,8 +48,11 @@ class _EditCourseState extends State<EditCourse> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      height: Get.height * 0.3,
-      width: Get.width,
+      width: kIsWeb ? null : Get.width * 0.9,
+      constraints: BoxConstraints(
+        maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
+        maxHeight: Get.height * 0.4,
+      ),
       child: Form(
         child: ListView(
           children: [

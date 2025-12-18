@@ -44,7 +44,8 @@ enum BiometricErrorType {
 class BiometricService extends BaseService {
   static BiometricService get to => Get.find();
 
-  late final bio_impl.BiometricServiceImpl _impl;
+  bio_impl.BiometricServiceImpl? _impl;
+  bool _initialized = false;
 
   var isAvailable = false.obs;
   var availableBiometrics = <String>[].obs;
@@ -52,12 +53,19 @@ class BiometricService extends BaseService {
 
   @override
   Future<void> initialize() async {
+    // Prevent double initialization
+    if (_initialized) {
+      Get.log('BiometricService already initialized, skipping');
+      return;
+    }
+
     try {
       _impl = bio_impl.BiometricServiceImpl();
-      await _impl.initialize();
+      await _impl!.initialize();
 
-      isAvailable.value = _impl.isAvailable;
-      availableBiometrics.value = _impl.availableBiometricNames;
+      isAvailable.value = _impl!.isAvailable;
+      availableBiometrics.value = _impl!.availableBiometricNames;
+      _initialized = true;
 
       Get.log('BiometricService initialized (Platform: ${PlatformUtils.platformName}, Available: ${isAvailable.value})');
     } catch (e) {
@@ -81,7 +89,7 @@ class BiometricService extends BaseService {
       );
     }
 
-    return await _impl.authenticate(
+    return await _impl!.authenticate(
       reason: reason,
       useErrorDialogs: useErrorDialogs,
       stickyAuth: stickyAuth,
@@ -139,6 +147,6 @@ class BiometricService extends BaseService {
     if (!isAvailable.value) {
       return 'No biometric authentication available';
     }
-    return _impl.securityLevelDescription;
+    return _impl?.securityLevelDescription ?? 'No biometric authentication available';
   }
 }

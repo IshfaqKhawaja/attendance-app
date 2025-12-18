@@ -3,6 +3,7 @@
 
 
 import 'package:app/app/dashboard/hod/controllers/edit_teacher_controller.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,10 +12,15 @@ import '../../../models/teacher_model.dart';
 import '../controllers/manage_teachers_controller.dart';
 import '../../../core/services/user_role_service.dart';
 
+// Max width for dialogs on web
+const double _maxDialogWidth = 400;
+
 class TeacherCard extends StatelessWidget {
   final Teacher teacher;
   TeacherCard({super.key, required this.teacher});
-  final ManageTeachersController controller = Get.find<ManageTeachersController>();
+
+  // Use getter to find controller at runtime, ensuring it exists when accessed
+  ManageTeachersController get controller => Get.find<ManageTeachersController>();
   final EditTeacherController editTeacherController = Get.put(EditTeacherController());
 
   @override
@@ -79,24 +85,32 @@ class TeacherCard extends StatelessWidget {
                       context: context,
                       builder: (context) => AlertDialog(
                         title: Text("Edit Teacher"),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextField(
+                        contentPadding: EdgeInsets.zero,
+                        content: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: kIsWeb ? _maxDialogWidth : double.infinity,
+                            minWidth: kIsWeb ? _maxDialogWidth : 280,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
                                   controller: TextEditingController(text: teacher.teacher_id),
                                   decoration: InputDecoration(labelText: "Id"),
                                   onChanged: (value) {
                                     editTeacherController.teacherId.value = value;
                                   },
                                 ),
-                            TextField(
+                                TextField(
                                   controller: TextEditingController(text: teacher.teacher_name),
                                   decoration: InputDecoration(labelText: "Teacher Name"),
                                   onChanged: (value) {
                                     editTeacherController.teacherName.value = value;
                                   },
                                 ),
-                            DropdownButtonFormField<String>(
+                                DropdownButtonFormField<String>(
                                   value: teacher.type,
                                   items: editTeacherController.teacherType
                                       .map((type) => DropdownMenuItem(
@@ -108,31 +122,33 @@ class TeacherCard extends StatelessWidget {
                                     if (value != null) {
                                       editTeacherController.selectedTeacherType.value = value;
                                     }
-                                  }, 
+                                  },
                                   decoration: InputDecoration(labelText: "Teacher Type"),
                                 ),
-
-
                               ],
                             ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(false),
-                                child: Text("Cancel"),
-                              ),
-                              TextButton(
-                                onPressed: () async  {
-                                  // Save the changes
-                                  var updated = await editTeacherController.updateTeacher(
-                                    teacher.teacher_id,
-                                  );
-                                  Navigator.of(context).pop(updated);
-                                },
-                                child: Text("Save"),
-                              ),
-                            ],
                           ),
-                        );
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              // Save the changes
+                              var updated = await editTeacherController.updateTeacher(
+                                teacher.teacher_id,
+                              );
+                              if (context.mounted) {
+                                Navigator.of(context).pop(updated);
+                              }
+                            },
+                            child: Text("Save"),
+                          ),
+                        ],
+                      ),
+                    );
 
 
                         if (edited == true) {
@@ -151,7 +167,17 @@ class TeacherCard extends StatelessWidget {
                       context: context,
                       builder: (context) => AlertDialog(
                         title: Text("Confirm Deletion"),
-                        content: Text("Are you sure you want to delete ${teacher.teacher_name}?"),
+                        contentPadding: EdgeInsets.zero,
+                        content: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: kIsWeb ? _maxDialogWidth : double.infinity,
+                            minWidth: kIsWeb ? _maxDialogWidth : 280,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Text("Are you sure you want to delete ${teacher.teacher_name}?"),
+                          ),
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(false),
@@ -159,7 +185,7 @@ class TeacherCard extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: Text("Delete", style: TextStyle(color: Colors.redAccent),),
+                            child: Text("Delete", style: TextStyle(color: Colors.redAccent)),
                           ),
                         ],
                       ),
@@ -169,8 +195,8 @@ class TeacherCard extends StatelessWidget {
                       controller.loadTeachers();
                     }
                   },
-                      icon: Icon(Icons.delete, color: Colors.redAccent),
-                    ),
+                  icon: Icon(Icons.delete, color: Colors.redAccent),
+                ),
                   ],
                 ),
               ),

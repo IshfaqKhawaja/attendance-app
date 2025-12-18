@@ -1,19 +1,32 @@
 import 'package:app/app/dashboard/hod/widgets/teacher_card.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/manage_teachers_controller.dart';
 import '../widgets/add_teacher_dialog.dart';
 import '../../../core/services/user_role_service.dart';
+import '../../../core/utils/responsive_utils.dart';
 
 class ManageTeachers extends StatelessWidget {
   ManageTeachers({super.key});
-  final ManageTeachersController manageTeachersController = Get.put(
-    ManageTeachersController(),
-  );
+  // Controller is pre-registered by HodBottomBarController
+  final ManageTeachersController manageTeachersController = Get.find<ManageTeachersController>();
+
+  // Max width for list items on web
+  static const double maxItemWidth = 600;
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = ResponsiveUtils.isDesktop(context);
+    final crossAxisCount = ResponsiveUtils.value(
+      context: context,
+      mobile: 1,
+      tablet: 2,
+      desktop: 2,
+      largeDesktop: 3,
+    );
+
     return Obx(() {
       if (manageTeachersController.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
@@ -44,11 +57,11 @@ class ManageTeachers extends StatelessWidget {
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(isDesktop ? 16 : 10),
                 child: Text(
                   "Teachers",
                   style: GoogleFonts.openSans(
-                    fontSize: 20,
+                    fontSize: isDesktop ? 24 : 20,
                     color: Colors.black87,
                     fontWeight: FontWeight.bold,
                   ),
@@ -60,15 +73,8 @@ class ManageTeachers extends StatelessWidget {
                     await manageTeachersController.loadTeachers();
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: ListView.builder(
-                      padding: const EdgeInsets.only(top: 10, bottom: 80),
-                      itemCount: manageTeachersController.teachers.length,
-                      itemBuilder: (context, index) {
-                        final teacher = manageTeachersController.teachers[index];
-                        return TeacherCard(teacher: teacher);
-                      },
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: isDesktop ? 16 : 10),
+                    child: _buildTeachersList(crossAxisCount),
                   ),
                 ),
               ),
@@ -98,5 +104,53 @@ class ManageTeachers extends StatelessWidget {
         ],
       );
     });
+  }
+
+  Widget _buildTeachersList(int crossAxisCount) {
+    final teachers = manageTeachersController.teachers;
+
+    if (teachers.isEmpty) {
+      return ListView(children: const [
+        SizedBox(height: 16),
+        Center(child: Text('No teachers found')),
+      ]);
+    }
+
+    // Use grid on larger screens
+    if (kIsWeb && crossAxisCount > 1) {
+      return GridView.builder(
+        padding: const EdgeInsets.only(top: 10, bottom: 80),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 2.8,
+        ),
+        itemCount: teachers.length,
+        itemBuilder: (context, index) {
+          final teacher = teachers[index];
+          return TeacherCard(teacher: teacher);
+        },
+      );
+    }
+
+    // Use list on mobile or single column
+    return ListView.builder(
+      padding: const EdgeInsets.only(top: 10, bottom: 80),
+      itemCount: teachers.length,
+      itemBuilder: (context, index) {
+        final teacher = teachers[index];
+        // Constrain width on web even for list view
+        if (kIsWeb) {
+          return Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: maxItemWidth),
+              child: TeacherCard(teacher: teacher),
+            ),
+          );
+        }
+        return TeacherCard(teacher: teacher);
+      },
+    );
   }
 }

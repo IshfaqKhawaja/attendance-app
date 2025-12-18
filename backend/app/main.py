@@ -5,8 +5,10 @@ Includes all routers, middleware, and startup configuration.
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI #type: ignore
+from fastapi import FastAPI, Request #type: ignore
 from fastapi.middleware.cors import CORSMiddleware #type: ignore
+from fastapi.responses import JSONResponse #type: ignore
+from starlette.exceptions import HTTPException as StarletteHTTPException #type: ignore
 
 # Import settings and logging
 from app.core.settings import settings
@@ -163,3 +165,59 @@ app.include_router(student_enrolement_router)
 
 
 logger.info("Application initialized successfully")
+
+
+# Global exception handlers for user-friendly error messages
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    """Handle HTTP exceptions with user-friendly messages."""
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "success": False,
+            "message": exc.detail or "An error occurred",
+            "error_code": exc.status_code
+        }
+    )
+
+
+@app.exception_handler(RuntimeError)
+async def runtime_error_handler(request: Request, exc: RuntimeError):
+    """Handle runtime errors like missing files."""
+    error_message = str(exc)
+    logger.error(f"RuntimeError: {error_message}")
+
+    # Check for specific error types and provide friendly messages
+    if "does not exist" in error_message:
+        return JSONResponse(
+            status_code=404,
+            content={
+                "success": False,
+                "message": "The requested resource could not be found. Please try again later.",
+                "error_code": "RESOURCE_NOT_FOUND"
+            }
+        )
+
+    return JSONResponse(
+        status_code=500,
+        content={
+            "success": False,
+            "message": "An unexpected error occurred. Please try again later.",
+            "error_code": "INTERNAL_ERROR"
+        }
+    )
+
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    """Catch-all handler for unhandled exceptions."""
+    logger.error(f"Unhandled exception: {type(exc).__name__}: {str(exc)}")
+
+    return JSONResponse(
+        status_code=500,
+        content={
+            "success": False,
+            "message": "Something went wrong. Please try again later or contact support if the issue persists.",
+            "error_code": "INTERNAL_ERROR"
+        }
+    )

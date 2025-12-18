@@ -22,8 +22,10 @@ class _HodDashboardState extends State<HodDashboard> {
     permanent: true,
   );
 
+  // Initialize bottom bar controller at field declaration time to ensure it's ready before build
   final HodBottomBarController hodBottomBarController = Get.put(
     HodBottomBarController(),
+    permanent: true,
   );
 
   String? deptId;
@@ -32,13 +34,19 @@ class _HodDashboardState extends State<HodDashboard> {
   void initState() {
     super.initState();
     deptId = Get.parameters['deptId'];
-    hodDashboardController.init(deptId: deptId);
+    // Defer initialization to after the build phase to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      hodDashboardController.init(deptId: deptId);
+      // Reload teachers when department changes (for SuperAdmin navigation)
+      hodBottomBarController.reloadTeachers();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       return DashboardScaffold(
+        showBackButton: Get.find<UserRoleService>().isSuperAdmin,
         headerContent: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,

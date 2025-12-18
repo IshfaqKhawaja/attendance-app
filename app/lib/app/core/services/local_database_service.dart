@@ -19,13 +19,21 @@ import 'local_database_service_mobile.dart'
 class LocalDatabaseService extends BaseService {
   static LocalDatabaseService get to => Get.find();
 
-  late final db_impl.LocalDatabaseImpl _impl;
+  db_impl.LocalDatabaseImpl? _impl;
+  bool _initialized = false;
 
   @override
   Future<void> initialize() async {
+    // Prevent double initialization
+    if (_initialized) {
+      Get.log('LocalDatabaseService already initialized, skipping');
+      return;
+    }
+
     try {
       _impl = db_impl.LocalDatabaseImpl();
-      await _impl.initialize();
+      await _impl!.initialize();
+      _initialized = true;
       Get.log('LocalDatabaseService initialized (Platform: ${PlatformUtils.platformName})');
     } catch (e) {
       Get.log('Failed to initialize LocalDatabaseService: $e');
@@ -38,24 +46,24 @@ class LocalDatabaseService extends BaseService {
 
   // Student operations
   Future<void> insertStudent(Map<String, dynamic> student) async {
-    await _impl.insertStudent(student);
+    await _impl?.insertStudent(student);
   }
 
   Future<List<Map<String, dynamic>>> getStudents({String? courseId}) async {
-    return await _impl.getStudents(courseId: courseId);
+    return await _impl?.getStudents(courseId: courseId) ?? [];
   }
 
   Future<Map<String, dynamic>?> getStudent(String studentId) async {
-    return await _impl.getStudent(studentId);
+    return await _impl?.getStudent(studentId);
   }
 
   // Attendance operations
   Future<void> insertAttendance(Map<String, dynamic> attendance) async {
-    await _impl.insertAttendance(attendance);
+    await _impl?.insertAttendance(attendance);
   }
 
   Future<void> insertBulkAttendance(List<Map<String, dynamic>> attendanceList) async {
-    await _impl.insertBulkAttendance(attendanceList);
+    await _impl?.insertBulkAttendance(attendanceList);
   }
 
   Future<List<Map<String, dynamic>>> getAttendance({
@@ -64,60 +72,60 @@ class LocalDatabaseService extends BaseService {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    return await _impl.getAttendance(
+    return await _impl?.getAttendance(
       studentId: studentId,
       courseId: courseId,
       startDate: startDate,
       endDate: endDate,
-    );
+    ) ?? [];
   }
 
   // Course operations
   Future<void> insertCourse(Map<String, dynamic> course) async {
-    await _impl.insertCourse(course);
+    await _impl?.insertCourse(course);
   }
 
   Future<List<Map<String, dynamic>>> getCourses() async {
-    return await _impl.getCourses();
+    return await _impl?.getCourses() ?? [];
   }
 
   // Synchronization operations
   Future<void> addToSyncQueue(String tableName, String recordId, String action, Map<String, dynamic> data) async {
-    await _impl.addToSyncQueue(tableName, recordId, action, data);
+    await _impl?.addToSyncQueue(tableName, recordId, action, data);
   }
 
   Future<List<Map<String, dynamic>>> getPendingSyncItems() async {
-    return await _impl.getPendingSyncItems();
+    return await _impl?.getPendingSyncItems() ?? [];
   }
 
   Future<void> markAsSynced(String tableName, String recordId) async {
-    await _impl.markAsSynced(tableName, recordId);
+    await _impl?.markAsSynced(tableName, recordId);
   }
 
   Future<void> removeSyncItem(int syncId) async {
-    await _impl.removeSyncItem(syncId);
+    await _impl?.removeSyncItem(syncId);
   }
 
   // Utility operations
   Future<int> getUnsyncedCount(String tableName) async {
-    return await _impl.getUnsyncedCount(tableName);
+    return await _impl?.getUnsyncedCount(tableName) ?? 0;
   }
 
   Future<void> clearTable(String tableName) async {
-    await _impl.clearTable(tableName);
+    await _impl?.clearTable(tableName);
   }
 
   Future<void> clearAllData() async {
-    await _impl.clearAllData();
+    await _impl?.clearAllData();
   }
 
   Future<Map<String, int>> getDatabaseStats() async {
-    return await _impl.getDatabaseStats();
+    return await _impl?.getDatabaseStats() ?? {};
   }
 
   @override
   void onClose() {
-    _impl.dispose();
+    _impl?.dispose();
     Get.log('LocalDatabaseService disposed');
     super.onClose();
   }

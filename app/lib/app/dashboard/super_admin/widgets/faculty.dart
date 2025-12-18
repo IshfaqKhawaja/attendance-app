@@ -8,12 +8,14 @@ class Faculty extends StatelessWidget {
   final String factName;
   final String factId;
   final int index;
-  
+  final bool useMargin;
+
   const Faculty({
     super.key,
     required this.factName,
     required this.factId,
     required this.index,
+    this.useMargin = true,
   });
 
   Color _getGradientColor(int index) {
@@ -28,9 +30,9 @@ class Faculty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gradientColor = _getGradientColor(index);
-    
+
     return Container(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: useMargin ? EdgeInsets.only(bottom: 16) : EdgeInsets.zero,
       child: Material(
         elevation: 4,
         borderRadius: BorderRadius.circular(16),
@@ -75,30 +77,37 @@ class Faculty extends StatelessWidget {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           factName,
                           style: GoogleFonts.openSans(
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: 6),
+                        SizedBox(height: 4),
                         Row(
                           children: [
                             Icon(
                               Icons.badge_outlined,
-                              size: 16,
+                              size: 14,
                               color: Colors.white.withValues(alpha: 0.9),
                             ),
-                            SizedBox(width: 6),
-                            Text(
-                              'ID: $factId',
-                              style: GoogleFonts.openSans(
-                                fontSize: 14,
-                                color: Colors.white.withValues(alpha: 0.9),
-                                fontWeight: FontWeight.w500,
+                            SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                'ID: $factId',
+                                style: GoogleFonts.openSans(
+                                  fontSize: 12,
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],

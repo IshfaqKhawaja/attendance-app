@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +19,9 @@ class AddSemester extends StatefulWidget {
 class _AddSemesterState extends State<AddSemester> {
   final AddSemesterController addSemesterController = Get.put(AddSemesterController());
 
+  // Max width for dialog on web
+  static const double maxDialogWidth = 400;
+
   @override
   void initState() {
     super.initState();
@@ -27,11 +31,14 @@ class _AddSemesterState extends State<AddSemester> {
   @override
   Widget build(BuildContext context) {
     final sizedBox = SizedBox(height: 20);
-    final height = Get.size.height * 0.35;
-    
+
     return Container(
       padding: const EdgeInsets.all(10.0),
-      height: height,
+      width: kIsWeb ? null : Get.width * 0.9,
+      constraints: BoxConstraints(
+        maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
+        maxHeight: Get.size.height * 0.45,
+      ),
       child: Obx((){
         final startDate = addSemesterController.startDate.value;
         final endDate = addSemesterController.endDate.value;
