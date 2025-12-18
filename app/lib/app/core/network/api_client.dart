@@ -1,27 +1,37 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
+
 import 'endpoints.dart';
 
 typedef UnauthorizedHandler = Future<bool> Function();
 
 class ApiClient {
-  final http.Client _client;
+  late final Dio _dio;
   final Duration timeout;
   final Map<String, String> defaultHeaders;
   final Future<String?> Function()? tokenProvider;
   final UnauthorizedHandler? onUnauthorized;
 
   ApiClient({
-    http.Client? client,
-    this.timeout = const Duration(seconds: 10),
+    Dio? dio,
+    this.timeout = const Duration(seconds: 30),
     this.defaultHeaders = const {"Accept": "application/json"},
     this.tokenProvider,
     this.onUnauthorized,
-  }) : _client = client ?? http.Client();
+  }) {
+    _dio = dio ?? Dio(BaseOptions(
+      connectTimeout: timeout,
+      receiveTimeout: timeout,
+      // sendTimeout causes issues on web for GET requests without body
+      sendTimeout: kIsWeb ? null : timeout,
+      headers: defaultHeaders,
+      // Important for web CORS
+      extra: {'withCredentials': false},
+    ));
+  }
 
   /// Normalize URL to ensure it's absolute
   String _normalizeUrl(String url) {
@@ -33,7 +43,7 @@ class ApiClient {
     if (tokenProvider != null) {
       final token = await tokenProvider!.call();
       if (token != null && token.isNotEmpty) {
-        merged['Authorization'] = 'Bearer ' + token;
+        merged['Authorization'] = 'Bearer $token';
       }
     }
     return merged;
@@ -42,20 +52,33 @@ class ApiClient {
   Future<Map<String, dynamic>> getJson(String url, {Map<String, String>? headers}) async {
     final normalizedUrl = _normalizeUrl(url);
     final mergedHeaders = await _authHeaders(headers ?? const {});
-    Future<http.Response> run() => _client.get(Uri.parse(normalizedUrl), headers: mergedHeaders).timeout(timeout);
-    http.Response res = await run();
-    if (res.statusCode == 401 && onUnauthorized != null) {
-      if (await onUnauthorized!.call()) {
-        final retryHeaders = await _authHeaders(headers ?? const {});
-        res = await _client.get(Uri.parse(normalizedUrl), headers: retryHeaders).timeout(timeout);
+
+    try {
+      Response response = await _dio.get(
+        normalizedUrl,
+        options: Options(headers: mergedHeaders),
+      );
+
+      if (response.statusCode == 401 && onUnauthorized != null) {
+        if (await onUnauthorized!.call()) {
+          final retryHeaders = await _authHeaders(headers ?? const {});
+          response = await _dio.get(
+            normalizedUrl,
+            options: Options(headers: retryHeaders),
+          );
+        }
       }
+
+      final data = response.data;
+      if (data is Map<String, dynamic>) return data;
+      if (data is String) return jsonDecode(data) as Map<String, dynamic>;
+      throw const FormatException('Invalid JSON payload: expected an object');
+    } on DioException catch (e) {
+      throw HttpException(
+        e.response?.statusCode ?? 500,
+        e.response?.data?.toString() ?? e.message ?? 'Network error',
+      );
     }
-    if (res.statusCode < 200 || res.statusCode >= 300) {
-      throw HttpException(res.statusCode, res.body);
-    }
-    final json = jsonDecode(res.body);
-    if (json is Map<String, dynamic>) return json;
-    throw const FormatException('Invalid JSON payload: expected an object');
   }
 
   Future<Map<String, dynamic>> postJson(String url, Map<String, dynamic> body,
@@ -65,28 +88,38 @@ class ApiClient {
       'Content-Type': 'application/json',
       ...?headers,
     });
-    Future<http.Response> run() => _client
-        .post(Uri.parse(normalizedUrl), headers: mergedHeaders, body: jsonEncode(body))
-        .timeout(timeout);
-    http.Response res = await run();
 
-    if (res.statusCode == 401 && onUnauthorized != null) {
-      if (await onUnauthorized!.call()) {
-        final retryHeaders = await _authHeaders({
-          'Content-Type': 'application/json',
-          ...?headers,
-        });
-        res = await _client
-            .post(Uri.parse(normalizedUrl), headers: retryHeaders, body: jsonEncode(body))
-            .timeout(timeout);
+    try {
+      Response response = await _dio.post(
+        normalizedUrl,
+        data: body,
+        options: Options(headers: mergedHeaders),
+      );
+
+      if (response.statusCode == 401 && onUnauthorized != null) {
+        if (await onUnauthorized!.call()) {
+          final retryHeaders = await _authHeaders({
+            'Content-Type': 'application/json',
+            ...?headers,
+          });
+          response = await _dio.post(
+            normalizedUrl,
+            data: body,
+            options: Options(headers: retryHeaders),
+          );
+        }
       }
+
+      final data = response.data;
+      if (data is Map<String, dynamic>) return data;
+      if (data is String) return jsonDecode(data) as Map<String, dynamic>;
+      throw const FormatException('Invalid JSON payload: expected an object');
+    } on DioException catch (e) {
+      throw HttpException(
+        e.response?.statusCode ?? 500,
+        e.response?.data?.toString() ?? e.message ?? 'Network error',
+      );
     }
-    if (res.statusCode < 200 || res.statusCode >= 300) {
-      throw HttpException(res.statusCode, res.body);
-    }
-    final json = jsonDecode(res.body);
-    if (json is Map<String, dynamic>) return json;
-    throw const FormatException('Invalid JSON payload: expected an object');
   }
 
   Future<Uint8List> postBytes(String url, Map<String, dynamic> body,
@@ -96,82 +129,135 @@ class ApiClient {
       'Content-Type': 'application/json',
       ...?headers,
     });
-    Future<http.Response> run() => _client
-        .post(Uri.parse(normalizedUrl), headers: mergedHeaders, body: jsonEncode(body))
-        .timeout(timeout);
-    http.Response res = await run();
-    if (res.statusCode == 401 && onUnauthorized != null) {
-      if (await onUnauthorized!.call()) {
-        final retryHeaders = await _authHeaders({
-          'Content-Type': 'application/json',
-          ...?headers,
-        });
-        res = await _client
-            .post(Uri.parse(normalizedUrl), headers: retryHeaders, body: jsonEncode(body))
-            .timeout(timeout);
+
+    try {
+      Response<List<int>> response = await _dio.post(
+        normalizedUrl,
+        data: body,
+        options: Options(
+          headers: mergedHeaders,
+          responseType: ResponseType.bytes,
+        ),
+      );
+
+      if (response.statusCode == 401 && onUnauthorized != null) {
+        if (await onUnauthorized!.call()) {
+          final retryHeaders = await _authHeaders({
+            'Content-Type': 'application/json',
+            ...?headers,
+          });
+          response = await _dio.post(
+            normalizedUrl,
+            data: body,
+            options: Options(
+              headers: retryHeaders,
+              responseType: ResponseType.bytes,
+            ),
+          );
+        }
       }
+
+      return Uint8List.fromList(response.data ?? []);
+    } on DioException catch (e) {
+      throw HttpException(
+        e.response?.statusCode ?? 500,
+        e.response?.data?.toString() ?? e.message ?? 'Network error',
+      );
     }
-    if (res.statusCode < 200 || res.statusCode >= 300) {
-      throw HttpException(res.statusCode, 'Binary response status: ${res.statusCode}');
-    }
-    return res.bodyBytes;
   }
 
-  
+  /// Upload File to Server (mobile only - web uses different approach)
+  Future<Map<String, dynamic>> uploadFile(
+    String filePath,
+    String fileName,
+    Map<String, String> fields, {
+    String url = '',
+    Map<String, String>? headers,
+  }) async {
+    if (kIsWeb) {
+      throw UnsupportedError('File upload from path not supported on web. Use uploadFileBytes instead.');
+    }
 
-// Upload File to Server:
-Future<Map<String, dynamic>> uploadFile(
-  String url,
-  File file,
-  String fileName,
-  Map<String, String> fields, {
-  Map<String, String>? headers,
-}) async {
-  final normalizedUrl = _normalizeUrl(url);
-  final mergedHeaders = await _authHeaders(headers ?? const {});
-  try {
-    // 1. Create a FormData object to hold multipart data.
-    final formData = FormData.fromMap({
-      ...fields,
-      'file': await MultipartFile.fromFile(
-        file.path,
-        filename: fileName,
-      ),
-    });
+    final normalizedUrl = _normalizeUrl(url);
+    final mergedHeaders = await _authHeaders(headers ?? const {});
 
-    // 2. Send the request using Dio with merged headers.
-    final dio = Dio();
-    dio.options.headers = mergedHeaders;
-    final response = await dio.post(
-      normalizedUrl,
-      data: formData,
-      onSendProgress: (int sent, int total) {
-        if (total != 0) {
-          print('Uploading... ${((sent / total) * 100).toStringAsFixed(0)}%');
-        }
-      },
-    );
+    try {
+      final formData = FormData.fromMap({
+        ...fields,
+        'file': await MultipartFile.fromFile(
+          filePath,
+          filename: fileName,
+        ),
+      });
 
-    // 3. Handle the response.
-    if (response.statusCode == 200) {
+      final response = await _dio.post(
+        normalizedUrl,
+        data: formData,
+        options: Options(headers: mergedHeaders),
+        onSendProgress: (int sent, int total) {
+          if (total != 0) {
+            debugPrint('Uploading... ${((sent / total) * 100).toStringAsFixed(0)}%');
+          }
+        },
+      );
+
       final data = response.data;
       if (data is Map<String, dynamic>) return data;
       if (data is String) return jsonDecode(data) as Map<String, dynamic>;
       return Map<String, dynamic>.from(data);
-    } else {
-      throw HttpException(response.statusCode ?? 500, response.data.toString());
+    } on DioException catch (e) {
+      throw HttpException(
+        e.response?.statusCode ?? 500,
+        e.response?.data?.toString() ?? e.message ?? 'Upload failed',
+      );
     }
-  } on DioException catch (e) { // More specific error handling for Dio
-    throw HttpException(e.response?.statusCode ?? 500, e.response?.data?.toString() ?? e.message ?? e.toString());
-  } catch (e) {
-    throw HttpException(500, 'An unexpected error occurred: $e');
   }
+
+  /// Upload file bytes (works on both web and mobile)
+  Future<Map<String, dynamic>> uploadFileBytes(
+    Uint8List bytes,
+    String fileName,
+    Map<String, String> fields, {
+    String url = '',
+    Map<String, String>? headers,
+  }) async {
+    final normalizedUrl = _normalizeUrl(url);
+    final mergedHeaders = await _authHeaders(headers ?? const {});
+
+    try {
+      final formData = FormData.fromMap({
+        ...fields,
+        'file': MultipartFile.fromBytes(
+          bytes,
+          filename: fileName,
+        ),
+      });
+
+      final response = await _dio.post(
+        normalizedUrl,
+        data: formData,
+        options: Options(headers: mergedHeaders),
+        onSendProgress: (int sent, int total) {
+          if (total != 0) {
+            debugPrint('Uploading... ${((sent / total) * 100).toStringAsFixed(0)}%');
+          }
+        },
+      );
+
+      final data = response.data;
+      if (data is Map<String, dynamic>) return data;
+      if (data is String) return jsonDecode(data) as Map<String, dynamic>;
+      return Map<String, dynamic>.from(data);
+    } on DioException catch (e) {
+      throw HttpException(
+        e.response?.statusCode ?? 500,
+        e.response?.data?.toString() ?? e.message ?? 'Upload failed',
+      );
+    }
+  }
+
+  void close() => _dio.close();
 }
-
-
-void close() => _client.close();
-}
-
 
 class HttpException implements Exception {
   final int statusCode;

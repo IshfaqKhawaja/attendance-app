@@ -1,11 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 import '../../models/student_model.dart';
 import '../../core/network/endpoints.dart';
 import '../../core/network/api_client.dart';
+import '../../core/services/file_service.dart';
 import '../models/student_attendence.dart';
 
 class CourseController extends GetxController {
@@ -205,8 +203,6 @@ class CourseController extends GetxController {
 
   Future<void> generateReport(String courseName, DateTime startDate, DateTime endDate) async {
   try {
-    
-
     final bytes = await client.postBytes(
       Endpoints.generateAttendanceReport,
       {
@@ -217,14 +213,33 @@ class CourseController extends GetxController {
       },
     );
 
-      // 📁 Get download directory
-      final dir = await getApplicationDocumentsDirectory(); // For internal storage
-      final filePath = "${dir.path}/attendance_report_${DateTime.now().millisecondsSinceEpoch}.pdf";
-      final file = File(filePath);
-      await file.writeAsBytes(bytes);
-      await OpenFile.open(filePath);
-      // Get.snackbar("Success", "PDF saved to $filePath", colorText: Colors.green, snackPosition: SnackPosition.BOTTOM,
-      //   duration: Duration(seconds: 5));
+    if (bytes.isEmpty) {
+      Get.snackbar("No Data", "No attendance records found for the selected date range.",
+        colorText: Colors.orange,
+      );
+      return;
+    }
+
+    final fileName = "attendance_report_${DateTime.now().millisecondsSinceEpoch}.pdf";
+    final filePath = await FileService.saveFile(
+      bytes: bytes,
+      fileName: fileName,
+    );
+
+    if (filePath != null) {
+      final opened = await FileService.openFile(filePath);
+      if (opened) {
+        Get.snackbar("Success", "Report opened successfully", colorText: Colors.green);
+      } else {
+        if (FileService.isSupported) {
+          await FileService.shareFile(filePath, text: 'Attendance Report');
+        } else {
+          Get.snackbar("Success", "Report downloaded successfully", colorText: Colors.green);
+        }
+      }
+    } else {
+      Get.snackbar("Error", "Failed to save report", colorText: Colors.red);
+    }
   } catch (e) {
     print(e);
     Get.snackbar("Error", "Something went wrong: $e", colorText: Colors.red);

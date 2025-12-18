@@ -69,11 +69,11 @@ app = FastAPI(
 # For web app support, we allow all origins without credentials for preflight
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins_list,
-    allow_credentials=settings.ALLOWED_ORIGINS != "*",  # Disable credentials for wildcard
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allow_headers=["*"],
-    expose_headers=["*"],
+    allow_origins=["*"],  # Allow all origins for web app support
+    allow_credentials=False,  # Must be False when using wildcard origins
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+    expose_headers=["*"],  # Expose all headers to browser
 )
 
 # Add rate limiting middleware

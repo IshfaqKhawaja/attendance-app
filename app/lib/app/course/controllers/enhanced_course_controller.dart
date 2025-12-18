@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../core/core.dart';
+import '../../core/services/file_service.dart';
 import '../../models/student_model.dart';
 import '../models/student_attendence.dart';
 
@@ -231,7 +229,7 @@ class EnhancedCourseController extends BaseController {
   Future<void> generateReport(String courseName, DateTime startDate, DateTime endDate) async {
     try {
       isGeneratingReport.value = true;
-      
+
       final bytes = await _apiClient.postBytes(
         Endpoints.generateAttendanceReport,
         {
@@ -242,18 +240,33 @@ class EnhancedCourseController extends BaseController {
         },
       );
 
-      // Save file to device
-      final dir = await getApplicationDocumentsDirectory();
+      if (bytes.isEmpty) {
+        Get.snackbar("No Data", "No attendance records found for the selected date range.",
+          colorText: Colors.orange,
+        );
+        return;
+      }
+
       final fileName = 'attendance_report_${courseId}_${DateTime.now().millisecondsSinceEpoch}.pdf';
-      final filePath = '${dir.path}/$fileName';
-      final file = File(filePath);
-      
-      await file.writeAsBytes(bytes);
-      
-      // Open file
-      await OpenFile.open(filePath);
-      
-      Get.snackbar("Success", "Report generated and saved", colorText: Colors.green);
+      final filePath = await FileService.saveFile(
+        bytes: bytes,
+        fileName: fileName,
+      );
+
+      if (filePath != null) {
+        final opened = await FileService.openFile(filePath);
+        if (opened) {
+          Get.snackbar("Success", "Report generated and opened", colorText: Colors.green);
+        } else {
+          if (FileService.isSupported) {
+            await FileService.shareFile(filePath, text: 'Attendance Report');
+          } else {
+            Get.snackbar("Success", "Report downloaded successfully", colorText: Colors.green);
+          }
+        }
+      } else {
+        Get.snackbar("Error", "Failed to save report", colorText: Colors.red);
+      }
     } catch (e) {
       _errorService.logError('Failed to generate report: $e');
       Get.snackbar("Error", "Failed to generate report: $e", colorText: Colors.red);

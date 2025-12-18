@@ -1,18 +1,13 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:app/app/signin/controllers/signin_controller.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// http not needed after refactor
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-
 import '../../core/network/endpoints.dart';
 import '../../core/network/api_client.dart';
+import '../../core/services/file_service.dart';
 import '../../models/course_model.dart';
 import '../../models/student_model.dart';
 import '../../signin/models/teacher_model.dart';
@@ -35,14 +30,6 @@ class CourseBySemesterIdController  extends GetxController{
         duration: const Duration(seconds: 2),
       );
 
-      // Use external storage for better file sharing with other apps
-      Directory? dir;
-      if (Platform.isAndroid) {
-        dir = await getExternalStorageDirectory();
-      }
-      dir ??= await getApplicationDocumentsDirectory();
-
-      String filePath = "${dir.path}/course_report_$courseId${DateTime.now().millisecondsSinceEpoch}.xlsx";
       final bytes = await client.postBytes(
         Endpoints.generateCourseReport,
         {
@@ -60,31 +47,38 @@ class CourseBySemesterIdController  extends GetxController{
         return;
       }
 
-      final file = File(filePath);
-      await file.writeAsBytes(bytes);
+      final fileName = "course_report_$courseId${DateTime.now().millisecondsSinceEpoch}.xlsx";
+      final filePath = await FileService.saveFile(
+        bytes: bytes,
+        fileName: fileName,
+      );
 
-      // Try to open the file, fallback to share if no app available
-      final result = await OpenFile.open(filePath);
-      if (result.type == ResultType.done) {
-        Get.snackbar("Success", "Report opened successfully",
-          colorText: Colors.green,
-        );
+      if (filePath != null) {
+        // Try to open the file (mobile only)
+        final opened = await FileService.openFile(filePath);
+        if (opened) {
+          Get.snackbar("Success", "Report opened successfully",
+            colorText: Colors.green,
+          );
+        } else {
+          // Share the file or show download success on web
+          if (FileService.isSupported) {
+            Get.snackbar("Info", "Opening share options. You can save or open the file with any spreadsheet app.",
+              colorText: Colors.blue,
+              duration: const Duration(seconds: 3),
+            );
+            await FileService.shareFile(filePath, text: 'Course Attendance Report');
+          } else {
+            Get.snackbar("Success", "Report downloaded successfully",
+              colorText: Colors.green,
+            );
+          }
+        }
       } else {
-        // Fallback: Use share to let user choose how to handle the file
-        Get.snackbar("Info", "Opening share options. You can save or open the file with any spreadsheet app.",
-          colorText: Colors.blue,
-          duration: const Duration(seconds: 3),
-        );
-        await Share.shareXFiles(
-          [XFile(filePath)],
-          text: 'Course Attendance Report',
+        Get.snackbar("Error", "Failed to save report",
+          colorText: Colors.red,
         );
       }
-    } on SocketException {
-      Get.snackbar("Network Error", "Unable to connect to server. Please check your internet connection.",
-        colorText: Colors.red,
-        duration: const Duration(seconds: 4),
-      );
     } on TimeoutException {
       Get.snackbar("Timeout", "Server took too long to respond. Please try again later.",
         colorText: Colors.red,
@@ -99,6 +93,8 @@ class CourseBySemesterIdController  extends GetxController{
         errorMessage = "Course not found. It may have been deleted.";
       } else if (e.toString().contains("500")) {
         errorMessage = "Server error. Please try again later or contact support.";
+      } else if (e.toString().contains("Failed to fetch") || e.toString().contains("SocketException")) {
+        errorMessage = "Unable to connect to server. Please check your internet connection.";
       }
       Get.snackbar("Error", errorMessage,
         colorText: Colors.red,
@@ -284,22 +280,38 @@ Future<void> selectAndUploadCSVFile(String semId) async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['csv'],
+      withData: true, // Required for web support
     );
     if (result == null || result.files.isEmpty){
       Get.snackbar('Error', 'No file selected');
       return;
     }
-    final file = File(result.files.single.path!);
-    final fileName = result.files.single.name;
 
-    // Upload the file
-    final res = await client.uploadFile(
-      Endpoints.addStudentsFromFile,
-      file,
-      fileName,
-      {"sem_id": semId},
-    );
-    print(res);
+    final file = result.files.single;
+    final fileName = file.name;
+
+    // Use bytes for cross-platform compatibility (works on web and mobile)
+    if (file.bytes != null) {
+      final res = await client.uploadFileBytes(
+        file.bytes!,
+        fileName,
+        {"sem_id": semId},
+        url: Endpoints.addStudentsFromFile,
+      );
+      print(res);
+    } else if (file.path != null) {
+      // Fallback for mobile when bytes not available
+      final res = await client.uploadFile(
+        file.path!,
+        fileName,
+        {"sem_id": semId},
+        url: Endpoints.addStudentsFromFile,
+      );
+      print(res);
+    } else {
+      throw Exception('No file data available');
+    }
+
     Get.snackbar('Success', 'File uploaded successfully',
       colorText: Colors.green,
     );
@@ -366,14 +378,6 @@ void attendanceForSem(String semId) async {
         duration: const Duration(seconds: 2),
       );
 
-      // Use external storage for better file sharing with other apps
-      Directory? dir;
-      if (Platform.isAndroid) {
-        dir = await getExternalStorageDirectory();
-      }
-      dir ??= await getApplicationDocumentsDirectory();
-
-      String filePath = "${dir.path}/attendance_report_$semId${DateTime.now().millisecondsSinceEpoch}.xlsx";
       final bytes = await client.postBytes(
         Endpoints.generateAttendanceReportBySemId,
         {
@@ -389,31 +393,38 @@ void attendanceForSem(String semId) async {
         return;
       }
 
-      final file = File(filePath);
-      await file.writeAsBytes(bytes);
+      final fileName = "attendance_report_$semId${DateTime.now().millisecondsSinceEpoch}.xlsx";
+      final filePath = await FileService.saveFile(
+        bytes: bytes,
+        fileName: fileName,
+      );
 
-      // Try to open the file, fallback to share if no app available
-      final result = await OpenFile.open(filePath);
-      if (result.type == ResultType.done) {
-        Get.snackbar("Success", "Report opened successfully",
-          colorText: Colors.green,
-        );
+      if (filePath != null) {
+        // Try to open the file (mobile only)
+        final opened = await FileService.openFile(filePath);
+        if (opened) {
+          Get.snackbar("Success", "Report opened successfully",
+            colorText: Colors.green,
+          );
+        } else {
+          // Share the file or show download success on web
+          if (FileService.isSupported) {
+            Get.snackbar("Info", "Opening share options. You can save or open the file with any spreadsheet app.",
+              colorText: Colors.blue,
+              duration: const Duration(seconds: 3),
+            );
+            await FileService.shareFile(filePath, text: 'Semester Attendance Report');
+          } else {
+            Get.snackbar("Success", "Report downloaded successfully",
+              colorText: Colors.green,
+            );
+          }
+        }
       } else {
-        // Fallback: Use share to let user choose how to handle the file
-        Get.snackbar("Info", "Opening share options. You can save or open the file with any spreadsheet app.",
-          colorText: Colors.blue,
-          duration: const Duration(seconds: 3),
-        );
-        await Share.shareXFiles(
-          [XFile(filePath)],
-          text: 'Semester Attendance Report',
+        Get.snackbar("Error", "Failed to save report",
+          colorText: Colors.red,
         );
       }
-    } on SocketException {
-      Get.snackbar("Network Error", "Unable to connect to server. Please check your internet connection.",
-        colorText: Colors.red,
-        duration: const Duration(seconds: 4),
-      );
     } on TimeoutException {
       Get.snackbar("Timeout", "Server took too long to respond. Please try again later.",
         colorText: Colors.red,
@@ -428,6 +439,8 @@ void attendanceForSem(String semId) async {
         errorMessage = "Semester not found. It may have been deleted.";
       } else if (e.toString().contains("500")) {
         errorMessage = "Server error. Please try again later or contact support.";
+      } else if (e.toString().contains("Failed to fetch") || e.toString().contains("SocketException")) {
+        errorMessage = "Unable to connect to server. Please check your internet connection.";
       }
       Get.snackbar("Error", errorMessage,
         colorText: Colors.red,
