@@ -32,8 +32,8 @@ class AppConfig {
     // For iOS Simulator: use localhost
     // For Physical Device: use your computer's IP or server IP
     // apiBaseUrl: 'http://10.0.2.2:8000',  // Android Emulator
-    apiBaseUrl: 'http://localhost:8000',
-    // apiBaseUrl: 'http://172.105.41.86',
+    // apiBaseUrl: 'http://localhost:8000',
+    apiBaseUrl: 'http://172.105.41.86',
     enableLogging: true,
     enableDebugMode: true,
     apiTimeout: 30,

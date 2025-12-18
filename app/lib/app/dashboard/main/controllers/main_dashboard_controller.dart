@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 // Core imports
 import '../../../core/core.dart';
+import '../../../core/utils/platform_utils.dart';
 import '../../../routes/routes.dart';
 
 // Feature imports
@@ -10,9 +11,12 @@ import '../../../signin/controllers/access_controller.dart';
 
 class MainDashboardController extends BaseController {
   SignInController? _signInController;
-  
+
   // Observable to track which dashboard should be shown
   final currentDashboard = ''.obs;
+
+  // Observable to track if teacher is trying to access web
+  final isTeacherOnWeb = false.obs;
 
   @override
   void onInit() {
@@ -54,13 +58,23 @@ class MainDashboardController extends BaseController {
       // Determine dashboard based on user type
       if (userData.type == "SUPER_ADMIN") {
         currentDashboard.value = Routes.SUPER_ADMIN_DASHBOARD;
+        isTeacherOnWeb.value = false;
       } else if (userData.type == "HOD") {
         currentDashboard.value = Routes.HOD_DASHBOARD;
+        isTeacherOnWeb.value = false;
       } else if (teacherData.teacherId.isNotEmpty) {
-        currentDashboard.value = Routes.TEACHER_DASHBOARD;
+        // Check if teacher is trying to access from web
+        if (PlatformUtils.isWeb) {
+          isTeacherOnWeb.value = true;
+          currentDashboard.value = ''; // No dashboard for teacher on web
+        } else {
+          currentDashboard.value = Routes.TEACHER_DASHBOARD;
+          isTeacherOnWeb.value = false;
+        }
       } else {
         // Fallback to sign in if no valid user data
         currentDashboard.value = Routes.SIGN_IN;
+        isTeacherOnWeb.value = false;
       }
     });
   }
@@ -84,12 +98,15 @@ class MainDashboardController extends BaseController {
 
   /// Check if user is super admin
   bool get isSuperAdmin => (_signInController?.userData.value.type ?? "") == "SUPER_ADMIN";
-  
+
   /// Check if user is HOD
   bool get isHod => (_signInController?.userData.value.type ?? "") == "HOD";
-  
+
   /// Check if user is teacher
   bool get isTeacher => (_signInController?.teacherData.value.teacherId ?? "").isNotEmpty;
+
+  /// Check if running on web
+  bool get isWeb => PlatformUtils.isWeb;
 
   /// Get user's department ID (works for both HOD and Teacher)
   String? get userDeptId {
@@ -112,13 +129,13 @@ class MainDashboardController extends BaseController {
       () async {
         // Clear stored tokens
         await AccessController.clearTokens();
-        
+
         // Reset all user data in SignInController if it exists
         if (_signInController != null) {
           _signInController!.resetUserData();
           _signInController!.clearForm();
         }
-        
+
         // Clear specific controllers but keep SignInController
         Get.delete<MainDashboardController>();
         // Clear other dashboard controllers
@@ -129,7 +146,7 @@ class MainDashboardController extends BaseController {
         } catch (e) {
           // Controllers might not exist, that's fine
         }
-        
+
         // Navigate to sign in page
         safeNavigateOffAll(Routes.SIGN_IN);
       },

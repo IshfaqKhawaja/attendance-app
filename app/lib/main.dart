@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
@@ -9,17 +11,19 @@ import 'app/routes/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize dependency injection system
   await DependencyInjection.init();
-  
-  // Configure system UI
-  _configureSystemUI();
-  
+
+  // Configure system UI (only for mobile platforms)
+  if (!kIsWeb) {
+    _configureSystemUI();
+  }
+
   runApp(const AttendanceApp());
 }
 
-/// Configure system UI appearance
+/// Configure system UI appearance (mobile only)
 void _configureSystemUI() {
   // Enable edge-to-edge display
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -49,6 +53,17 @@ class AttendanceApp extends StatelessWidget {
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
+      // Add scroll behavior for web (enables mouse scroll)
+      scrollBehavior: kIsWeb
+          ? const MaterialScrollBehavior().copyWith(
+              scrollbars: true,
+              dragDevices: {
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+                PointerDeviceKind.trackpad,
+              },
+            )
+          : null,
       // Add global error handling
       builder: (context, child) {
         return child ?? const SizedBox.shrink();

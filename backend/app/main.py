@@ -65,12 +65,15 @@ app = FastAPI(
 )
 
 # Add CORS middleware with configured origins
+# Note: When allow_origins=["*"], allow_credentials must be False
+# For web app support, we allow all origins without credentials for preflight
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_origins_list,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allow_credentials=settings.ALLOWED_ORIGINS != "*",  # Disable credentials for wildcard
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Add rate limiting middleware

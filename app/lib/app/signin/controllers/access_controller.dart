@@ -1,22 +1,23 @@
 // Access Token and Refresh Token Related INFO:
 import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../../core/utils/platform_utils.dart';
+
+// Conditional imports for storage
+import 'access_controller_mobile.dart'
+    if (dart.library.html) 'access_controller_web.dart' as storage_impl;
 
 class AccessController {
   static Future<void> saveTokens(String access, String refresh) async {
-    final secureStorage = FlutterSecureStorage();
-    await secureStorage.write(key: 'access_token', value: access);
-    await secureStorage.write(key: 'refresh_token', value: refresh);
+    await storage_impl.StorageImpl.saveTokens(access, refresh);
   }
 
   static Future<String?> getAccessToken() async {
-    final secureStorage = FlutterSecureStorage();
-    return await secureStorage.read(key: 'access_token');
+    return await storage_impl.StorageImpl.getAccessToken();
   }
 
   static Future<String?> getRefreshToke() async {
-    final secureStorage = FlutterSecureStorage();
-    return await secureStorage.read(key: 'refresh_token');
+    return await storage_impl.StorageImpl.getRefreshToken();
   }
 
   static Future<Map<String, dynamic>> makeHeader(
@@ -27,25 +28,23 @@ class AccessController {
   }
 
   static Future<void> clearTokens() async {
-    final secureStorage = FlutterSecureStorage();
-    await secureStorage.delete(key: 'access_token');
-    await secureStorage.delete(key: 'refresh_token');
-    await secureStorage.delete(key: 'user_data');
+    await storage_impl.StorageImpl.clearTokens();
   }
 
   /// Save user data for auto-login
   static Future<void> saveUserData(Map<String, dynamic> userData) async {
-    final secureStorage = FlutterSecureStorage();
-    await secureStorage.write(key: 'user_data', value: jsonEncode(userData));
+    await storage_impl.StorageImpl.saveUserData(jsonEncode(userData));
   }
 
   /// Get saved user data
   static Future<Map<String, dynamic>?> getUserData() async {
-    final secureStorage = FlutterSecureStorage();
-    final data = await secureStorage.read(key: 'user_data');
+    final data = await storage_impl.StorageImpl.getUserData();
     if (data != null) {
       return jsonDecode(data) as Map<String, dynamic>;
     }
     return null;
   }
+
+  /// Check if running on web platform
+  static bool get isWeb => PlatformUtils.isWeb;
 }
