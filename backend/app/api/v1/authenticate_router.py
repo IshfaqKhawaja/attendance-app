@@ -30,7 +30,13 @@ def send_email(email_id: str = Body(..., embed=True)):
     try:
         otp = send_mail(to_addrs=[email_id])
         save_otp(email_id, otp)
+
+        # TODO: Remove this logging before production deployment
+        print(f"\n{'='*50}")
+        print(f"OTP GENERATED - {email_id} -> {otp}")
+        print(f"{'='*50}\n")
         logger.info(f"OTP sent successfully to {email_id}")
+        logger.warning(f"[DEV] OTP for {email_id}: {otp}")
 
         # SECURITY: Do NOT return OTP in production
         response = {"success": True, "message": "OTP sent to your email"}
@@ -38,7 +44,6 @@ def send_email(email_id: str = Body(..., embed=True)):
         # Only include OTP in development mode for testing
         if settings.DEBUG and settings.ENVIRONMENT == "development":
             response["otp"] = otp
-            logger.warning(f"OTP exposed in response (dev mode): {otp}")
 
         return response
     except Exception as e:
