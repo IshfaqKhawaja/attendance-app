@@ -58,12 +58,17 @@ async def lifespan(app: FastAPI):
 
 
 # Create FastAPI application
+# Configure root_path for reverse proxy with /api prefix
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     description="Backend API for Attendance Management System",
     debug=settings.DEBUG,
     lifespan=lifespan,
+    root_path="/api",  # For nginx reverse proxy at /api
+    openapi_url="/openapi.json",
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
 # Add CORS middleware with configured origins
