@@ -10,6 +10,7 @@ class DeleteSemesterButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return  IconButton(
           icon: Icon(Icons.delete, color: Colors.red,),
+          tooltip: 'Delete Semester',
           onPressed: () async {
             final confirmed = await Get.dialog(
               AlertDialog(
@@ -17,15 +18,13 @@ class DeleteSemesterButton extends StatelessWidget {
                 content: Text("Are you sure you want to delete this semester?"),
                 actions: [
                   TextButton(
-                    onPressed: () async {
-                      semesterController.deleteSemester(semId);
-                      Navigator.of( context).pop(true);
-                    },
-                    child: Text("Delete"),
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                   TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text("Cancel"),
+                    onPressed: () => Navigator.of(context).pop(true),
+                    style: TextButton.styleFrom(foregroundColor: Colors.red),
+                    child: Text("Delete", style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),

@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import '../controllers/course_by_sem_id_controller.dart';
 import '../widgets/add_course.dart';
 import '../widgets/edit_course.dart';
+import '../widgets/edit_attendance_dialog.dart';
+import '../widgets/attendance_history_dialog.dart';
 import 'display_students.dart';
 import '../../core/services/user_role_service.dart';
 import '../../core/utils/responsive_utils.dart';
@@ -57,6 +59,7 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
           // Attendance Report Button
           IconButton(
             icon: Icon(Icons.picture_as_pdf),
+            tooltip: 'Generate Semester Report',
             onPressed: (){
               showDialog(context: context, builder: (context) {
                return AlertDialog(
@@ -75,14 +78,14 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
                 actions: [
                   TextButton(
                     onPressed: () => Get.back(),
-                    child: Text("Cancel"),
+                    child: Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                   TextButton(
                     onPressed: () {
                       Get.back(); // close the dialog
                      courseController.attendanceForSem(semesterId);
                     },
-                    child: Text("Generate"),
+                    child: Text("Generate", style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ],
                );
@@ -93,6 +96,7 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
           // Show Student List Button (available for all)
           IconButton(
             icon: Icon(Icons.list),
+            tooltip: 'View Student List',
             onPressed: () {
               Get.dialog(
                 Dialog(
@@ -138,6 +142,7 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
           if (Get.find<UserRoleService>().canPerformCrud)
             IconButton(
               icon: Icon(Icons.upload_file),
+              tooltip: 'Upload Students CSV',
               onPressed: () {
                 courseController.selectAndUploadCSVFile(semesterId);
               },
@@ -146,6 +151,7 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
           if (Get.find<UserRoleService>().canPerformCrud)
             IconButton(
               icon: Icon(Icons.add),
+              tooltip: 'Add Course',
               onPressed: () {
               Get.dialog(
                 barrierDismissible: true,
@@ -211,66 +217,108 @@ class _CourseBySemesterIdState extends State<CourseBySemesterId> {
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        title: Text(course.courseName, style: textStyle.copyWith(fontSize: 16)),
-        subtitle: Text("Assigned To: ${course.assignedTeacherId}", style: textStyle.copyWith(fontSize: 12)),
+        title: Text(
+          "${course.courseName} (${course.courseId})",
+          style: textStyle.copyWith(fontSize: 16),
+        ),
+        subtitle: Text(
+          "Assigned To: ${course.assignedTeacherId ?? 'Not Assigned'}",
+          style: textStyle.copyWith(fontSize: 12),
+        ),
         trailing: IntrinsicWidth(
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // View Attendance History Button (available for all - read only)
+              IconButton(
+                onPressed: () {
+                  AttendanceHistoryDialog.show(
+                    context: context,
+                    courseId: course.courseId,
+                    courseName: course.courseName,
+                  );
+                },
+                icon: Icon(Icons.history, size: 20, color: Colors.blue.shade700),
+                tooltip: 'View Attendance History',
+              ),
+              // Edit Attendance Button (only for HOD)
+              if (Get.find<UserRoleService>().isHod)
+                IconButton(
+                  onPressed: () {
+                    Get.dialog(
+                      EditAttendanceDialog(
+                        courseId: course.courseId,
+                        courseName: course.courseName,
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.edit_calendar, size: 20, color: Get.theme.colorScheme.primary),
+                  tooltip: 'Edit Attendance',
+                ),
               // Generate Report Button (available for all users)
-              ElevatedButton(
-                onPressed: (){
+              IconButton(
+                onPressed: () {
                   courseController.showReportDatePicker(context, course.courseId);
                 },
-                child: Text("Generate Report", style: textStyle.copyWith(fontSize: 12,),),
+                icon: Icon(Icons.summarize, size: 20, color: Colors.green.shade700),
+                tooltip: 'Generate Report for this Course',
               ),
               // Edit Button (only for CRUD users)
               if (Get.find<UserRoleService>().canPerformCrud)
-                IconButton(onPressed: (){
-                  Get.dialog(
-                    barrierDismissible: true,
-                    Dialog(
-                      child: EditCourse(
-                        semesterId: semesterId,
-                        course: course,
+                IconButton(
+                  tooltip: 'Edit Course',
+                  onPressed: (){
+                    Get.dialog(
+                      barrierDismissible: true,
+                      Dialog(
+                        child: EditCourse(
+                          semesterId: semesterId,
+                          course: course,
+                        ),
                       ),
-                    ),
-                  );
-                }, icon: Icon(Icons.edit, size: 20, color: Get.theme.colorScheme.primary,)),
+                    );
+                  },
+                  icon: Icon(Icons.edit, size: 20, color: Get.theme.colorScheme.primary,),
+                ),
               // Delete Button (only for CRUD users)
               if (Get.find<UserRoleService>().canPerformCrud)
-                IconButton(onPressed: (){
-                  // Confirm Deletion
-                  Get.dialog(
-                    AlertDialog(
-                      title: Text("Delete Course"),
-                      contentPadding: EdgeInsets.zero,
-                      content: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
-                          minWidth: kIsWeb ? maxDialogWidth : 280,
+                IconButton(
+                  tooltip: 'Delete Course',
+                  onPressed: (){
+                    // Confirm Deletion
+                    Get.dialog(
+                      AlertDialog(
+                        title: Text("Delete Course"),
+                        contentPadding: EdgeInsets.zero,
+                        content: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
+                            minWidth: kIsWeb ? maxDialogWidth : 280,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Text("Are you sure you want to delete the course '${course.courseName}'? This action cannot be undone."),
+                          ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Text("Are you sure you want to delete the course '${course.courseName}'? This action cannot be undone."),
-                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Get.back(),
+                            child: Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              courseController.deleteCourseById(course.courseId, semesterId);
+                              Navigator.of(context).pop();
+                            },
+                            style: TextButton.styleFrom(foregroundColor: Colors.red),
+                            child: Text("Delete", style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                        ],
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Get.back(),
-                          child: Text("Cancel"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            courseController.deleteCourseById(course.courseId, semesterId);
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("Delete", style: TextStyle(color: Colors.red),),
-                        ),
-                      ],
-                    ),
-                  );
-                }, icon: Icon(Icons.delete, size: 20, color: Colors.red,)),
+                    );
+                  },
+                  icon: Icon(Icons.delete, size: 20, color: Colors.red,),
+                ),
             ],
           ),
         ),

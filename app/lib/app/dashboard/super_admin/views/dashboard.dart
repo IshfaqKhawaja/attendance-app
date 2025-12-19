@@ -24,7 +24,7 @@ class Dashboard extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Get.back(result: false),
-            child: const Text('Cancel'),
+            child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           ElevatedButton(
             onPressed: () => Get.back(result: true),
@@ -32,7 +32,7 @@ class Dashboard extends StatelessWidget {
               backgroundColor: Colors.green,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Send SMS'),
+            child: const Text('Send SMS', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),

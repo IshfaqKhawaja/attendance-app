@@ -1,13 +1,47 @@
 import pandas as pd
 from app.db.connection import connection_to_db
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from app.db.models.attendence_model import ReportInput
 
 
-
-def generate_report_by_course_id_xls(course_id: str, start_date: Optional[str] = None, end_date: Optional[str] = None) -> pd.DataFrame:
+def get_course_info(course_id: str) -> Dict[str, str]:
     """
-    Fetches all individual attendance records for a course, handling multiple 
+    Get course, semester, and program information for the report header.
+    """
+    with connection_to_db() as conn:
+        with conn.cursor() as cur:
+            query = """
+                SELECT
+                    c.course_id,
+                    c.course_name,
+                    sem.sem_name,
+                    p.prog_name
+                FROM course c
+                JOIN semester sem ON c.sem_id = sem.sem_id
+                JOIN program p ON sem.prog_id = p.prog_id
+                WHERE c.course_id = %s
+                LIMIT 1;
+            """
+            cur.execute(query, (course_id,))
+            row = cur.fetchone()
+            if row:
+                return {
+                    'course_id': row[0],
+                    'course_name': row[1],
+                    'sem_name': row[2],
+                    'prog_name': row[3]
+                }
+            return {
+                'course_id': course_id,
+                'course_name': 'Unknown Course',
+                'sem_name': 'Unknown Semester',
+                'prog_name': 'Unknown Program'
+            }
+
+
+def generate_report_by_course_id_xls(course_id: str, start_date: Optional[str] = None, end_date: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Fetches all individual attendance records for a course, handling multiple
     sessions per day by assigning a lecture number.
 
     Args:
@@ -16,12 +50,15 @@ def generate_report_by_course_id_xls(course_id: str, start_date: Optional[str] =
         end_date (str, optional): End date (YYYY-MM-DD).
 
     Returns:
-        pd.DataFrame with columns: student_id, student_name, date, lecture_num, status ('P' or 'A').
+        Dict with 'data' (pd.DataFrame) and 'info' (course info dict).
     """
-    # CHANGED: Using 'with' statements for safe connection handling
+    # Get course info for report header
+    course_info = get_course_info(course_id)
+
+    # Using 'with' statements for safe connection handling
     with connection_to_db() as conn:
         with conn.cursor() as cur:
-            # CHANGED: The SQL query now generates a lecture number and formats the status
+            # The SQL query generates a lecture number and formats the status
             query = """
                 WITH NumberedAttendance AS (
                     SELECT
@@ -34,7 +71,7 @@ def generate_report_by_course_id_xls(course_id: str, start_date: Optional[str] =
                     FROM attendance
                     WHERE course_id = %(course_id)s
                 )
-                SELECT 
+                SELECT
                     s.student_id,
                     s.student_name,
                     na.date,
@@ -54,7 +91,7 @@ def generate_report_by_course_id_xls(course_id: str, start_date: Optional[str] =
             if end_date:
                 date_filters.append("na.date <= %(end_date)s")
                 params['end_date'] = end_date
-            
+
             if date_filters:
                 query += " WHERE " + " AND ".join(date_filters)
 
@@ -62,20 +99,21 @@ def generate_report_by_course_id_xls(course_id: str, start_date: Optional[str] =
 
             cur.execute(query, params)
             rows = cur.fetchall()
-            
+
             # Get column names from the cursor description
-            # cur.description can be None (some DB adapters or queries without result sets),
-            # so guard against that to avoid iterating over None.
             if cur.description:
                 columns = [desc[0] for desc in cur.description]
                 df = pd.DataFrame(rows, columns=columns)
             else:
-                # No column description available; let pandas infer column labels
                 df = pd.DataFrame(rows)
-            return df
+
+            return {
+                'data': df,
+                'info': course_info
+            }
 
 
-def generate_report_by_course_id_pdf(report: ReportInput) -> List:
+def generate_report_by_course_id_pdf(report: ReportInput) -> Dict[str, Any]:
     """
     Fetches an aggregated summary of attendance for a course,
     perfect for summary reports like PDFs.
@@ -84,36 +122,25 @@ def generate_report_by_course_id_pdf(report: ReportInput) -> List:
         report (ReportInput): Pydantic model with course_id, start_date, and end_date.
 
     Returns:
-        List of tuples: (student_id, student_name, present_days, total_classes).
+        Dict with 'data' (List of tuples) and 'info' (course info dict).
+
+    Note: Total classes is calculated per student - only counts days where
+          that student has an attendance record. Students who joined late
+          won't be penalized for days before they were enrolled.
     """
+    # Get course info for report header
+    course_info = get_course_info(report.course_id)
+
     with connection_to_db() as conn:
         with conn.cursor() as cur:
-            # Get total number of classes held for this course in the date range
-            # Total classes = maximum attendance records for any student
-            # This represents the actual number of class sessions held
-            total_classes_query = """
-                SELECT COALESCE(MAX(student_attendance_count), 0)
-                FROM (
-                    SELECT COUNT(*) as student_attendance_count
-                    FROM attendance
-                    WHERE course_id = %s
-                      AND date BETWEEN %s AND %s
-                    GROUP BY student_id
-                ) AS student_counts;
-            """
-
-            cur.execute(total_classes_query, (
-                report.course_id, report.start_date, report.end_date
-            ))
-            total_classes = cur.fetchone()[0] or 0
-
-            # Now get per-student attendance with the fixed total for all students
+            # Get per-student attendance where total is based on their own records
+            # This ensures students who joined late are not penalized
             query = """
                 SELECT
                   s.student_id,
                   s.student_name,
                   COUNT(*) FILTER (WHERE a.present = true) AS present_days,
-                  %s AS total_classes
+                  COUNT(*) AS total_classes
                 FROM attendance a
                 JOIN students s ON a.student_id = s.student_id
                 WHERE a.course_id = %s
@@ -121,7 +148,10 @@ def generate_report_by_course_id_pdf(report: ReportInput) -> List:
                 GROUP BY s.student_id, s.student_name
                 ORDER BY s.student_name;
             """
-            cur.execute(query, (total_classes, report.course_id, report.start_date, report.end_date))
+            cur.execute(query, (report.course_id, report.start_date, report.end_date))
             rows = cur.fetchall()
 
-    return rows
+    return {
+        'data': rows,
+        'info': course_info
+    }

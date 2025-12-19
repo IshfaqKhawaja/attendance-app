@@ -48,6 +48,13 @@ class Endpoints {
 
   // Attendance endpoints
   static const String addAttendanceBulk = '/attendance/add_attendence_bulk';
+  static const String updateAttendanceBulk = '/attendance/update-bulk';
+  static String getAttendanceForDate(String courseId, String date) =>
+      '$baseUrl/attendance/course/$courseId/$date';
+  static String getLastWorkingDay(String courseId) =>
+      '$baseUrl/attendance/last-working-day/$courseId';
+  static String getAttendanceHistory(String courseId, String startDate, String endDate) =>
+      '$baseUrl/attendance/history/$courseId?start_date=$startDate&end_date=$endDate';
 
   // Report endpoints
   static const String generateCourseReport = '/reports/generate_course_report_xls';

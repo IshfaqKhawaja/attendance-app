@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 
 import '../controllers/course_controller.dart';
 import '../../core/utils/responsive_utils.dart';
+import '../../core/services/user_role_service.dart';
 
 class Students extends StatefulWidget {
   const Students({super.key});
@@ -61,27 +62,29 @@ class _StudentsState extends State<Students> {
         padding: EdgeInsets.all(isDesktop ? 16 : 8),
         child: Column(
           children: [
-            // Add Student Button at the top
-            Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: kIsWeb ? maxItemWidth : double.infinity),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Get.dialog(
-                      Dialog(
-                        child: AddStudentToCourse(semesterId: semId, courseId: courseId),
-                      ),
-                    );
-                  },
-                  icon: Icon(Icons.add),
-                  label: Text('Add Student'),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 45),
+            // Add Student Button at the top (only for CRUD users)
+            if (Get.find<UserRoleService>().canPerformCrud)
+              Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: kIsWeb ? maxItemWidth : double.infinity),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Get.dialog(
+                        Dialog(
+                          child: AddStudentToCourse(semesterId: semId, courseId: courseId),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.add),
+                    label: Text('Add Student'),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 45),
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 8),
+            if (Get.find<UserRoleService>().canPerformCrud)
+              const SizedBox(height: 8),
             // Student List
             Expanded(
               child: Obx(() {
@@ -138,6 +141,8 @@ class _StudentsState extends State<Students> {
   }
 
   Widget _buildStudentCard(BuildContext context, dynamic student, int index) {
+    final canPerformCrud = Get.find<UserRoleService>().canPerformCrud;
+
     return Card(
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 8),
@@ -147,66 +152,69 @@ class _StudentsState extends State<Students> {
         ),
         title: Text(student.studentName),
         subtitle: Text(student.studentId),
-        trailing: IntrinsicWidth(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Edit button
-              IconButton(
-                onPressed: () {
-                  Get.dialog(
-                    Dialog(
-                      child: EditStudentInCourse(
-                        semesterId: semId,
-                        courseId: courseId,
-                        student: student,
-                      ),
+        trailing: canPerformCrud
+            ? IntrinsicWidth(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Edit button (only for CRUD users)
+                    IconButton(
+                      onPressed: () {
+                        Get.dialog(
+                          Dialog(
+                            child: EditStudentInCourse(
+                              semesterId: semId,
+                              courseId: courseId,
+                              student: student,
+                            ),
+                          ),
+                        );
+                      },
+                      icon: Icon(Icons.edit, size: 20, color: Get.theme.colorScheme.primary),
                     ),
-                  );
-                },
-                icon: Icon(Icons.edit, size: 20, color: Get.theme.colorScheme.primary),
-              ),
-              // Delete button
-              IconButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("Remove Student", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        contentPadding: EdgeInsets.zero,
-                        content: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
-                            minWidth: kIsWeb ? maxDialogWidth : 280,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: Text("Are you sure you want to remove '${student.studentName}' from this course?", style: TextStyle(fontSize: 14)),
-                          ),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Get.back(),
-                            child: Text("Cancel"),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              Get.back();
-                              await courseController.deleteStudentFromCourse(student.studentId, semId);
-                            },
-                            child: Text("Remove", style: TextStyle(color: Colors.red)),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                icon: Icon(Icons.delete, color: Colors.red),
+                    // Delete button (only for CRUD users)
+                    IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text("Remove Student", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              contentPadding: EdgeInsets.zero,
+                              content: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
+                                  minWidth: kIsWeb ? maxDialogWidth : 280,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(24.0),
+                                  child: Text("Are you sure you want to remove '${student.studentName}' from this course?", style: TextStyle(fontSize: 14)),
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Get.back(),
+                                  child: Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    Get.back();
+                                    await courseController.deleteStudentFromCourse(student.studentId, semId);
+                                  },
+                                  style: TextButton.styleFrom(foregroundColor: Colors.red),
+                                  child: Text("Remove", style: TextStyle(fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      icon: Icon(Icons.delete, color: Colors.red),
+                    )
+                  ],
+                ),
               )
-            ],
-          ),
-        ),
+            : null, // No trailing buttons for teachers (view only)
       ),
     );
   }

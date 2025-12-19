@@ -37,7 +37,7 @@ class _AddCourseState extends State<AddCourse> {
           width: kIsWeb ? null : Get.width * 0.9,
           constraints: BoxConstraints(
             maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
-            maxHeight: Get.height * 0.4,
+            maxHeight: Get.height * 0.5,
           ),
           child: Form(
             child: ListView(
@@ -46,11 +46,23 @@ class _AddCourseState extends State<AddCourse> {
                   'Add Course',
                   style: textStyle.copyWith(fontSize: 24),
                 ),
+                const SizedBox(height: 12),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Name'),
+                  decoration: const InputDecoration(
+                    labelText: 'Course ID *',
+                    hintText: 'e.g., CS101, MATH201',
+                  ),
+                  controller: courseController.courseIdController,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Course Name *',
+                    hintText: 'e.g., Introduction to Programming',
+                  ),
                   controller: courseController.nameController,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 Obx(() {
                   if (courseController.teachersInThisDept.isEmpty) {
                     return Text("Loading teachers...", style: textStyle.copyWith(fontSize: 14, color: Colors.grey),);
@@ -81,12 +93,35 @@ class _AddCourseState extends State<AddCourse> {
                  
 
                   onPressed: () {
+                    final courseId = courseController.courseIdController.text.trim();
+                    final courseName = courseController.nameController.text.trim();
+
+                    // Validate before closing
+                    if (courseId.isEmpty) {
+                      Get.snackbar("Error", "Please enter course ID",
+                        colorText: Colors.red,
+                      );
+                      return;
+                    }
+                    if (courseName.isEmpty) {
+                      Get.snackbar("Error", "Please enter course name",
+                        colorText: Colors.red,
+                      );
+                      return;
+                    }
+                    if (courseController.selectedTeacher.value == null) {
+                      Get.snackbar("Error", "Please select a teacher",
+                        colorText: Colors.red,
+                      );
+                      return;
+                    }
+
                     courseController.addCourse(
-                      courseController.nameController.text,
+                      courseId,
+                      courseName,
                       widget.semesterId,
                     );
                     Get.back();
-      
                   },
                   child:  Text('Add Course', style: textStyle.copyWith(fontSize: 14, color: Colors.white,),),
                 ),

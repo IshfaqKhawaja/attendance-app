@@ -77,6 +77,41 @@ class CourseController extends GetxController {
     return false;
   }
 
+  /// Mark all students as present (all slots filled)
+  void selectAllPresent() {
+    for (var attendance in attendenceMarked) {
+      // Ensure the marked list has the right size
+      while (attendance.marked.length < countedAs.value) {
+        attendance.marked.add(false);
+      }
+      // Mark all slots as present
+      for (int i = 0; i < countedAs.value; i++) {
+        attendance.marked[i] = true;
+      }
+    }
+    attendenceMarked.refresh();
+  }
+
+  /// Mark all students as absent (all slots empty)
+  void deselectAll() {
+    for (var attendance in attendenceMarked) {
+      for (int i = 0; i < attendance.marked.length; i++) {
+        attendance.marked[i] = false;
+      }
+    }
+    attendenceMarked.refresh();
+  }
+
+  /// Check if all students are marked as fully present
+  bool areAllPresent() {
+    if (attendenceMarked.isEmpty) return false;
+    for (var attendance in attendenceMarked) {
+      final presentCount = attendance.marked.where((m) => m).length;
+      if (presentCount < countedAs.value) return false;
+    }
+    return true;
+  }
+
   void addAttendence() async {
     // Check if there are students to mark attendance for
     if (attendenceMarked.isEmpty) {
@@ -187,14 +222,14 @@ class CourseController extends GetxController {
       actions: [
         TextButton(
           onPressed: () => Get.back(),
-          child: Text("Cancel"),
+          child: Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
         ),
         TextButton(
           onPressed: () {
             Get.back(); // close the dialog
             generateReport(courseName, startDate, endDate);
           },
-          child: Text("Generate"),
+          child: Text("Generate", style: TextStyle(fontWeight: FontWeight.bold)),
         ),
       ],
     ),

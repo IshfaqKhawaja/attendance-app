@@ -19,6 +19,7 @@ class CourseBySemesterIdController  extends GetxController{
   var selectedTeacher = Rx<TeacherModel?>(null);
   // Course Form Controller
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController courseIdController = TextEditingController();
   final ApiClient client= ApiClient();
   final SignInController signInController = Get.find<SignInController>();
 
@@ -133,13 +134,13 @@ class CourseBySemesterIdController  extends GetxController{
       actions: [
         TextButton(
           onPressed: () => Get.back(),
-          child: Text("Cancel"),
+          child: Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
         ),
         TextButton(
           onPressed: () {
             Get.back(); // close the dialog
             getCourseReport(courseId, startDate.toIso8601String(), endDate.toIso8601String());},
-          child: Text("Generate"),
+          child: Text("Generate", style: TextStyle(fontWeight: FontWeight.bold)),
         ),
       ],
     ),
@@ -147,10 +148,10 @@ class CourseBySemesterIdController  extends GetxController{
   }
 
   // Add Course Function
-  void addCourse(String name, String semId) async {
+  void addCourse(String courseId, String name, String semId) async {
       try{
-        if(selectedTeacher.value == null){
-          Get.snackbar("Error", "Please select a teacher",
+        if(courseId.isEmpty){
+          Get.snackbar("Error", "Please enter course ID",
             colorText: Colors.red,
           );
           return;
@@ -161,9 +162,16 @@ class CourseBySemesterIdController  extends GetxController{
           );
           return;
         }
+        if(selectedTeacher.value == null){
+          Get.snackbar("Error", "Please select a teacher",
+            colorText: Colors.red,
+          );
+          return;
+        }
         var res = await client.postJson(
           Endpoints.addCourse,
           {
+            "course_id": courseId,
             "course_name": name,
             "sem_id": semId,
             "assigned_teacher_id": selectedTeacher.value?.teacherId,
@@ -188,10 +196,10 @@ class CourseBySemesterIdController  extends GetxController{
   }
 
   // Edit Course Function
-  void editCourse(String courseId, String name, String semId) async {
+  void editCourse(String currentCourseId, String newCourseId, String name, String semId) async {
       try{
-        if(selectedTeacher.value == null){
-          Get.snackbar("Error", "Please select a teacher",
+        if(newCourseId.isEmpty){
+          Get.snackbar("Error", "Please enter course ID",
             colorText: Colors.red,
           );
           return;
@@ -202,13 +210,25 @@ class CourseBySemesterIdController  extends GetxController{
           );
           return;
         }
+        // Build the request body
+        Map<String, dynamic> body = {
+          "course_id": currentCourseId,
+          "course_name": name,
+        };
+
+        // Only include new_course_id if it's different from current
+        if (newCourseId != currentCourseId) {
+          body["new_course_id"] = newCourseId;
+        }
+
+        // Only include teacher if selected
+        if (selectedTeacher.value != null) {
+          body["assigned_teacher_id"] = selectedTeacher.value?.teacherId;
+        }
+
         var res = await client.postJson(
           Endpoints.editCourse,
-          {
-            "course_id": courseId,
-            "course_name": name,
-            "assigned_teacher_id": selectedTeacher.value?.teacherId,
-          },
+          body,
         );
         if(res["success"] == true){
           Get.snackbar("Success", "Course Updated Successfully",
@@ -586,6 +606,7 @@ void attendanceForSem(String semId) async {
 
 
  void clear(){
+  courseIdController.clear();
   nameController.clear();
   selectedTeacher.value = null;
   }
@@ -593,6 +614,7 @@ void attendanceForSem(String semId) async {
 
   @override
   void onClose() {
+    courseIdController.dispose();
     nameController.dispose();
     super.onClose();
   }

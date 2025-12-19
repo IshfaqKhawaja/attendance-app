@@ -51,6 +51,7 @@ class SemesterDashboard extends StatelessWidget {
           if (Get.find<UserRoleService>().canPerformCrud)
             IconButton(
               icon: Icon(Icons.add),
+              tooltip: 'Add Semester',
               onPressed: ()  async {
             var added = await showDialog(
                 context: context,
@@ -139,6 +140,7 @@ class SemesterDashboard extends StatelessWidget {
                     // Edit Button
                     IconButton(
                       icon: Icon(Icons.edit, color: Colors.blue),
+                      tooltip: 'Edit Semester',
                       onPressed: () async {
                         var updated = await showDialog(context: context, builder: (context) {
                           return Dialog(
@@ -163,13 +165,22 @@ class SemesterDashboard extends StatelessWidget {
               ),
         title: Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
-          child: Text(semester.semName, style: textStyle.copyWith(fontSize: 16,),),
+          child: Text(
+            semester.semName,
+            style: textStyle.copyWith(fontSize: 16,),
+          ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Start Date: ${DateFormat.yMMMd().format(semester.startDate)}", style: textStyle.copyWith(fontSize: 14,),),
-            Text("End Date: ${DateFormat.yMMMd().format(semester.endDate)}", style: textStyle.copyWith(fontSize: 14,),),
+            Text(
+              "Start Date: ${DateFormat.yMMMd().format(semester.startDate)}",
+              style: textStyle.copyWith(fontSize: 14,),
+            ),
+            Text(
+              "End Date: ${DateFormat.yMMMd().format(semester.endDate)}",
+              style: textStyle.copyWith(fontSize: 14,),
+            ),
           ],
         ),
       ),

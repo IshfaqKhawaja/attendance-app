@@ -68,18 +68,74 @@ class _AttendenceState extends State<Attendence> {
               ),
             ],
           ),
+          const SizedBox(height: 8),
+          // Select All / Deselect All button
+          Obx(() {
+            final allPresent = courseController.areAllPresent();
+            return Row(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    if (allPresent) {
+                      courseController.deselectAll();
+                    } else {
+                      courseController.selectAllPresent();
+                    }
+                  },
+                  icon: Icon(
+                    allPresent ? Icons.deselect : Icons.select_all,
+                    size: 18,
+                  ),
+                  label: Text(
+                    allPresent ? "Deselect All" : "Select All Present",
+                    style: textStyle.copyWith(fontSize: 12),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: allPresent
+                        ? Colors.grey
+                        : Get.theme.colorScheme.primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "(Mark absent students only)",
+                  style: textStyle.copyWith(
+                    fontSize: 11,
+                    color: Colors.grey,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            );
+          }),
           Divider(thickness: 2, color: Get.theme.primaryColor),
           // Main content area - expands to fill available space
           Expanded(
             child: Container(
               width: double.infinity,
-              color: Colors.black12.withValues(alpha: 0.1),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
+              decoration: BoxDecoration(
+                color: Colors.black12.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
                 child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: AttendenceWidget(courseId: widget.courseId),
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    Center(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: AttendenceWidget(courseId: widget.courseId),
+                      ),
+                    ),
+                    // Extra padding at bottom so last rows aren't hidden behind FAB
+                    const SizedBox(height: 80),
+                  ],
                 ),
+              ),
               ),
             ),
           ),

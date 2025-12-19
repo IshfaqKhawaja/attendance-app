@@ -43,11 +43,16 @@ class _AddTeacherDialogState extends State<AddTeacherDialog> {
               Text("Add Teacher", style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 16),
               TextField(
-                decoration: InputDecoration(labelText: "ID"),
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  hintText: "e.g., teacher@university.edu",
+                ),
                 controller: addTeacherController.emailController.value,
+                keyboardType: TextInputType.emailAddress,
               ),
+              const SizedBox(height: 8),
               TextField(
-                decoration: InputDecoration(labelText: "Name"),
+                decoration: const InputDecoration(labelText: "Name"),
                 controller: addTeacherController.nameController.value,
               ),
               Obx(() {
@@ -78,7 +83,7 @@ class _AddTeacherDialogState extends State<AddTeacherDialog> {
           onPressed: () {
             Navigator.of(context).pop(false);
           },
-          child: Text("Cancel", style: textStyle.copyWith(fontSize: 16)),
+          child: Text("Cancel", style: textStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
         TextButton(
           onPressed: () async {
@@ -87,7 +92,7 @@ class _AddTeacherDialogState extends State<AddTeacherDialog> {
               Navigator.of(context).pop(added);
             }
           },
-          child: Text("Add", style: textStyle.copyWith(fontSize: 16)),
+          child: Text("Add", style: textStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
       ],
     );

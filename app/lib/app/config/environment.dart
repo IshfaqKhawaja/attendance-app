@@ -32,7 +32,7 @@ class AppConfig {
     // For iOS Simulator: use localhost
     // For Physical Device: use your computer's IP or server IP
     // apiBaseUrl: 'http://10.0.2.2:8000',  // Android Emulator
-    // apiBaseUrl: 'http://172.105.41.86',  // Production Server
+    // apiBaseUrl: 'http://172.105.41.86/api',  // Production Server
     apiBaseUrl: 'http://localhost:8000',  // Local development
     enableLogging: true,
     enableDebugMode: true,
@@ -44,7 +44,7 @@ class AppConfig {
   static const AppConfig staging = AppConfig(
     environment: Environment.staging,
     // apiBaseUrl: 'http://10.0.2.2:8000',  // Android Emulator
-    apiBaseUrl: 'http://172.105.41.86',
+    apiBaseUrl: 'http://172.105.41.86/api',
     enableLogging: true,
     enableDebugMode: false,
     apiTimeout: 20,
@@ -54,7 +54,7 @@ class AppConfig {
   /// Production configuration (Server IP)
   static const AppConfig production = AppConfig(
     environment: Environment.production,
-    apiBaseUrl: 'http://172.105.41.86',  // Production Server
+    apiBaseUrl: 'http://172.105.41.86/api',  // Production Server with /api prefix
     enableLogging: false,
     enableDebugMode: false,
     apiTimeout: 15,

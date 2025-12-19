@@ -65,10 +65,48 @@ class AttendanceApp extends StatelessWidget {
               },
             )
           : null,
+      // Default route when URL doesn't match any route (for web)
+      unknownRoute: GetPage(
+        name: '/not-found',
+        page: () => const _NotFoundPage(),
+      ),
+      // Handle back button on web - prevent app from closing
+      popGesture: !kIsWeb,
       // Add global error handling
       builder: (context, child) {
         return child ?? const SizedBox.shrink();
       },
+    );
+  }
+}
+
+/// Page shown when route is not found (for web navigation)
+class _NotFoundPage extends StatelessWidget {
+  const _NotFoundPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(
+              'Page Not Found',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 8),
+            const Text('The page you are looking for does not exist.'),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () => Get.offAllNamed(Routes.LOADING),
+              child: const Text('Go to Home'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

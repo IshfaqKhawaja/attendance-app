@@ -3,10 +3,10 @@ from pydantic import BaseModel #type: ignore
 from typing import List, Optional
 from uuid import uuid4
 class CourseCreate(BaseModel):
-    course_name: str 
+    course_name: str
     course_id: str
     sem_id: str
-    assigned_teacher_id: str
+    assigned_teacher_id: Optional[str] = None  # Optional to allow courses without assigned teachers
     def __init__(self, **data):
         if 'course_id' not in data:
             data['course_id'] = str(uuid4())
@@ -33,6 +33,7 @@ class BulkCourseCreateResponse(BaseModel):
     message: Optional[str] = None
 
 class CourseUpdate(BaseModel):
-    course_id: str
+    course_id: str  # Current course ID (to identify which course to update)
+    new_course_id: Optional[str] = None  # New course ID (if changing the ID)
     course_name: Optional[str] = None
     assigned_teacher_id: Optional[str] = None

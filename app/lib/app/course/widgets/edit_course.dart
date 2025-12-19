@@ -26,6 +26,7 @@ class _EditCourseState extends State<EditCourse> {
   void initState() {
     super.initState();
     // Pre-fill the form with existing course data
+    courseController.courseIdController.text = widget.course.courseId;
     courseController.nameController.text = widget.course.courseName;
 
     // Fetch teachers and set selected teacher after frame is built
@@ -51,7 +52,7 @@ class _EditCourseState extends State<EditCourse> {
       width: kIsWeb ? null : Get.width * 0.9,
       constraints: BoxConstraints(
         maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
-        maxHeight: Get.height * 0.4,
+        maxHeight: Get.height * 0.5,
       ),
       child: Form(
         child: ListView(
@@ -60,11 +61,23 @@ class _EditCourseState extends State<EditCourse> {
               'Edit Course',
               style: textStyle.copyWith(fontSize: 24),
             ),
+            const SizedBox(height: 12),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(
+                labelText: 'Course ID',
+                hintText: 'e.g., CS101, MATH201',
+              ),
+              controller: courseController.courseIdController,
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Course Name',
+                hintText: 'e.g., Introduction to Programming',
+              ),
               controller: courseController.nameController,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             Obx(() {
               if (courseController.teachersInThisDept.isEmpty) {
                 return Text("Loading teachers...", style: textStyle.copyWith(fontSize: 14, color: Colors.grey));
@@ -93,9 +106,26 @@ class _EditCourseState extends State<EditCourse> {
                 ),
               ),
               onPressed: () {
+                final newCourseId = courseController.courseIdController.text.trim();
+                final courseName = courseController.nameController.text.trim();
+
+                if (newCourseId.isEmpty) {
+                  Get.snackbar("Error", "Please enter course ID",
+                    colorText: Colors.red,
+                  );
+                  return;
+                }
+                if (courseName.isEmpty) {
+                  Get.snackbar("Error", "Please enter course name",
+                    colorText: Colors.red,
+                  );
+                  return;
+                }
+
                 courseController.editCourse(
-                  widget.course.courseId,
-                  courseController.nameController.text,
+                  widget.course.courseId,  // Original course ID
+                  newCourseId,             // New course ID (may be same or different)
+                  courseName,
                   widget.semesterId,
                 );
                 Get.back();

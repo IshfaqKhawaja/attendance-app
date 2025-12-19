@@ -23,7 +23,7 @@ class CardWidget extends StatelessWidget {
             children: [
               // Course:
               Text(
-                course.courseName!,
+                "${course.courseName!} (${course.courseId})",
                 style: textStyle.copyWith(color: Colors.white, fontSize: 20),
               ),
               // Sem Name

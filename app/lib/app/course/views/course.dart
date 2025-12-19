@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../core/constants/typography.dart';
 import '../../core/widgets/dashboard_scaffold.dart';
 import '../../routes/app_routes.dart';
 import '../controllers/course_controller.dart';
+import '../widgets/attendance_history_dialog.dart';
 import 'attendence.dart';
 
 class Course extends StatefulWidget {
@@ -61,25 +61,31 @@ class _CourseState extends State<Course> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ElevatedButton(
-                    child: Text(
-                      "Students",
-                      style: textStyle.copyWith(fontSize: 13),
-                    ),
+                  IconButton(
+                    icon: const Icon(Icons.people, color: Colors.white),
+                    tooltip: 'View Students',
                     onPressed: () {
                       Get.toNamed(Routes.STUDENTS, arguments: {"course": course});
                     },
                   ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
+                  IconButton(
+                    icon: const Icon(Icons.history, color: Colors.white),
+                    tooltip: 'Attendance History',
+                    onPressed: () {
+                      AttendanceHistoryDialog.show(
+                        context: context,
+                        courseId: course.courseId,
+                        courseName: course.courseName!,
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
+                    tooltip: 'Generate Report',
                     onPressed: () {
                       courseController.showDateRangeDialog(
                           context, course.courseName!);
                     },
-                    child: Text(
-                      "Report",
-                      style: textStyle.copyWith(fontSize: 13),
-                    ),
                   ),
                 ],
               ),

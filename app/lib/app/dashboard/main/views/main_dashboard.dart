@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/main_dashboard_controller.dart';
@@ -17,34 +18,71 @@ class MainDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     final MainDashboardController controller = Get.put(MainDashboardController());
 
-    return Obx(() {
-      // Show loading while determining which dashboard to display
-      if (controller.isLoading.value) {
-        return Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text(
-                  'Loading Dashboard...',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
+    // Wrap with PopScope to handle browser back button on web
+    return PopScope(
+      canPop: false, // Prevent default pop behavior
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        // Show sign out confirmation instead of closing/going back
+        _showExitConfirmation(controller);
+      },
+      child: Obx(() {
+        // Show loading while determining which dashboard to display
+        if (controller.isLoading.value) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text(
+                    'Loading Dashboard...',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
             ),
+          );
+        }
+
+        // Check if teacher is trying to access web
+        if (controller.isTeacherOnWeb.value) {
+          return _buildTeacherWebBlockedScreen(controller);
+        }
+
+        // Route to the appropriate dashboard based on user role
+        return _buildDashboard(controller);
+      }),
+    );
+  }
+
+  /// Show exit/sign-out confirmation dialog
+  void _showExitConfirmation(MainDashboardController controller) {
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Sign Out?'),
+        content: Text(
+          kIsWeb
+              ? 'Do you want to sign out?'
+              : 'Do you want to sign out or exit the app?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
-        );
-      }
-
-      // Check if teacher is trying to access web
-      if (controller.isTeacherOnWeb.value) {
-        return _buildTeacherWebBlockedScreen(controller);
-      }
-
-      // Route to the appropriate dashboard based on user role
-      return _buildDashboard(controller);
-    });
+          TextButton(
+            onPressed: () {
+              Get.back();
+              controller.signOut();
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Sign Out', style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Build the blocked screen for teachers on web
@@ -172,7 +210,8 @@ class MainDashboard extends StatelessWidget {
         dashboard,
         // Sign-out button positioned at top-right
         Positioned(
-          right: 10,
+          top: 16,
+          right: 16,
           child: SafeArea(
             child: _SignOutButton(controller: controller),
           ),
@@ -240,7 +279,7 @@ class _SignOutButton extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           TextButton(
             onPressed: () {
@@ -250,7 +289,7 @@ class _SignOutButton extends StatelessWidget {
             style: TextButton.styleFrom(
               foregroundColor: Colors.red,
             ),
-            child: const Text('Sign Out'),
+            child: const Text('Sign Out', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),

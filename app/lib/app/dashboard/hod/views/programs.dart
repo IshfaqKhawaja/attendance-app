@@ -133,8 +133,13 @@ class Programs extends StatelessWidget {
           program.progName,
           style: textStyle.copyWith(fontSize: 16),
         ),
-        subtitle: Text("Program Code : ${program.progId}"),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        subtitle: Text(
+          "Program Code : ${program.progId}",
+        ),
+        trailing: Tooltip(
+          message: 'View Semesters',
+          child: const Icon(Icons.arrow_forward_ios, size: 16),
+        ),
       ),
     );
   }

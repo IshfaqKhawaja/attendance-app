@@ -404,34 +404,37 @@ def get_student_attendance_summary(student_id: str, course_id: str) -> dict:
 def get_course_attendance_for_date(course_id: str, attendance_date: date) -> dict:
     """
     Get all attendance records for a course on a specific date.
-    
+
     Returns:
-        Dict with list of attendance records
+        Dict with list of attendance records (includes attendance_id for updates and student_name)
     """
     conn = connection_to_db()
     try:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT student_id, course_id, date, present 
-                FROM attendance 
-                WHERE course_id = %s AND date = %s
-                ORDER BY student_id
+                SELECT a.attendance_id, a.student_id, a.course_id, a.date, a.present, s.student_name
+                FROM attendance a
+                LEFT JOIN students s ON a.student_id = s.student_id
+                WHERE a.course_id = %s AND a.date = %s
+                ORDER BY a.student_id, a.attendance_id
                 """,
                 (course_id, attendance_date)
             )
-            
+
             rows = cur.fetchall()
-            
+
             records = []
             for row in rows:
                 records.append({
-                    "student_id": row[0],
-                    "course_id": row[1],
-                    "date": str(row[2]),
-                    "present": row[3]
+                    "attendance_id": row[0],
+                    "student_id": row[1],
+                    "course_id": row[2],
+                    "date": str(row[3]),
+                    "present": row[4],
+                    "student_name": row[5] or row[1]  # Fallback to student_id if name not found
                 })
-            
+
             return {
                 "success": True,
                 "course_id": course_id,
@@ -439,8 +442,288 @@ def get_course_attendance_for_date(course_id: str, attendance_date: date) -> dic
                 "total_records": len(records),
                 "attendance_records": records
             }
-            
+
     except Exception as e:
         return {"success": False, "message": f"Couldn't get course attendance: {e}"}
+    finally:
+        conn.close()
+
+
+def get_last_working_day(course_id: str) -> dict:
+    """
+    Get the most recent date before today that has attendance records for this course.
+
+    Returns:
+        Dict with success status and the last working day date
+    """
+    conn = connection_to_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT DISTINCT date
+                FROM attendance
+                WHERE course_id = %s AND date < CURRENT_DATE
+                ORDER BY date DESC
+                LIMIT 1
+                """,
+                (course_id,)
+            )
+
+            row = cur.fetchone()
+
+            if row:
+                return {
+                    "success": True,
+                    "course_id": course_id,
+                    "last_working_day": str(row[0]),
+                    "message": "Last working day found"
+                }
+            else:
+                return {
+                    "success": False,
+                    "course_id": course_id,
+                    "last_working_day": None,
+                    "message": "No previous attendance records found for this course"
+                }
+
+    except Exception as e:
+        return {"success": False, "message": f"Couldn't get last working day: {e}"}
+    finally:
+        conn.close()
+
+
+def update_attendance_bulk(attendances: list) -> dict:
+    """
+    Bulk-update multiple attendance records.
+
+    Args:
+        attendances: List of attendance dicts with attendance_id or student_id/course_id/date
+
+    Returns:
+        Dict with success status and update results
+    """
+    if not attendances:
+        return {
+            "success": False,
+            "message": "No attendance records provided",
+            "total_records": 0,
+            "updated": 0,
+            "failed": 0
+        }
+
+    conn = connection_to_db()
+    try:
+        updated_count = 0
+        failed_count = 0
+        updated_records = []
+        failed_records = []
+
+        with conn.cursor() as cur:
+            for record in attendances:
+                try:
+                    # Check if we have attendance_id (preferred for multi-slot updates)
+                    attendance_id = record.get('attendance_id') if isinstance(record, dict) else getattr(record, 'attendance_id', None)
+
+                    if attendance_id:
+                        # Use attendance_id for precise update (handles multiple slots)
+                        present = record.get('present') if isinstance(record, dict) else record.present
+                        cur.execute(
+                            """
+                            UPDATE attendance
+                            SET present = %s
+                            WHERE attendance_id = %s
+                            RETURNING attendance_id, student_id, course_id, date, present
+                            """,
+                            (present, attendance_id)
+                        )
+                    else:
+                        # Fallback: use student_id + course_id + date (only works for single slot)
+                        if isinstance(record, dict):
+                            student_id = record.get('student_id')
+                            course_id = record.get('course_id')
+                            date_value = record.get('date')
+                            present = record.get('present')
+                        else:
+                            student_id = record.student_id
+                            course_id = record.course_id
+                            date_value = record.date
+                            present = record.present
+
+                        # Convert datetime to date if needed
+                        if hasattr(date_value, 'date'):
+                            date_value = date_value.date()
+                        elif isinstance(date_value, str):
+                            date_value = datetime.strptime(date_value.split('T')[0], '%Y-%m-%d').date()
+
+                        cur.execute(
+                            """
+                            UPDATE attendance
+                            SET present = %s
+                            WHERE student_id = %s AND course_id = %s AND date = %s
+                            RETURNING attendance_id, student_id, course_id, date, present
+                            """,
+                            (present, student_id, course_id, date_value)
+                        )
+
+                    row = cur.fetchone()
+                    if row:
+                        updated_count += 1
+                        updated_records.append({
+                            "attendance_id": row[0],
+                            "student_id": row[1],
+                            "course_id": row[2],
+                            "date": str(row[3]),
+                            "present": row[4]
+                        })
+                    else:
+                        failed_count += 1
+                        record_info = record if isinstance(record, dict) else {
+                            "student_id": record.student_id,
+                            "course_id": record.course_id,
+                            "date": str(record.date)
+                        }
+                        failed_records.append({
+                            **record_info,
+                            "reason": "Record not found"
+                        })
+
+                except Exception as e:
+                    failed_count += 1
+                    record_info = record if isinstance(record, dict) else {
+                        "student_id": getattr(record, 'student_id', 'unknown'),
+                        "course_id": getattr(record, 'course_id', 'unknown'),
+                        "date": str(getattr(record, 'date', 'unknown'))
+                    }
+                    failed_records.append({
+                        **record_info,
+                        "reason": f"Error: {str(e)}"
+                    })
+                    continue
+
+        conn.commit()
+
+        return {
+            "success": True,
+            "message": f"Attendance updated: {updated_count} updated, {failed_count} failed",
+            "total_records": len(attendances),
+            "updated": updated_count,
+            "failed": failed_count,
+            "updated_records": updated_records,
+            "failed_records": failed_records
+        }
+
+    except Exception as e:
+        conn.rollback()
+        return {
+            "success": False,
+            "message": f"Bulk update failed: {str(e)}",
+            "total_records": len(attendances),
+            "updated": 0,
+            "failed": 0
+        }
+    finally:
+        conn.close()
+
+
+def get_attendance_history(course_id: str, start_date: date, end_date: date) -> dict:
+    """
+    Get attendance history for a course within a date range.
+    Groups records by date for easy display.
+
+    Args:
+        course_id: The course ID
+        start_date: Start date of the range
+        end_date: End date of the range
+
+    Returns:
+        Dict with attendance records grouped by date
+
+    Note: 'slot' represents multiple attendance sessions per day for the same course.
+          For example, if attendance is taken twice on the same day (morning & afternoon),
+          slot 1 = first session, slot 2 = second session.
+    """
+    conn = connection_to_db()
+    try:
+        with conn.cursor() as cur:
+            # Get all attendance records for the course in date range
+            # slot_num is calculated per student per date - represents which session
+            # (e.g., if a student has 2 attendance records on same day, they're slot 1 and 2)
+            cur.execute(
+                """
+                SELECT
+                    a.attendance_id,
+                    a.student_id,
+                    s.student_name,
+                    a.course_id,
+                    a.date,
+                    a.present,
+                    ROW_NUMBER() OVER(PARTITION BY a.student_id, a.date ORDER BY a.attendance_id) as slot_num
+                FROM attendance a
+                LEFT JOIN students s ON a.student_id = s.student_id
+                WHERE a.course_id = %s
+                  AND a.date BETWEEN %s AND %s
+                ORDER BY a.date DESC, s.student_name, a.attendance_id
+                """,
+                (course_id, start_date, end_date)
+            )
+
+            rows = cur.fetchall()
+
+            # Group by date
+            dates_data = {}
+            for row in rows:
+                date_str = str(row[4])
+                if date_str not in dates_data:
+                    dates_data[date_str] = {
+                        "date": date_str,
+                        "total_students": 0,
+                        "present_count": 0,
+                        "absent_count": 0,
+                        "slots_count": 1,
+                        "records": []
+                    }
+
+                slot_num = row[6]
+                # Track max slot number to know how many sessions per day
+                if slot_num > dates_data[date_str]["slots_count"]:
+                    dates_data[date_str]["slots_count"] = slot_num
+
+                dates_data[date_str]["records"].append({
+                    "attendance_id": row[0],
+                    "student_id": row[1],
+                    "student_name": row[2] or row[1],
+                    "course_id": row[3],
+                    "date": date_str,
+                    "present": row[5],
+                    "slot": slot_num
+                })
+
+            # Calculate totals per date
+            for date_str in dates_data:
+                records = dates_data[date_str]["records"]
+                # Get unique students
+                unique_students = set(r["student_id"] for r in records)
+                dates_data[date_str]["total_students"] = len(unique_students)
+
+                # Count present/absent for slot 1 (primary attendance)
+                slot1_records = [r for r in records if r["slot"] == 1]
+                dates_data[date_str]["present_count"] = sum(1 for r in slot1_records if r["present"])
+                dates_data[date_str]["absent_count"] = sum(1 for r in slot1_records if not r["present"])
+
+            # Convert to sorted list
+            dates_list = sorted(dates_data.values(), key=lambda x: x["date"], reverse=True)
+
+            return {
+                "success": True,
+                "course_id": course_id,
+                "start_date": str(start_date),
+                "end_date": str(end_date),
+                "total_days": len(dates_list),
+                "dates": dates_list
+            }
+
+    except Exception as e:
+        return {"success": False, "message": f"Couldn't get attendance history: {e}"}
     finally:
         conn.close()

@@ -1,9 +1,11 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, Field
 
 from app.db.crud import course # type: ignore
 
 class AttendenceModel(BaseModel):
+    attendance_id:  Optional[int] = None  # Optional: used for precise updates with multiple slots
     student_id:     str
     course_id:      str
     date:           datetime

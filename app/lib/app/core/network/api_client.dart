@@ -122,6 +122,47 @@ class ApiClient {
     }
   }
 
+  Future<Map<String, dynamic>> putJson(String url, Map<String, dynamic> body,
+      {Map<String, String>? headers}) async {
+    final normalizedUrl = _normalizeUrl(url);
+    final mergedHeaders = await _authHeaders({
+      'Content-Type': 'application/json',
+      ...?headers,
+    });
+
+    try {
+      Response response = await _dio.put(
+        normalizedUrl,
+        data: body,
+        options: Options(headers: mergedHeaders),
+      );
+
+      if (response.statusCode == 401 && onUnauthorized != null) {
+        if (await onUnauthorized!.call()) {
+          final retryHeaders = await _authHeaders({
+            'Content-Type': 'application/json',
+            ...?headers,
+          });
+          response = await _dio.put(
+            normalizedUrl,
+            data: body,
+            options: Options(headers: retryHeaders),
+          );
+        }
+      }
+
+      final data = response.data;
+      if (data is Map<String, dynamic>) return data;
+      if (data is String) return jsonDecode(data) as Map<String, dynamic>;
+      throw const FormatException('Invalid JSON payload: expected an object');
+    } on DioException catch (e) {
+      throw HttpException(
+        e.response?.statusCode ?? 500,
+        e.response?.data?.toString() ?? e.message ?? 'Network error',
+      );
+    }
+  }
+
   Future<Uint8List> postBytes(String url, Map<String, dynamic> body,
       {Map<String, String>? headers}) async {
     final normalizedUrl = _normalizeUrl(url);

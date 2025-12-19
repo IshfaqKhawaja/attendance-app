@@ -132,8 +132,9 @@ def add_courses_bulk(payload: BulkCourseCreate) -> BulkCourseCreateResponse:
 def fetch_courses_by_semester_id(sem_id: str) -> CourseDetailResponse:
     """
     Fetches a flat list of course-teacher assignments for a semester.
+    Uses LEFT JOIN to include courses without assigned teachers.
     """
-    
+
     sql_query = """
         SELECT
             c.course_name,
@@ -142,7 +143,7 @@ def fetch_courses_by_semester_id(sem_id: str) -> CourseDetailResponse:
             tc.teacher_id AS assigned_teacher_id
         FROM
             course c
-        JOIN
+        LEFT JOIN
             teacher_course tc ON c.course_id = tc.course_id
         WHERE
             c.sem_id = %s
@@ -213,18 +214,33 @@ def delete_course_by_id(course_id: str) -> CourseCreateResponse:
 
 
 def update_course_by_id(course_update) -> CourseCreateResponse:
-    """Update course name and/or assigned teacher"""
+    """Update course ID, name, and/or assigned teacher"""
     from app.db.models.course_model import CourseUpdate
     from app.db.crud.teacher_course import update_teacher_course_assignment
 
     conn = connection_to_db()
     try:
-        # Update course name if provided
+        current_course_id = course_update.course_id
+
+        # Build the update fields dynamically
+        update_fields = []
+        params = []
+
+        if course_update.new_course_id:
+            update_fields.append("course_id = %s")
+            params.append(course_update.new_course_id)
+
         if course_update.course_name:
+            update_fields.append("course_name = %s")
+            params.append(course_update.course_name)
+
+        # Execute course table update if there are fields to update
+        if update_fields:
+            params.append(current_course_id)  # For WHERE clause
             with conn.cursor() as cur:
                 cur.execute(
-                    "UPDATE course SET course_name = %s WHERE course_id = %s",
-                    (course_update.course_name, course_update.course_id)
+                    f"UPDATE course SET {', '.join(update_fields)} WHERE course_id = %s",
+                    params
                 )
                 if cur.rowcount == 0:
                     return CourseCreateResponse(
@@ -232,10 +248,13 @@ def update_course_by_id(course_update) -> CourseCreateResponse:
                         message="Course not found"
                     )
 
+        # Determine which course_id to use for teacher assignment
+        effective_course_id = course_update.new_course_id if course_update.new_course_id else current_course_id
+
         # Update teacher assignment if provided
         if course_update.assigned_teacher_id:
             result = update_teacher_course_assignment(
-                course_update.course_id,
+                effective_course_id,
                 course_update.assigned_teacher_id
             )
             if not result.get("success", False):

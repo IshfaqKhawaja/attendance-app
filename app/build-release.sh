@@ -55,6 +55,17 @@ if [[ "$1" == "ios" ]] || [[ "$1" == "all" ]]; then
     echo "Open Xcode to archive and upload to App Store"
 fi
 
+# Build for Web
+if [[ "$1" == "web" ]] || [[ "$1" == "all" ]]; then
+    echo -e "${YELLOW}Building Web...${NC}"
+    flutter build web --release --dart-define=FLAVOR=production --base-href=/webapp/
+
+    echo -e "${GREEN}✓${NC} Web build completed!"
+    echo "Web build: build/web/"
+    echo ""
+    echo "To deploy, copy build/web/* to backend/webapp/"
+fi
+
 echo ""
 echo -e "${GREEN}=========================================${NC}"
 echo -e "${GREEN}Build completed successfully!${NC}"

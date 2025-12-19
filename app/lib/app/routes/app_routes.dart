@@ -2,7 +2,7 @@ class Routes {
   static const String LOADING = "/loading";
   static const String SIGN_IN = "/sign_in";
   static const String REGISTER = "/register";
-  static const String MAIN_DASHBOARD = "/main_dashboard";
+  static const String MAIN_DASHBOARD = "/dashboard";
   static const String TEACHER_DASHBOARD = "/teacher_dashboard";
   static const String HOD_DASHBOARD = "/hod_dashboard";
   static const String HOD_DASHBOARD_WITH_DEPT = "/hod_dashboard/:deptId";

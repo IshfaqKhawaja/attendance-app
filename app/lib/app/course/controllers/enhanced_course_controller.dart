@@ -288,11 +288,11 @@ class EnhancedCourseController extends BaseController {
         actions: [
           TextButton(
             onPressed: () => Get.back(result: false),
-            child: const Text('Cancel'),
+            child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           TextButton(
             onPressed: () => Get.back(result: true),
-            child: const Text('Confirm'),
+            child: const Text('Confirm', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),

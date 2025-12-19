@@ -75,6 +75,7 @@ class TeacherCard extends StatelessWidget {
                     children: [
                       // Edit Button
                       IconButton(
+                  tooltip: 'Edit Teacher',
                   onPressed: () async {
                     editTeacherController.updateData(
                       id: teacher.teacher_id,
@@ -132,7 +133,7 @@ class TeacherCard extends StatelessWidget {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(false),
-                            child: Text("Cancel"),
+                            child: Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
                           ),
                           TextButton(
                             onPressed: () async {
@@ -144,7 +145,7 @@ class TeacherCard extends StatelessWidget {
                                 Navigator.of(context).pop(updated);
                               }
                             },
-                            child: Text("Save"),
+                            child: Text("Save", style: TextStyle(fontWeight: FontWeight.bold)),
                           ),
                         ],
                       ),
@@ -162,6 +163,7 @@ class TeacherCard extends StatelessWidget {
 
                 // Delete Button
                 IconButton(
+                  tooltip: 'Delete Teacher',
                   onPressed: () async {
                     final confirmed = await showDialog<bool>(
                       context: context,
@@ -181,11 +183,12 @@ class TeacherCard extends StatelessWidget {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(false),
-                            child: Text("Cancel"),
+                            child: Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: Text("Delete", style: TextStyle(color: Colors.redAccent)),
+                            style: TextButton.styleFrom(foregroundColor: Colors.red),
+                            child: Text("Delete", style: TextStyle(fontWeight: FontWeight.bold)),
                           ),
                         ],
                       ),
