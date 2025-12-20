@@ -5,9 +5,11 @@ Includes all routers, middleware, and startup configuration.
 import logging
 from contextlib import asynccontextmanager
 
+from pathlib import Path
 from fastapi import FastAPI, Request #type: ignore
 from fastapi.middleware.cors import CORSMiddleware #type: ignore
-from fastapi.responses import JSONResponse #type: ignore
+from fastapi.responses import JSONResponse, FileResponse #type: ignore
+from fastapi.staticfiles import StaticFiles #type: ignore
 from starlette.exceptions import HTTPException as StarletteHTTPException #type: ignore
 
 # Import settings and logging
@@ -170,6 +172,16 @@ app.include_router(student_enrolement_router)
 
 
 logger.info("Application initialized successfully")
+
+# Mount webapp static files
+# The webapp folder should be at backend/webapp
+WEBAPP_DIR = Path(__file__).parent.parent / "webapp"
+if WEBAPP_DIR.exists():
+    # Mount static files for Flutter web app
+    app.mount("/webapp", StaticFiles(directory=str(WEBAPP_DIR), html=True), name="webapp")
+    logger.info(f"Webapp mounted from {WEBAPP_DIR}")
+else:
+    logger.warning(f"Webapp directory not found at {WEBAPP_DIR}")
 
 
 # Global exception handlers for user-friendly error messages
