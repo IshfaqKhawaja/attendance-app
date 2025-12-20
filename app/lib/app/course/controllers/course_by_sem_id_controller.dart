@@ -562,8 +562,14 @@ void attendanceForSem(String semId) async {
   }
 
   // Edit Student Function
-  Future<void> editStudent(String studentId, String studentName, String phoneNumber, String semId) async {
+  Future<void> editStudent(String currentStudentId, String newStudentId, String studentName, String phoneNumber, String semId) async {
     try {
+      if (newStudentId.isEmpty) {
+        Get.snackbar("Error", "Please enter student ID",
+          colorText: Colors.red,
+        );
+        return;
+      }
       if (studentName.isEmpty) {
         Get.snackbar("Error", "Please enter student name",
           colorText: Colors.red,
@@ -577,13 +583,21 @@ void attendanceForSem(String semId) async {
         return;
       }
 
+      // Build request body
+      Map<String, dynamic> body = {
+        "student_id": currentStudentId,
+        "student_name": studentName,
+        "phone_number": int.tryParse(phoneNumber) ?? 0,
+      };
+
+      // Only include new_student_id if it's different from current
+      if (newStudentId != currentStudentId) {
+        body["new_student_id"] = newStudentId;
+      }
+
       var res = await client.postJson(
         Endpoints.editStudent,
-        {
-          "student_id": studentId,
-          "student_name": studentName,
-          "phone_number": int.tryParse(phoneNumber) ?? 0,
-        },
+        body,
       );
 
       if (res["success"] == true) {

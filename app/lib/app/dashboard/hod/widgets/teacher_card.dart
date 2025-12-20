@@ -99,11 +99,17 @@ class TeacherCard extends StatelessWidget {
                               children: [
                                 TextField(
                                   controller: TextEditingController(text: teacher.teacher_id),
-                                  decoration: InputDecoration(labelText: "Id"),
+                                  decoration: InputDecoration(
+                                    labelText: "Email ID",
+                                    hintText: "teacher@example.com",
+                                    helperText: "This is the login email",
+                                  ),
+                                  keyboardType: TextInputType.emailAddress,
                                   onChanged: (value) {
                                     editTeacherController.teacherId.value = value;
                                   },
                                 ),
+                                SizedBox(height: 12),
                                 TextField(
                                   controller: TextEditingController(text: teacher.teacher_name),
                                   decoration: InputDecoration(labelText: "Teacher Name"),
@@ -111,6 +117,7 @@ class TeacherCard extends StatelessWidget {
                                     editTeacherController.teacherName.value = value;
                                   },
                                 ),
+                                SizedBox(height: 12),
                                 DropdownButtonFormField<String>(
                                   value: teacher.type,
                                   items: editTeacherController.teacherType

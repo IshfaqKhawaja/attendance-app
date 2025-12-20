@@ -8,6 +8,7 @@ import '../../models/program_model.dart';
 import '../../models/faculty_model.dart';
 import '../../models/department_model.dart';
 import '../../signin/controllers/access_controller.dart';
+import '../../signin/controllers/signin_controller.dart';
 
 class LoadingController extends GetxController {
   RxBool isDataLoaded = false.obs;
@@ -20,13 +21,17 @@ class LoadingController extends GetxController {
   /// Check if user has valid tokens and auto-login
   Future<void> checkAuthentication() async {
     final accessToken = await AccessController.getAccessToken();
-    if (accessToken != null && accessToken.isNotEmpty) {
+    final userData = await AccessController.getUserData();
+
+    if (accessToken != null && accessToken.isNotEmpty && userData != null) {
       isAuthenticated.value = true;
 
-      // Try to load user data from backend using the token
+      // Restore user data and navigate to dashboard
       try {
-        // The SignInController will be initialized by MainDashboardController
-        // For now, just navigate - the token will be used automatically
+        // Ensure SignInController is available and restore user data
+        if (Get.isRegistered<SignInController>()) {
+          await Get.find<SignInController>().restoreUserData();
+        }
         Get.offAndToNamed(Routes.MAIN_DASHBOARD);
       } catch (e) {
         print("Error during auto-login: $e");
@@ -36,6 +41,8 @@ class LoadingController extends GetxController {
         Get.offAndToNamed(Routes.SIGN_IN);
       }
     } else {
+      // No valid session, clear any stale data and go to sign in
+      await AccessController.clearTokens();
       isAuthenticated.value = false;
       Get.offAndToNamed(Routes.SIGN_IN);
     }

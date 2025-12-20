@@ -142,19 +142,22 @@ def fetch_students_by_student_ids(student_ids: list) -> dict:
 
 
 def update_student_by_id(student_update) -> dict:
-    """Update student name and/or phone number"""
-    from app.db.models.student_model import StudentUpdate
-
+    """Update student ID, name, and/or phone number"""
     conn = connection_to_db()
     try:
         updates = []
         params = []
 
+        # Handle new student ID
+        if student_update.new_student_id and student_update.new_student_id != student_update.student_id:
+            updates.append("student_id = %s")
+            params.append(student_update.new_student_id)
+
         if student_update.student_name:
             updates.append("student_name = %s")
             params.append(student_update.student_name)
 
-        if student_update.phone_number:
+        if student_update.phone_number is not None:
             updates.append("phone_number = %s")
             params.append(student_update.phone_number)
 
@@ -182,6 +185,12 @@ def update_student_by_id(student_update) -> dict:
         }
     except Exception as e:
         conn.rollback()
+        error_msg = str(e)
+        if "duplicate key" in error_msg.lower() or "unique constraint" in error_msg.lower():
+            return {
+                "success": False,
+                "message": "Student ID already exists"
+            }
         return {
             "success": False,
             "message": f"Couldn't update student: {e}"

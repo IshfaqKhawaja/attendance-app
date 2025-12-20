@@ -9,7 +9,8 @@ class StudentIn(BaseModel):
     sem_id : str
 
 class StudentUpdate(BaseModel):
-    student_id: str
+    student_id: str  # Current student ID (used to find the record)
+    new_student_id: Optional[str] = None  # New student ID (if changing)
     student_name: Optional[str] = None
     phone_number: Optional[int] = None
 

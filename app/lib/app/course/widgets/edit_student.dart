@@ -17,6 +17,7 @@ class EditStudent extends StatefulWidget {
 
 class _EditStudentState extends State<EditStudent> {
   final CourseBySemesterIdController controller = Get.find<CourseBySemesterIdController>();
+  late final TextEditingController studentIdController;
   late final TextEditingController studentNameController;
   late final TextEditingController phoneNumberController;
 
@@ -27,12 +28,14 @@ class _EditStudentState extends State<EditStudent> {
   void initState() {
     super.initState();
     // Pre-fill with existing student data
+    studentIdController = TextEditingController(text: widget.student.studentId);
     studentNameController = TextEditingController(text: widget.student.studentName);
     phoneNumberController = TextEditingController(text: widget.student.phoneNumber);
   }
 
   @override
   void dispose() {
+    studentIdController.dispose();
     studentNameController.dispose();
     phoneNumberController.dispose();
     super.dispose();
@@ -54,12 +57,15 @@ class _EditStudentState extends State<EditStudent> {
               'Edit Student',
               style: textStyle.copyWith(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
-            Text(
-              'Student ID: ${widget.student.studentId}',
-              style: textStyle.copyWith(fontSize: 14, color: Colors.grey),
-            ),
             const SizedBox(height: 20),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Student ID',
+                border: OutlineInputBorder(),
+              ),
+              controller: studentIdController,
+            ),
+            const SizedBox(height: 16),
             TextFormField(
               decoration: const InputDecoration(
                 labelText: 'Student Name',
@@ -90,6 +96,7 @@ class _EditStudentState extends State<EditStudent> {
                 try {
                   await controller.editStudent(
                     widget.student.studentId,
+                    studentIdController.text,
                     studentNameController.text,
                     phoneNumberController.text,
                     widget.semesterId,

@@ -1,15 +1,32 @@
-# app/db/attendance_crud.py
+# app/db/crud/daily_attendance.py
 from datetime import date
-from typing import List
+from typing import List, Dict
+from dataclasses import dataclass
 from app.db.connection import connection_to_db
-from app.db.models.daily_attendence import DailyAttendance
 
-def fetch_daily_attendance(att_date: date) -> List[DailyAttendance]:
+
+@dataclass
+class CourseAttendanceSummary:
+    """Summarized attendance for a course (handles multiple classes in a day)."""
+    course_id: str
+    course_name: str
+    total_classes: int
+    attended: int
+
+
+@dataclass
+class StudentDailyAttendance:
+    """Consolidated daily attendance for a student across all courses."""
+    student_id: str
+    student_name: str
+    phone_number: int
+    courses: List[CourseAttendanceSummary]
+
+
+def fetch_daily_attendance(att_date: date) -> List[StudentDailyAttendance]:
     """
-    Returns one record per student for the given date, with:
-      - present_count: # of times present that day
-      - total_count:   # of total attendance records that day
-      - percentage:    (present_count / total_count)*100
+    Returns consolidated attendance for each student for the given date.
+    Groups multiple classes of the same course and summarizes attendance.
     """
     conn = connection_to_db()
     with conn.cursor() as cur:
@@ -18,24 +35,61 @@ def fetch_daily_attendance(att_date: date) -> List[DailyAttendance]:
               a.student_id,
               s.student_name,
               s.phone_number,
-              COUNT(*) FILTER (WHERE a.present)     AS present_count,
-              COUNT(*)                              AS total_count
+              a.course_id,
+              c.course_name,
+              a.present
             FROM attendance a
             JOIN students s USING(student_id)
+            JOIN course c USING(course_id)
             WHERE a.date = %s
-            GROUP BY a.student_id, s.student_name, s.phone_number
+            ORDER BY a.student_id, c.course_name
         """, (att_date,))
         rows = cur.fetchall()
 
-    results = []
-    for sid, name, phone, pres, tot in rows:
-        pct = (pres / tot * 100) if tot else 0.0
-        results.append(DailyAttendance(
-            student_id=sid,
-            student_name=name,
-            phone_number=phone,
-            present_count=pres,
-            total_count=tot,
-            percentage=round(pct, 2),
+    # Group by student, then by course
+    students_dict: Dict[str, Dict] = {}
+
+    for student_id, student_name, phone_number, course_id, course_name, present in rows:
+        if student_id not in students_dict:
+            students_dict[student_id] = {
+                "student_name": student_name,
+                "phone_number": phone_number or 0,
+                "courses": {}  # course_id -> {course_name, total, attended}
+            }
+
+        student = students_dict[student_id]
+        if course_id not in student["courses"]:
+            student["courses"][course_id] = {
+                "course_name": course_name,
+                "total_classes": 0,
+                "attended": 0
+            }
+
+        # Count this class
+        student["courses"][course_id]["total_classes"] += 1
+        if present:
+            student["courses"][course_id]["attended"] += 1
+
+    # Convert to dataclass list
+    result = []
+    for student_id, data in students_dict.items():
+        courses = [
+            CourseAttendanceSummary(
+                course_id=course_id,
+                course_name=info["course_name"],
+                total_classes=info["total_classes"],
+                attended=info["attended"]
+            )
+            for course_id, info in data["courses"].items()
+        ]
+        # Sort courses by name
+        courses.sort(key=lambda c: c.course_name)
+
+        result.append(StudentDailyAttendance(
+            student_id=student_id,
+            student_name=data["student_name"],
+            phone_number=data["phone_number"],
+            courses=courses
         ))
-    return results
+
+    return result
