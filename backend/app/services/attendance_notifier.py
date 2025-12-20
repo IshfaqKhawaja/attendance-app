@@ -1,6 +1,9 @@
+import logging
 from datetime import date
 from app.db.crud.daily_attendance import fetch_daily_attendance
 from app.api.sms import send_sms
+
+logger = logging.getLogger(__name__)
 
 
 def notify_attendance_for_date(att_date: date) -> dict:
@@ -14,7 +17,10 @@ def notify_attendance_for_date(att_date: date) -> dict:
     Data Structures (CS201): Present
     Operating Systems (CS301): Attended 2/3
     """
+    logger.info(f"Starting attendance notification for date: {att_date}")
     students = fetch_daily_attendance(att_date)
+    logger.info(f"Found {len(students)} students with attendance records")
+
     sent_count = 0
     failed_count = 0
     skipped_count = 0
@@ -63,10 +69,12 @@ def notify_attendance_for_date(att_date: date) -> dict:
             failed_count += 1
             print(f"Failed to notify {student.student_id}: {resp.get('error')}")
 
+    logger.info(f"Notification complete: sent={sent_count}, failed={failed_count}, skipped={skipped_count}")
     return {
         "message": f"Sent {sent_count} SMS, {failed_count} failed, {skipped_count} skipped",
         "sent": sent_count,
         "failed": failed_count,
         "skipped": skipped_count,
-        "date": att_date.isoformat()
+        "date": att_date.isoformat(),
+        "students_found": len(students)
     }
