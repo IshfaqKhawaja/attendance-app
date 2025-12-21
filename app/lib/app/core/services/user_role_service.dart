@@ -33,6 +33,9 @@ class UserRoleService extends GetxService {
   /// Check if current user is super admin
   bool get isSuperAdmin => currentRole.isSuperAdmin;
 
+  /// Check if current user is Dean
+  bool get isDean => currentRole.isDean;
+
   /// Check if current user is HOD
   bool get isHod => currentRole.isHod;
 
@@ -50,7 +53,7 @@ class UserRoleService extends GetxService {
 
   /// Get user's display name
   String get userName {
-    if (isSuperAdmin || isHod) {
+    if (isSuperAdmin || isDean || isHod) {
       return _signInController.userData.value.userName;
     } else if (isTeacher) {
       return _signInController.teacherData.value.teacherName;
@@ -60,7 +63,7 @@ class UserRoleService extends GetxService {
 
   /// Get user's ID
   String get userId {
-    if (isSuperAdmin || isHod) {
+    if (isSuperAdmin || isDean || isHod) {
       return _signInController.userData.value.userId;
     } else if (isTeacher) {
       return _signInController.teacherData.value.teacherId;
@@ -70,7 +73,7 @@ class UserRoleService extends GetxService {
 
   /// Get user's department ID
   String? get userDeptId {
-    if (isSuperAdmin || isHod) {
+    if (isSuperAdmin || isDean || isHod) {
       return _signInController.userData.value.deptId;
     } else if (isTeacher) {
       return _signInController.teacherData.value.deptId;
@@ -78,9 +81,9 @@ class UserRoleService extends GetxService {
     return null;
   }
 
-  /// Get user's faculty ID (mainly for super admin)
+  /// Get user's faculty ID (for super admin and dean)
   String? get userFactId {
-    if (isSuperAdmin || isHod) {
+    if (isSuperAdmin || isDean || isHod) {
       return _signInController.userData.value.factId;
     }
     return null;
@@ -116,6 +119,8 @@ class UserRoleService extends GetxService {
     final name = userName;
     if (isSuperAdmin) {
       return 'Viewing';  // No 'Admin' suffix for super admin
+    } else if (isDean) {
+      return 'Viewing';  // Dean is view-only
     } else if (isHod) {
       return 'Welcome\n$name';
     } else if (isTeacher) {

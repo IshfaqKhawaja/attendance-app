@@ -92,11 +92,12 @@ class SignInController extends BaseFormController {
     return handleAsync(() async {
       final otp = otpController.text.trim();
       final email = emailController.text.trim();
-      
+
       final res = await _authRepo.verifyOtp(email, otp);
       final success = res["success"] == true;
       final isRegistered = res["is_registered"] == true;
       final isHod = res["is_hod"] == true;
+      final isDean = res["is_dean"] == true;
       final isSuperAdmin = res["is_super_admin"] == true;
 
       if (success) {
@@ -109,14 +110,15 @@ class SignInController extends BaseFormController {
         await AccessController.saveUserData(res);
 
         // Set user data based on role
-        if (isSuperAdmin || isHod) {
+        // Admin users (Super Admin, Dean, HOD) use UserModel
+        if (isSuperAdmin || isDean || isHod) {
           userData.value = UserModel.fromJson(res);
         } else if (isRegistered) {
           teacherData.value = TeacherModel.fromJson(res);
         }
 
         // Navigate to main dashboard if user is registered, otherwise show registration message
-        if (isSuperAdmin || isHod || isRegistered) {
+        if (isSuperAdmin || isDean || isHod || isRegistered) {
           clearForm(); // Clear form after successful login
           safeNavigateOffAll(Routes.MAIN_DASHBOARD);
         } else {
@@ -161,9 +163,10 @@ class SignInController extends BaseFormController {
     final savedData = await AccessController.getUserData();
     if (savedData != null) {
       final isSuperAdmin = savedData["is_super_admin"] == true;
+      final isDean = savedData["is_dean"] == true;
       final isHod = savedData["is_hod"] == true;
 
-      if (isSuperAdmin || isHod) {
+      if (isSuperAdmin || isDean || isHod) {
         userData.value = UserModel.fromJson(savedData);
       } else {
         teacherData.value = TeacherModel.fromJson(savedData);
@@ -171,9 +174,12 @@ class SignInController extends BaseFormController {
       isUserLoggedIn.value = true;
     }
   }
-  
+
   /// Check if current user is super admin
   bool get isSuperAdmin => userData.value.type.toLowerCase() == 'super_admin';
+
+  /// Check if current user is dean
+  bool get isDean => userData.value.type.toLowerCase() == 'dean';
 
   @override
   void onClose() {

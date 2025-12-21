@@ -74,14 +74,16 @@ def verify_otp(
     # Check if user exists in users table
     user_check = check_if_user_exists(user_id=email_id)
     if user_check["success"]:
-        logger.info(f"User authenticated successfully: {email_id} (type: {user_check.get('type', 'N/A')})")
+        user_type = user_check.get("type", "")
+        logger.info(f"User authenticated successfully: {email_id} (type: {user_type})")
         return {
             **user_check,
             "is_registered": True,
             "access_token": access_token,
             "refresh_token": refresh_token,
-            "is_hod": user_check.get("type", "") == "HOD",
-            "is_super_admin": user_check.get("type", "") == "SUPER_ADMIN",
+            "is_hod": user_type == "HOD",
+            "is_dean": user_type == "DEAN",
+            "is_super_admin": user_type == "SUPER_ADMIN",
             "message": "Login Success",
         }
 

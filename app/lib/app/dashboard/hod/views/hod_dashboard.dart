@@ -17,49 +17,54 @@ class HodDashboard extends StatefulWidget {
 }
 
 class _HodDashboardState extends State<HodDashboard> {
-  final HodDashboardController hodDashboardController = Get.put(
-    HodDashboardController(),
-    permanent: true,
-  );
-
-  // Initialize bottom bar controller at field declaration time to ensure it's ready before build
-  final HodBottomBarController hodBottomBarController = Get.put(
-    HodBottomBarController(),
-    permanent: true,
-  );
-
-  String? deptId;
+  late final HodDashboardController hodDashboardController;
+  late final HodBottomBarController hodBottomBarController;
 
   @override
   void initState() {
     super.initState();
-    deptId = Get.parameters['deptId'];
-    // Defer initialization to after the build phase to avoid setState during build
+    // Get or create controllers
+    hodDashboardController = Get.put(HodDashboardController(), permanent: true);
+    hodBottomBarController = Get.put(HodBottomBarController(), permanent: true);
+
+    // Get department ID from route parameters
+    final deptId = Get.parameters['deptId'];
+    print('HodDashboard initState - deptId from route: $deptId');
+    print('HodDashboard initState - old routeDeptId: ${hodDashboardController.routeDeptId}');
+
+    // Set routeDeptId immediately (synchronously) so it's available right away
+    hodDashboardController.routeDeptId = deptId;
+    print('HodDashboard initState - new routeDeptId: ${hodDashboardController.routeDeptId}');
+
+    // Load data after the frame to avoid setState during build
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      hodDashboardController.init(deptId: deptId);
-      // Reload teachers when department changes (for SuperAdmin navigation)
+      print('HodDashboard postFrameCallback - routeDeptId: ${hodDashboardController.routeDeptId}');
+      // Reset to first tab (Programs) when navigating to a new department
+      hodBottomBarController.currentIndex.value = 0;
+      hodDashboardController.loadPrograms();
       hodBottomBarController.reloadTeachers();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final roleService = Get.find<UserRoleService>();
     return Obx(() {
       return DashboardScaffold(
-        showBackButton: Get.find<UserRoleService>().isSuperAdmin,
+        showBackButton: roleService.isSuperAdmin || roleService.isDean,
         headerContent: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              Get.find<UserRoleService>().getGreetingMessage(),
+              roleService.getGreetingMessage(),
               style: GoogleFonts.openSans(
                 fontSize: 28,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            if (Get.find<UserRoleService>().isSuperAdmin) ...<Widget>[
+            if (roleService.isSuperAdmin || roleService.isDean) ...<Widget>[
               const SizedBox(height: 8),
               if (hodDashboardController.departmentName != null)
                 Text(

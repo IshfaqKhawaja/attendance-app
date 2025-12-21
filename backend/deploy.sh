@@ -148,6 +148,20 @@ else
     echo -e "${YELLOW}!${NC} Webapp not accessible (may be empty or not built)"
 fi
 
+# Step 11: Run database migrations
+echo ""
+echo -e "${YELLOW}Step 11: Running database migrations...${NC}"
+
+# Add DEAN role to user_type enum if it doesn't exist
+echo "Adding DEAN role to user_type enum..."
+docker exec attendance-postgres psql -U myuser -d mydb -c "ALTER TYPE user_type ADD VALUE IF NOT EXISTS 'DEAN' AFTER 'HOD';" 2>/dev/null || echo "  - DEAN role already exists or enum update skipped"
+
+# Insert Dean user if not exists
+echo "Creating Dean user..."
+docker exec attendance-postgres psql -U myuser -d mydb -c "INSERT INTO users (user_id, user_name, type, dept_id, fact_id) VALUES ('dean@test.com', 'Faculty of Engineering Dean', 'DEAN', NULL, 'F006') ON CONFLICT (user_id) DO NOTHING;" 2>/dev/null && echo -e "${GREEN}✓${NC} Dean user created/verified" || echo -e "${YELLOW}!${NC} Could not create Dean user (may already exist)"
+
+echo -e "${GREEN}✓${NC} Database migrations complete"
+
 # Get server IP
 SERVER_IP=$(hostname -I 2>/dev/null | awk '{print $1}' || echo "localhost")
 

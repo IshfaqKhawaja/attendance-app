@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart' show ValueKey;
 import 'package:app/app/course/views/course.dart';
 import 'package:app/app/course/views/students.dart';
 import 'package:app/app/dashboard/teacher/views/teacher_dashboard.dart';
+import 'package:app/app/dashboard/dean/views/dean_dashboard.dart';
 import 'package:get/get.dart';
 // Local Imports
 import '../course/views/course_by_semester_id.dart';
@@ -39,17 +41,26 @@ class Pages {
       binding: TeacherDashboardBinding(),
     ),
     GetPage(
-      name: Routes.HOD_DASHBOARD, 
+      name: Routes.HOD_DASHBOARD,
       page: () => const HodDashboard(),
       binding: HodDashboardBinding(),
     ),
     GetPage(
-      name: Routes.HOD_DASHBOARD_WITH_DEPT, 
-      page: () => const HodDashboard(),
+      name: Routes.HOD_DASHBOARD_WITH_DEPT,
+      page: () {
+        // Use deptId as key to force widget recreation when department changes
+        final deptId = Get.parameters['deptId'] ?? '';
+        return HodDashboard(key: ValueKey(deptId));
+      },
       binding: HodDashboardBinding(),
     ),
     GetPage(
-      name: Routes.SUPER_ADMIN_DASHBOARD, 
+      name: Routes.DEAN_DASHBOARD,
+      page: () => DeanDashboard(),
+      binding: DeanDashboardBinding(),
+    ),
+    GetPage(
+      name: Routes.SUPER_ADMIN_DASHBOARD,
       page: () => Dashboard(),
       binding: SuperAdminDashboardBinding(),
     ),

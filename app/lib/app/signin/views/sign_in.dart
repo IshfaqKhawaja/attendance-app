@@ -27,8 +27,15 @@ class _SignInState extends State<SignIn> {
     } catch (e) {
       controller = Get.put(SignInController(), permanent: true);
     }
-    // Clear form when entering sign-in page
-    controller.clearForm();
+    // Reset form key immediately to avoid duplicate GlobalKey error
+    // This must happen before the widget tree is built
+    controller.resetFormKey();
+    // Clear form fields after the frame to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.clearFormFields();
+      controller.otpReady.value = false;
+      controller.resendCooldown.value = 0;
+    });
   }
 
   @override

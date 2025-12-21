@@ -179,6 +179,13 @@ def insert_users(conn):
                 "fact_id": fact_id
             },
             {
+                "user_id": "dean@test.com",
+                "user_name": "Faculty of Engineering Dean",
+                "type": "DEAN",
+                "dept_id": None,
+                "fact_id": fact_id
+            },
+            {
                 "user_id": "superadmin@test.com",
                 "user_name": "Super Admin",
                 "type": "SUPER_ADMIN",

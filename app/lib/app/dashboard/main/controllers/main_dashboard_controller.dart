@@ -59,6 +59,9 @@ class MainDashboardController extends BaseController {
       if (userData.type == "SUPER_ADMIN") {
         currentDashboard.value = Routes.SUPER_ADMIN_DASHBOARD;
         isTeacherOnWeb.value = false;
+      } else if (userData.type == "DEAN") {
+        currentDashboard.value = Routes.DEAN_DASHBOARD;
+        isTeacherOnWeb.value = false;
       } else if (userData.type == "HOD") {
         currentDashboard.value = Routes.HOD_DASHBOARD;
         isTeacherOnWeb.value = false;
@@ -99,6 +102,9 @@ class MainDashboardController extends BaseController {
   /// Check if user is super admin
   bool get isSuperAdmin => (_signInController?.userData.value.type ?? "") == "SUPER_ADMIN";
 
+  /// Check if user is Dean
+  bool get isDean => (_signInController?.userData.value.type ?? "") == "DEAN";
+
   /// Check if user is HOD
   bool get isHod => (_signInController?.userData.value.type ?? "") == "HOD";
 
@@ -108,9 +114,9 @@ class MainDashboardController extends BaseController {
   /// Check if running on web
   bool get isWeb => PlatformUtils.isWeb;
 
-  /// Get user's department ID (works for both HOD and Teacher)
+  /// Get user's department ID (works for HOD, Dean, and Teacher)
   String? get userDeptId {
-    if (isHod || isSuperAdmin) {
+    if (isHod || isDean || isSuperAdmin) {
       return _signInController?.userData.value.deptId;
     } else if (isTeacher) {
       return _signInController?.teacherData.value.deptId;
@@ -142,6 +148,7 @@ class MainDashboardController extends BaseController {
         try {
           Get.delete(tag: 'teacher_dashboard');
           Get.delete(tag: 'hod_dashboard');
+          Get.delete(tag: 'dean_dashboard');
           Get.delete(tag: 'super_admin_dashboard');
         } catch (e) {
           // Controllers might not exist, that's fine

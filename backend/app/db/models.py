@@ -29,7 +29,12 @@ statements = [
     """
     DO $$ BEGIN
         IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_type') THEN
-            CREATE TYPE user_type AS ENUM ('NORMAL', 'HOD', 'SUPER_ADMIN');
+            CREATE TYPE user_type AS ENUM ('NORMAL', 'HOD', 'DEAN', 'SUPER_ADMIN');
+        ELSE
+            -- Add DEAN to existing enum if it doesn't exist
+            IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'DEAN' AND enumtypid = (SELECT oid FROM pg_type WHERE typname = 'user_type')) THEN
+                ALTER TYPE user_type ADD VALUE 'DEAN' AFTER 'HOD';
+            END IF;
         END IF;
     END $$;
     """,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../controllers/main_dashboard_controller.dart';
 import '../../teacher/views/teacher_dashboard.dart';
 import '../../hod/views/hod_dashboard.dart';
+import '../../dean/views/dean_dashboard.dart';
 import '../../super_admin/views/dashboard.dart';
 
 /// Main Dashboard that routes to the appropriate dashboard based on user role
@@ -188,6 +189,8 @@ class MainDashboard extends StatelessWidget {
 
     if (controller.isSuperAdmin) {
       dashboard = Dashboard(); // Super Admin Dashboard
+    } else if (controller.isDean) {
+      dashboard = DeanDashboard(); // Dean Dashboard
     } else if (controller.isHod) {
       dashboard = const HodDashboard(); // HOD Dashboard
     } else if (controller.isTeacher) {

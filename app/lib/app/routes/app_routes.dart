@@ -6,6 +6,7 @@ class Routes {
   static const String TEACHER_DASHBOARD = "/teacher_dashboard";
   static const String HOD_DASHBOARD = "/hod_dashboard";
   static const String HOD_DASHBOARD_WITH_DEPT = "/hod_dashboard/:deptId";
+  static const String DEAN_DASHBOARD = "/dean_dashboard";
   static const String SUPER_ADMIN_DASHBOARD = "/super_admin_dashboard";
   static const String DEPARTMENTS = "/departments";
   static const String SEMESTER = "/semester";

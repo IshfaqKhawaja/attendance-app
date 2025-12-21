@@ -59,9 +59,12 @@ class HodDashboardController extends BaseController {
   /// Navigate to HOD Dashboard with optional department ID
   static void navigateTo({String? deptId}) {
     if (deptId != null) {
-      Get.toNamed(Routes.HOD_DASHBOARD_WITH_DEPT.replaceAll(':deptId', deptId));
+      final route = Routes.HOD_DASHBOARD_WITH_DEPT.replaceAll(':deptId', deptId);
+      // Use toNamed with preventDuplicates: false to ensure navigation happens
+      // even if a similar route exists in the stack
+      Get.toNamed(route, preventDuplicates: false);
     } else {
-      Get.toNamed(Routes.HOD_DASHBOARD);
+      Get.toNamed(Routes.HOD_DASHBOARD, preventDuplicates: false);
     }
   }
 
