@@ -39,23 +39,32 @@ class ManageTeachersController extends GetxController {
     // If department ID is not available (e.g., during sign-out), clear teachers and return
     if (deptId.value.isEmpty) {
       teachers.clear();
+      errorMessage.value = '';
       isLoading.value = false;
       return;
     }
 
     isLoading.value = true;
+    errorMessage.value = ''; // Clear any previous error
+
     try {
       final res = await client.getJson(Endpoints.displayTeacherByDeptId(deptId.value));
       if (res['success'] == true) {
-        teachers.value = (res['teachers'] as List<dynamic>)
-            .map((e) => Teacher.fromJson(e as Map<String, dynamic>))
-            .toList();
+        final teacherList = res['teachers'] as List<dynamic>?;
+        if (teacherList != null) {
+          teachers.value = teacherList
+              .map((e) => Teacher.fromJson(e as Map<String, dynamic>))
+              .toList();
+        } else {
+          teachers.clear();
+        }
         errorMessage.value = '';
       } else {
+        teachers.clear();
         errorMessage.value = res['message'] ?? 'Failed to load teachers';
       }
-
     } catch (e) {
+      teachers.clear();
       errorMessage.value = 'Failed to load teachers';
     } finally {
       isLoading.value = false;
@@ -71,8 +80,12 @@ class ManageTeachersController extends GetxController {
       };
       final response = await client.postJson(Endpoints.deleteTeacher, body);
       if (response['success'] == true) {
+        // Remove from local list immediately for instant UI feedback
+        teachers.removeWhere((t) => t.teacher_id == teacherId);
         Get.snackbar("Success", "Teacher deleted successfully");
         return true;
+      } else {
+        Get.snackbar("Error", response['message'] ?? "Failed to delete teacher");
       }
     } catch (e) {
       Get.snackbar("Error", "An error occurred: $e");

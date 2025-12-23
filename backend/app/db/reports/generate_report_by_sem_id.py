@@ -37,24 +37,77 @@ def generate_semester_attendance_report_xls(sem_id: str, output_path: str):
         LIMIT 1;
     """
 
-    # Query to get attendance summary per student per course
-    # Only counts days where student has attendance record (P or A), excludes N/A
+    # Query to get all students enrolled in courses for this semester
+    # This includes both semester students (via student_enrollment) and local/backlog students (via course_students)
     sql = """
+        WITH semester_courses AS (
+            -- Get all courses in this semester
+            SELECT course_id, course_name
+            FROM course
+            WHERE sem_id = %(sem_id)s
+        ),
+        all_course_students AS (
+            -- Get students enrolled in semester (they have access to all courses)
+            SELECT DISTINCT
+                s.student_id,
+                s.student_name,
+                sc.course_id,
+                sc.course_name,
+                TRUE as is_enrolled
+            FROM students s
+            JOIN student_enrollment se ON s.student_id = se.student_id
+            CROSS JOIN semester_courses sc
+            WHERE se.sem_id = %(sem_id)s
+
+            UNION
+
+            -- Get local/backlog students (only enrolled in specific courses via course_students)
+            SELECT DISTINCT
+                s.student_id,
+                s.student_name,
+                cs.course_id,
+                sc.course_name,
+                TRUE as is_enrolled
+            FROM students s
+            JOIN course_students cs ON s.student_id = cs.student_id
+            JOIN semester_courses sc ON cs.course_id = sc.course_id
+            WHERE NOT EXISTS (
+                -- Exclude students already enrolled in semester
+                SELECT 1 FROM student_enrollment se
+                WHERE se.student_id = s.student_id AND se.sem_id = %(sem_id)s
+            )
+        ),
+        all_students_all_courses AS (
+            -- Create a cross join of all unique students with all courses
+            -- to ensure we have N/A entries for courses a student isn't enrolled in
+            SELECT DISTINCT
+                acs.student_id,
+                acs.student_name,
+                sc.course_id,
+                sc.course_name,
+                CASE
+                    WHEN EXISTS (
+                        SELECT 1 FROM all_course_students acs2
+                        WHERE acs2.student_id = acs.student_id
+                        AND acs2.course_id = sc.course_id
+                    ) THEN TRUE
+                    ELSE FALSE
+                END as is_enrolled
+            FROM (SELECT DISTINCT student_id, student_name FROM all_course_students) acs
+            CROSS JOIN semester_courses sc
+        )
         SELECT
-            s.student_id,
-            s.student_name,
-            c.course_id,
-            c.course_name,
-            COUNT(*) FILTER (WHERE a.present = true) AS present_count,
-            COUNT(*) AS total_classes
-        FROM students s
-        JOIN student_enrollment se ON s.student_id = se.student_id
-        JOIN course c ON c.sem_id = se.sem_id
-        LEFT JOIN attendance a ON a.student_id = s.student_id AND a.course_id = c.course_id
-        WHERE se.sem_id = %(sem_id)s
-        GROUP BY s.student_id, s.student_name, c.course_id, c.course_name
-        HAVING COUNT(*) > 0
-        ORDER BY s.student_name, c.course_name;
+            asac.student_id,
+            asac.student_name,
+            asac.course_id,
+            asac.course_name,
+            asac.is_enrolled,
+            COALESCE(COUNT(*) FILTER (WHERE a.present = true), 0) AS present_count,
+            COALESCE(COUNT(a.present), 0) AS total_classes
+        FROM all_students_all_courses asac
+        LEFT JOIN attendance a ON a.student_id = asac.student_id AND a.course_id = asac.course_id
+        GROUP BY asac.student_id, asac.student_name, asac.course_id, asac.course_name, asac.is_enrolled
+        ORDER BY asac.student_name, asac.course_name;
     """
 
     try:
@@ -82,9 +135,11 @@ def generate_semester_attendance_report_xls(sem_id: str, output_path: str):
             if row['total_classes'] > 0 else 0, axis=1
         )
 
-        # Create formatted attendance string: "Present/Total (XX%)"
+        # Create formatted attendance string: "Present/Total (XX%)" or "N/A" if not enrolled
         df['attendance_str'] = df.apply(
-            lambda row: f"{row['present_count']}/{row['total_classes']} ({row['percentage']}%)",
+            lambda row: "N/A" if not row['is_enrolled']
+            else (f"{row['present_count']}/{row['total_classes']} ({row['percentage']}%)"
+                  if row['total_classes'] > 0 else "0/0 (0%)"),
             axis=1
         )
 
@@ -100,7 +155,7 @@ def generate_semester_attendance_report_xls(sem_id: str, output_path: str):
             columns='course_header',
             values='attendance_str',
             aggfunc='first',
-            fill_value='-'
+            fill_value='N/A'
         )
 
         pivot_df.reset_index(inplace=True)
@@ -126,6 +181,34 @@ def generate_semester_attendance_report_xls(sem_id: str, output_path: str):
         ordered_cols = ['Student ID', 'Student Name'] + sorted(course_cols)
         pivot_df = pivot_df[ordered_cols]
 
+        # Calculate overall attendance for each student (only for courses they're enrolled in)
+        def calculate_overall(row):
+            total_present = 0
+            total_classes = 0
+            for col in course_cols:
+                cell_val = row[col]
+                # Skip N/A cells (student not enrolled in this course)
+                if cell_val and cell_val != 'N/A' and '/' in str(cell_val):
+                    try:
+                        # Parse "Present/Total (XX%)" format
+                        parts = str(cell_val).split('/')
+                        present = int(parts[0])
+                        total = int(parts[1].split(' ')[0])
+                        total_present += present
+                        total_classes += total
+                    except (ValueError, IndexError):
+                        pass
+            if total_classes > 0:
+                percentage = round((total_present / total_classes * 100), 1)
+                return f"{total_present}/{total_classes} ({percentage}%)"
+            return "N/A"
+
+        pivot_df['Overall Attendance'] = pivot_df.apply(calculate_overall, axis=1)
+
+        # Update ordered columns to include Overall Attendance at the end
+        ordered_cols = ['Student ID', 'Student Name'] + sorted(course_cols) + ['Overall Attendance']
+        pivot_df = pivot_df[ordered_cols]
+
         # Write to Excel with formatting
         with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
             # Write main data
@@ -139,14 +222,14 @@ def generate_semester_attendance_report_xls(sem_id: str, output_path: str):
             worksheet.merge_cells('A1:F1')
             title_cell = worksheet['A1']
             title_cell.value = "SEMESTER ATTENDANCE REPORT"
-            title_cell.font = Font(bold=True, size=16)
+            title_cell.font = Font(bold=True, size=18)
             title_cell.alignment = Alignment(horizontal='center')
 
             # Add subtitle with semester and program info
             worksheet.merge_cells('A2:F2')
             subtitle_cell = worksheet['A2']
             subtitle_cell.value = f"Semester: {sem_name} | Program: {prog_name} | Format: Present/Total (Percentage)"
-            subtitle_cell.font = Font(size=10, italic=True)
+            subtitle_cell.font = Font(bold=True, size=11)
             subtitle_cell.alignment = Alignment(horizontal='center')
 
             # Style the header row
@@ -170,6 +253,7 @@ def generate_semester_attendance_report_xls(sem_id: str, output_path: str):
             yellow_fill = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")
             orange_fill = PatternFill(start_color="FCD5B4", end_color="FCD5B4", fill_type="solid")
             red_fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+            gray_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")  # For N/A cells
 
             # Style data rows and apply conditional formatting
             for row_idx in range(5, worksheet.max_row + 1):
@@ -177,22 +261,28 @@ def generate_semester_attendance_report_xls(sem_id: str, output_path: str):
                     cell.border = thin_border
                     cell.alignment = Alignment(horizontal='center')
 
-                    # Color code cells containing percentages
-                    if cell.value and isinstance(cell.value, str) and '%' in str(cell.value):
-                        try:
-                            # Extract percentage from string like "10/15 (66.7%)"
-                            percent_str = str(cell.value).split('(')[1].replace('%)', '')
-                            percent_val = float(percent_str)
-                            if percent_val >= 90:
-                                cell.fill = green_fill
-                            elif percent_val >= 75:
-                                cell.fill = yellow_fill
-                            elif percent_val >= 60:
-                                cell.fill = orange_fill
-                            else:
-                                cell.fill = red_fill
-                        except (ValueError, IndexError):
-                            pass
+                    # Color code cells
+                    if cell.value and isinstance(cell.value, str):
+                        cell_str = str(cell.value)
+                        # Gray for N/A cells (student not enrolled in course)
+                        if cell_str == 'N/A':
+                            cell.fill = gray_fill
+                        # Color code cells containing percentages
+                        elif '%' in cell_str:
+                            try:
+                                # Extract percentage from string like "10/15 (66.7%)"
+                                percent_str = cell_str.split('(')[1].replace('%)', '')
+                                percent_val = float(percent_str)
+                                if percent_val >= 90:
+                                    cell.fill = green_fill
+                                elif percent_val >= 75:
+                                    cell.fill = yellow_fill
+                                elif percent_val >= 60:
+                                    cell.fill = orange_fill
+                                else:
+                                    cell.fill = red_fill
+                            except (ValueError, IndexError):
+                                pass
 
             # Auto-adjust column widths (skip merged cells)
             for col_idx in range(1, worksheet.max_column + 1):
@@ -211,14 +301,6 @@ def generate_semester_attendance_report_xls(sem_id: str, output_path: str):
             # Set specific column widths
             worksheet.column_dimensions['A'].width = 15  # Student ID
             worksheet.column_dimensions['B'].width = 25  # Student Name
-
-            # Add legend at bottom
-            last_row = worksheet.max_row + 2
-            worksheet.cell(row=last_row, column=1, value="Legend:").font = Font(bold=True)
-            worksheet.cell(row=last_row, column=2, value=">=90% (Excellent)").fill = green_fill
-            worksheet.cell(row=last_row, column=3, value="75-89% (Good)").fill = yellow_fill
-            worksheet.cell(row=last_row, column=4, value="60-74% (Warning)").fill = orange_fill
-            worksheet.cell(row=last_row, column=5, value="<60% (Critical)").fill = red_fill
 
         print(f"\n🎉 Consolidated report saved to '{os.path.abspath(output_path)}'")
 

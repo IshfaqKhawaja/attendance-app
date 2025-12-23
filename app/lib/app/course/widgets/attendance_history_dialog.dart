@@ -414,7 +414,7 @@ class AttendanceHistoryDialog extends StatelessWidget {
               ],
             ),
           ),
-          // Session indicators (if multiple sessions)
+          // Class indicators (if multiple classes)
           if (totalSlots > 1)
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -428,23 +428,6 @@ class AttendanceHistoryDialog extends StatelessWidget {
                   ),
                 );
               }).toList(),
-            ),
-          // Status badge
-          if (totalSlots <= 1)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: student.isPresent ? Colors.green.shade100 : Colors.red.shade100,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                student.isPresent ? 'P' : 'A',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: student.isPresent ? Colors.green.shade700 : Colors.red.shade700,
-                ),
-              ),
             ),
         ],
       ),
@@ -546,12 +529,12 @@ class AttendanceHistoryDialog extends StatelessWidget {
                           ),
                         ],
                       ),
-                      // Show sessions info if multiple attendance sessions
+                      // Show classes info if multiple attendance classes
                       if (day.slotsCount > 1)
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            '${day.slotsCount} sessions',
+                            '${day.slotsCount} classes',
                             style: TextStyle(fontSize: 11, color: Colors.blue.shade600),
                           ),
                         ),
@@ -618,7 +601,7 @@ class AttendanceHistoryDialog extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            '${day.slotsCount} attendance sessions taken',
+                            '${day.slotsCount} classes taken',
                             style: TextStyle(fontSize: 12, color: Colors.blue.shade700),
                           ),
                         ),
@@ -643,19 +626,11 @@ class AttendanceHistoryDialog extends StatelessWidget {
                   SizedBox(
                     width: 100,
                     child: Text(
-                      'Sessions',
+                      'Classes',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                const SizedBox(
-                  width: 80,
-                  child: Text(
-                    'Status',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
               ],
             ),
           ),
@@ -717,7 +692,7 @@ class AttendanceHistoryDialog extends StatelessWidget {
               ],
             ),
           ),
-          // Session indicators (if multiple sessions) - show tick/cross icons
+          // Class indicators (if multiple classes) - show tick/cross icons
           if (totalSlots > 1)
             SizedBox(
               width: 100,
@@ -735,26 +710,6 @@ class AttendanceHistoryDialog extends StatelessWidget {
                 }).toList(),
               ),
             ),
-          // Overall status
-          SizedBox(
-            width: 80,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: student.isPresent ? Colors.green.shade100 : Colors.red.shade100,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                student.isPresent ? 'Present' : 'Absent',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: student.isPresent ? Colors.green.shade700 : Colors.red.shade700,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
         ],
       ),
     );

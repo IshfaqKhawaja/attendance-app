@@ -18,7 +18,8 @@ class SemesterController  extends GetxController {
       if (res["success"] == true) {
         semesters.value = (res["semesters"] as List)
             .map((e) => SemesterModel.fromJson(e))
-            .toList();
+            .toList()
+          ..sort((a, b) => a.semName.toLowerCase().compareTo(b.semName.toLowerCase()));
       } else {
         print('Failed to load semesters: ${res["message"]}');
       }

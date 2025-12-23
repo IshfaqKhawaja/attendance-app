@@ -199,39 +199,183 @@ class CourseController extends GetxController {
     initialDate: DateTime.now().subtract(Duration(days: 7)),
     firstDate: DateTime(2022),
     lastDate: DateTime.now(),
-    helpText: "Start Date",
+    helpText: "Select Start Date",
+    builder: (context, child) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.light(
+            primary: Get.theme.primaryColor,
+            onPrimary: Colors.white,
+            surface: Colors.white,
+            onSurface: Colors.black87,
+          ),
+          dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+          datePickerTheme: DatePickerThemeData(
+            backgroundColor: Colors.white,
+            headerBackgroundColor: Get.theme.primaryColor,
+            headerForegroundColor: Colors.white,
+            dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return Get.theme.primaryColor;
+              }
+              return null;
+            }),
+            todayBorder: BorderSide(color: Get.theme.primaryColor),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+        ),
+        child: child!,
+      );
+    },
   );
 
   if (startDate == null) return;
+
+  // ignore: use_build_context_synchronously
+  if (!context.mounted) return;
 
   DateTime? endDate = await showDatePicker(
     context: context,
     initialDate: DateTime.now(),
     firstDate: startDate,
     lastDate: DateTime.now(),
-    helpText: "End Date",
+    helpText: "Select End Date",
+    builder: (context, child) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.light(
+            primary: Get.theme.primaryColor,
+            onPrimary: Colors.white,
+            surface: Colors.white,
+            onSurface: Colors.black87,
+          ),
+          dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+          datePickerTheme: DatePickerThemeData(
+            backgroundColor: Colors.white,
+            headerBackgroundColor: Get.theme.primaryColor,
+            headerForegroundColor: Colors.white,
+            dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return Get.theme.primaryColor;
+              }
+              return null;
+            }),
+            todayBorder: BorderSide(color: Get.theme.primaryColor),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+        ),
+        child: child!,
+      );
+    },
   );
 
   if (endDate == null) return;
 
-  // Confirm dialog
+  // Confirm dialog with elegant design
   Get.dialog(
-    AlertDialog(
-      title: Text("Generate Report"),
-      content: Text("Do you want to generate report from ${startDate.day}/${startDate.month}/${startDate.year} to ${endDate.day}/${endDate.month}/${endDate.year}?"),
-      actions: [
-        TextButton(
-          onPressed: () => Get.back(),
-          child: Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
+    Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        constraints: BoxConstraints(
+          maxWidth: 400,
         ),
-        TextButton(
-          onPressed: () {
-            Get.back(); // close the dialog
-            generateReport(courseName, startDate, endDate);
-          },
-          child: Text("Generate", style: TextStyle(fontWeight: FontWeight.bold)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Icon
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: Colors.green.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.summarize,
+                size: 28,
+                color: Colors.green,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Title
+            Text(
+              'Generate Report',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // Message
+            Text(
+              "Generate report from ${startDate.day}/${startDate.month}/${startDate.year} to ${endDate.day}/${endDate.month}/${endDate.year}?",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+
+            // Buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Get.back(),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.back();
+                      generateReport(courseName, startDate, endDate);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Get.theme.colorScheme.primary,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      'Generate',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-      ],
+      ),
     ),
   );
 }
@@ -350,7 +494,7 @@ Future<void> addStudent(String studentId, String studentName, String phoneNumber
   }
 }
 
-Future<void> editStudent(String studentId, String studentName, String phoneNumber, String semId) async {
+Future<void> editStudent(String studentId, String studentName, String phoneNumber, String semId, {String? newStudentId}) async {
   if (studentName.isEmpty || phoneNumber.isEmpty) {
     Get.snackbar("Error", "Please fill all fields");
     return;
@@ -360,11 +504,18 @@ Future<void> editStudent(String studentId, String studentName, String phoneNumbe
     // Parse phone number to int, default to 0 if invalid
     int phoneNumberInt = int.tryParse(phoneNumber) ?? 0;
 
-    var res = await client.postJson(Endpoints.editStudent, {
+    final Map<String, dynamic> body = {
       "student_id": studentId,
       "student_name": studentName,
       "phone_number": phoneNumberInt,
-    });
+    };
+
+    // Add new_student_id if it's different from the original
+    if (newStudentId != null && newStudentId.isNotEmpty && newStudentId != studentId) {
+      body["new_student_id"] = newStudentId;
+    }
+
+    var res = await client.postJson(Endpoints.editStudent, body);
 
     if (res["success"] == true) {
       Get.snackbar("Success", "Student Updated Successfully");
@@ -378,11 +529,11 @@ Future<void> editStudent(String studentId, String studentName, String phoneNumbe
   }
 }
 
-Future<void> deleteStudentFromCourse(String studentId, String semId) async {
+Future<void> deleteStudentFromCourse(String studentId) async {
   try {
-    var res = await client.postJson(Endpoints.deleteStudentById, {
+    var res = await client.postJson(Endpoints.removeStudentFromCourse, {
       "student_id": studentId,
-      "sem_id": semId,
+      "course_id": courseId,
     });
 
     if (res["success"] == true) {
@@ -397,6 +548,34 @@ Future<void> deleteStudentFromCourse(String studentId, String semId) async {
   }
 }
 
+/// Add a local/backlog student directly to this course only (without semester enrollment)
+Future<void> addLocalStudent(String studentId, String studentName, String phoneNumber) async {
+  if (studentId.isEmpty || studentName.isEmpty || phoneNumber.isEmpty) {
+    Get.snackbar("Error", "Please fill all fields");
+    return;
+  }
+
+  try {
+    int phoneNumberInt = int.tryParse(phoneNumber) ?? 0;
+
+    var res = await client.postJson(Endpoints.addLocalStudentToCourse, {
+      "student_id": studentId,
+      "student_name": studentName,
+      "phone_number": phoneNumberInt,
+      "course_id": courseId,
+    });
+
+    if (res["success"] == true) {
+      Get.snackbar("Success", "Local Student Added Successfully");
+      await getStudentsList(); // Refresh the list
+      await getStudentsForAttendence(); // Refresh attendance list
+    } else {
+      Get.snackbar("Error", res["message"]?.toString() ?? "Failed to add local student");
+    }
+  } catch (e) {
+    Get.snackbar("Error", "Failed to add local student: $e");
+  }
+}
 
 
 }

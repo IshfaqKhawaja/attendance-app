@@ -1,16 +1,14 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-
-import '../../core/constants/typography.dart';
 import '../../semester/controllers/add_semester_controller.dart';
 
 class AddSemester extends StatefulWidget {
-
   final String progId;
-  AddSemester({super.key, required this.progId});
+  const AddSemester({super.key, required this.progId});
 
   @override
   State<AddSemester> createState() => _AddSemesterState();
@@ -20,7 +18,7 @@ class _AddSemesterState extends State<AddSemester> {
   final AddSemesterController addSemesterController = Get.put(AddSemesterController());
 
   // Max width for dialog on web
-  static const double maxDialogWidth = 400;
+  static const double maxDialogWidth = 450;
 
   @override
   void initState() {
@@ -30,99 +28,166 @@ class _AddSemesterState extends State<AddSemester> {
 
   @override
   Widget build(BuildContext context) {
-    final sizedBox = SizedBox(height: 20);
-
     return Container(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(20.0),
       width: kIsWeb ? null : Get.width * 0.9,
       constraints: BoxConstraints(
         maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
-        maxHeight: Get.size.height * 0.45,
+        maxHeight: Get.size.height * 0.55,
       ),
-      child: Obx((){
+      child: Obx(() {
         final startDate = addSemesterController.startDate.value;
         final endDate = addSemesterController.endDate.value;
-        return ListView(
-          children: [
-             Text(
-              'Add Semester',
-              style: textStyle.copyWith(fontSize: 24),
-            ),
-            sizedBox,
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Semester Name'),
-              controller: addSemesterController.semesterNameController.value,
-            ),
-            sizedBox,
-            Row(
-              children: [
-                if (startDate != null)
+        return Form(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              // Header
+              Row(
+                children: [
+                  Icon(Icons.add_circle, color: Get.theme.primaryColor, size: 28),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Start: ${DateFormat('dd/MM/yy').format(startDate)}',
-                      style: textStyle.copyWith(fontSize: 11),
-                      overflow: TextOverflow.ellipsis,
+                      'Add New Semester',
+                      style: GoogleFonts.openSans(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                if (startDate != null && endDate != null)
-                  SizedBox(width: 8),
-                if (endDate != null)
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    icon: Icon(Icons.close),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              // Semester Name
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Semester Name *',
+                  hintText: 'e.g., Fall 2024, Spring 2025',
+                  prefixIcon: Icon(Icons.school),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                controller: addSemesterController.semesterNameController.value,
+                style: GoogleFonts.openSans(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+
+              // Date display
+              if (startDate != null || endDate != null)
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.date_range, color: Get.theme.primaryColor, size: 20),
+                      const SizedBox(width: 8),
+                      if (startDate != null)
+                        Expanded(
+                          child: Text(
+                            'Start: ${DateFormat('dd/MM/yyyy').format(startDate)}',
+                            style: GoogleFonts.openSans(fontSize: 13),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      if (startDate != null && endDate != null)
+                        const SizedBox(width: 8),
+                      if (endDate != null)
+                        Expanded(
+                          child: Text(
+                            'End: ${DateFormat('dd/MM/yyyy').format(endDate)}',
+                            style: GoogleFonts.openSans(fontSize: 13),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              if (startDate != null || endDate != null)
+                const SizedBox(height: 16),
+
+              // Date Selection Buttons
+              Row(
+                children: [
                   Expanded(
-                    child: Text(
-                      'End: ${DateFormat('dd/MM/yy').format(endDate)}',
-                      style: textStyle.copyWith(fontSize: 11),
-                      overflow: TextOverflow.ellipsis,
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        await addSemesterController.selectStartDate(context);
+                      },
+                      icon: Icon(Icons.calendar_today, size: 18),
+                      label: Text(
+                        startDate == null ? "Select Start Date *" : "Change Start",
+                        style: GoogleFonts.openSans(fontSize: 14),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
                   ),
-              ],
-            ),
-            sizedBox,
-            // Select Start/End Date Button
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await addSemesterController.selectStartDate(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        await addSemesterController.selectEndDate(context);
+                      },
+                      icon: Icon(Icons.event, size: 18),
+                      label: Text(
+                        endDate == null ? "Select End Date *" : "Change End",
+                        style: GoogleFonts.openSans(fontSize: 14),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text("Select Start", textAlign: TextAlign.center),
-                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Add Button
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 54),
+                  backgroundColor: Get.theme.colorScheme.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await addSemesterController.selectEndDate(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                    ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text("Select End", textAlign: TextAlign.center),
-                    ),
+                icon: Icon(Icons.add, color: Colors.white),
+                onPressed: () async {
+                  final added = await addSemesterController.addSemester(widget.progId);
+                  if (context.mounted) {
+                    Navigator.of(context).pop(added);
+                  }
+                },
+                label: Text(
+                  'Add Semester',
+                  style: GoogleFonts.openSans(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
                   ),
                 ),
-              ],
-            ), 
-            sizedBox,
-            ElevatedButton(
-              onPressed: () async {
-                final added = await addSemesterController.addSemester(widget.progId);
-                Navigator.of(context).pop(added);
-              },
-              child: Text("Add Semester", style: textStyle.copyWith(fontSize: 16),)
-            ),
-          ]
+              ),
+            ],
+          ),
         );
-      }
-      ),
+      }),
     );
   }
 }

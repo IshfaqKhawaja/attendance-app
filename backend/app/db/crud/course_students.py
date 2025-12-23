@@ -1,5 +1,5 @@
 from app.db.connection import connection_to_db
-from app.db.models.course_student_model import BulkCourseStudentInput, CourseIdInput, CourseStudent
+from app.db.models.course_student_model import BulkCourseStudentInput, CourseIdInput, CourseStudent, LocalStudentInput
 from typing import  List
 
 
@@ -153,6 +153,90 @@ def display_all() -> list:
         }
         for row in rows
     ]
+
+
+def add_local_student_to_course(data: LocalStudentInput) -> dict:
+    """
+    Add a local/backlog student directly to a course without semester enrollment.
+
+    1. Check if student exists in students table
+    2. If not, create the student (without sem_id)
+    3. Add entry to course_students for this specific course
+    """
+    conn = connection_to_db()
+    try:
+        with conn.cursor() as cur:
+            # Check if student already exists
+            cur.execute(
+                "SELECT student_id FROM students WHERE student_id = %s",
+                (data.student_id,)
+            )
+            existing_student = cur.fetchone()
+
+            if not existing_student:
+                # Create the student without semester enrollment
+                cur.execute(
+                    """
+                    INSERT INTO students (student_id, student_name, phone_number)
+                    VALUES (%s, %s, %s)
+                    """,
+                    (data.student_id, data.student_name, data.phone_number)
+                )
+
+            # Add student to course_students for this specific course
+            cur.execute(
+                """
+                INSERT INTO course_students (student_id, course_id)
+                VALUES (%s, %s)
+                ON CONFLICT (student_id, course_id) DO NOTHING
+                """,
+                (data.student_id, data.course_id)
+            )
+
+        conn.commit()
+        return {
+            "success": True,
+            "message": "Local student added to course successfully"
+        }
+    except Exception as e:
+        conn.rollback()
+        print("Add local student failed:", e)
+        return {"success": False, "message": f"Couldn't add local student to course: {e}"}
+
+
+def remove_student_from_course(course_std: CourseStudent) -> dict:
+    """
+    Remove a student from a specific course only.
+    This only removes the entry from course_students table,
+    not from student_enrollment (semester) or students table.
+    """
+    conn = connection_to_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                DELETE FROM course_students
+                WHERE student_id = %s AND course_id = %s
+                """,
+                (course_std.student_id, course_std.course_id)
+            )
+            deleted_count = cur.rowcount
+        conn.commit()
+
+        if deleted_count > 0:
+            return {
+                "success": True,
+                "message": "Student removed from course successfully"
+            }
+        else:
+            return {
+                "success": False,
+                "message": "Student not found in this course"
+            }
+    except Exception as e:
+        conn.rollback()
+        print("Remove student from course failed:", e)
+        return {"success": False, "message": f"Couldn't remove student from course: {e}"}
 
 
 

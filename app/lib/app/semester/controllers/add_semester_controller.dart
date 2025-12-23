@@ -50,21 +50,83 @@ class AddSemesterController  extends GetxController{
   Future<void> selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: startDate.value ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Get.theme.primaryColor,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black87,
+            ),
+            dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+            datePickerTheme: DatePickerThemeData(
+              backgroundColor: Colors.white,
+              headerBackgroundColor: Get.theme.primaryColor,
+              headerForegroundColor: Colors.white,
+              dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return Get.theme.primaryColor;
+                }
+                return null;
+              }),
+              todayBorder: BorderSide(color: Get.theme.primaryColor),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
-    startDate.value = picked!;
+    if (picked != null) {
+      startDate.value = picked;
+    }
   }
 
   Future<void> selectEndDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: endDate.value ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Get.theme.primaryColor,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black87,
+            ),
+            dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+            datePickerTheme: DatePickerThemeData(
+              backgroundColor: Colors.white,
+              headerBackgroundColor: Get.theme.primaryColor,
+              headerForegroundColor: Colors.white,
+              dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return Get.theme.primaryColor;
+                }
+                return null;
+              }),
+              todayBorder: BorderSide(color: Get.theme.primaryColor),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
-    endDate.value = picked!;
+    if (picked != null) {
+      endDate.value = picked;
+    }
   }
 
 

@@ -2,9 +2,8 @@ import 'package:app/app/semester/controllers/edit_semester_controller.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
-import '../../core/constants/typography.dart';
 
 class EditSemesterButton extends StatefulWidget {
   final String semId;
@@ -19,10 +18,10 @@ class EditSemesterButton extends StatefulWidget {
 }
 
 class _EditSemesterButtonState extends State<EditSemesterButton> {
-  late EditSemesterController editSemesterController =  Get.put(EditSemesterController());
+  late EditSemesterController editSemesterController = Get.put(EditSemesterController());
 
   // Max width for dialog on web
-  static const double maxDialogWidth = 400;
+  static const double maxDialogWidth = 450;
 
   @override
   void initState() {
@@ -35,95 +34,163 @@ class _EditSemesterButtonState extends State<EditSemesterButton> {
       progId: widget.progId
     );
   }
+
   @override
   Widget build(BuildContext context) {
-    final sizedBox = SizedBox(height: 20);
     return Obx(() {
-      return Container(
-              padding: const EdgeInsets.all(10.0),
-              width: kIsWeb ? null : Get.width * 0.9,
-              constraints: BoxConstraints(
-                maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
-                maxHeight: Get.size.height * 0.5,
-              ),
-              child: ListView(
-                  children: [
-                    Text(
-                      'Edit Semester',
-                      style: textStyle.copyWith(fontSize: 24),
-                    ),
-                    sizedBox,
-                    TextFormField(
-                      decoration: const InputDecoration(labelText: 'Semester Name'),
-                      controller: editSemesterController.semesterNameController.value,
-                    ),
-                    sizedBox,
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Start: ${DateFormat('dd/MM/yy').format(editSemesterController.startDate.value.value ?? widget.startDate)}',
-                            style: textStyle.copyWith(fontSize: 11),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'End: ${DateFormat('dd/MM/yy').format(editSemesterController.endDate.value.value ?? widget.endDate)}',
-                            style: textStyle.copyWith(fontSize: 11),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                    sizedBox,
-                    // Select Start/End Date Button
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              await editSemesterController.selectStartDate(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                            ),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text("Edit Start", textAlign: TextAlign.center),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              await editSemesterController.selectEndDate(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                            ),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text("Edit End", textAlign: TextAlign.center),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ), 
-                    sizedBox,
-                    ElevatedButton(
-                      onPressed: () async {
-                        final edited = await editSemesterController.editSemester();
-                        Navigator.of(context).pop(edited);
-                      },
-                      child: Text("Edit", style: textStyle.copyWith(fontSize: 16),)
-                    ),
-                  ]
-                ),
-              );
-            });
-    }
+      final startDate = editSemesterController.startDate.value.value ?? widget.startDate;
+      final endDate = editSemesterController.endDate.value.value ?? widget.endDate;
 
+      return Container(
+        padding: const EdgeInsets.all(20.0),
+        width: kIsWeb ? null : Get.width * 0.9,
+        constraints: BoxConstraints(
+          maxWidth: kIsWeb ? maxDialogWidth : double.infinity,
+          maxHeight: Get.size.height * 0.55,
+        ),
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            // Header
+            Row(
+              children: [
+                Icon(Icons.edit, color: Get.theme.primaryColor, size: 28),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Edit Semester',
+                    style: GoogleFonts.openSans(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  icon: Icon(Icons.close),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Semester Name
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Semester Name *',
+                hintText: 'e.g., Fall 2024, Spring 2025',
+                prefixIcon: Icon(Icons.school),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              controller: editSemesterController.semesterNameController.value,
+              style: GoogleFonts.openSans(fontSize: 16),
+            ),
+            const SizedBox(height: 16),
+
+            // Date display
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.date_range, color: Get.theme.primaryColor, size: 20),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Start: ${DateFormat('dd/MM/yyyy').format(startDate)}',
+                      style: GoogleFonts.openSans(fontSize: 13),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'End: ${DateFormat('dd/MM/yyyy').format(endDate)}',
+                      style: GoogleFonts.openSans(fontSize: 13),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Date Selection Buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      await editSemesterController.selectStartDate(context);
+                    },
+                    icon: Icon(Icons.calendar_today, size: 18),
+                    label: Text(
+                      "Change Start",
+                      style: GoogleFonts.openSans(fontSize: 14),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      await editSemesterController.selectEndDate(context);
+                    },
+                    icon: Icon(Icons.event, size: 18),
+                    label: Text(
+                      "Change End",
+                      style: GoogleFonts.openSans(fontSize: 14),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // Save Button
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 54),
+                backgroundColor: Get.theme.colorScheme.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              icon: Icon(Icons.save, color: Colors.white),
+              onPressed: () async {
+                final edited = await editSemesterController.editSemester();
+                if (context.mounted) {
+                  Navigator.of(context).pop(edited);
+                }
+              },
+              label: Text(
+                'Save Changes',
+                style: GoogleFonts.openSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
 }

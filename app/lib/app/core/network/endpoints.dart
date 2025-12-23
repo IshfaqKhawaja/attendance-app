@@ -46,6 +46,10 @@ class Endpoints {
   static const String addStudentEnrollment = '/student_enrollment/add';
   static const String editStudent = '/student/edit';
 
+  // Course-student endpoints (local/backlog students)
+  static const String addLocalStudentToCourse = '/course_students/add_local_student';
+  static const String removeStudentFromCourse = '/course_students/remove_student_from_course';
+
   // Attendance endpoints
   static const String addAttendanceBulk = '/attendance/add_attendence_bulk';
   static const String updateAttendanceBulk = '/attendance/update-bulk';

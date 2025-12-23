@@ -1,7 +1,15 @@
 from fastapi import APIRouter # type: ignore
 from fastapi.responses import FileResponse # type: ignore
 from app.db.crud import course
-from app.db.crud.course_students import *
+from app.db.crud.course_students import (
+    add_course_students_to_db,
+    add_bulk_course_students_to_db,
+    display_course_student_by_id,
+    display_course_student_by_course_id,
+    display_all,
+    add_local_student_to_course,
+    remove_student_from_course,
+)
 from app.db.crud.student import add_students_in_bulk, fetch_students_by_student_ids
 from app.db.models.course_student_model import *
 
@@ -60,5 +68,24 @@ def display_students_by_ids(data: CourseIdInput) -> dict:
         "success": True,
         "students": students
     }
+
+
+@router.post("/add_local_student", response_model=dict, summary="Add a local/backlog student to a course")
+def add_local_student(data: LocalStudentInput) -> dict:
+    """
+    Add a local/backlog student directly to a course without semester enrollment.
+    - If the student doesn't exist, creates them first (without semester enrollment)
+    - Then adds them to the specified course only
+    """
+    return add_local_student_to_course(data)
+
+
+@router.post("/remove_student_from_course", response_model=dict, summary="Remove a student from a course")
+def remove_student(data: CourseStudent) -> dict:
+    """
+    Remove a student from a specific course only.
+    This does NOT remove them from the semester enrollment - only from this course.
+    """
+    return remove_student_from_course(data)
 
 

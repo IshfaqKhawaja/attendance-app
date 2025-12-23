@@ -105,46 +105,191 @@ class CourseBySemesterIdController  extends GetxController{
   }
 
   // Function to get start data and end date for course report generation
-  void showReportDatePicker(BuildContext context, String courseId) async  {
+  void showReportDatePicker(BuildContext context, String courseId) async {
     DateTime? startDate = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now().subtract(Duration(days: 7)),
-    firstDate: DateTime(2022),
-    lastDate: DateTime.now(),
-    helpText: "Start Date",
-  );
+      context: context,
+      initialDate: DateTime.now().subtract(Duration(days: 7)),
+      firstDate: DateTime(2022),
+      lastDate: DateTime.now(),
+      helpText: "Select Start Date",
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Get.theme.primaryColor,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black87,
+            ),
+            dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+            datePickerTheme: DatePickerThemeData(
+              backgroundColor: Colors.white,
+              headerBackgroundColor: Get.theme.primaryColor,
+              headerForegroundColor: Colors.white,
+              dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return Get.theme.primaryColor;
+                }
+                return null;
+              }),
+              todayBorder: BorderSide(color: Get.theme.primaryColor),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
 
-  if (startDate == null) return;
+    if (startDate == null) return;
 
-  DateTime? endDate = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: startDate,
-    lastDate: DateTime.now(),
-    helpText: "End Date",
-  );
+    // ignore: use_build_context_synchronously
+    if (!context.mounted) return;
 
-  if (endDate == null) return;
+    DateTime? endDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: startDate,
+      lastDate: DateTime.now(),
+      helpText: "Select End Date",
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Get.theme.primaryColor,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black87,
+            ),
+            dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+            datePickerTheme: DatePickerThemeData(
+              backgroundColor: Colors.white,
+              headerBackgroundColor: Get.theme.primaryColor,
+              headerForegroundColor: Colors.white,
+              dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return Get.theme.primaryColor;
+                }
+                return null;
+              }),
+              todayBorder: BorderSide(color: Get.theme.primaryColor),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
 
-  // Confirm dialog
-  Get.dialog(
-    AlertDialog(
-      title: Text("Generate Report"),
-      content: Text("Do you want to generate report from ${startDate.day}/${startDate.month}/${startDate.year} to ${endDate.day}/${endDate.month}/${endDate.year}?"),
-      actions: [
-        TextButton(
-          onPressed: () => Get.back(),
-          child: Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
+    if (endDate == null) return;
+
+    // Confirm dialog with elegant design
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
         ),
-        TextButton(
-          onPressed: () {
-            Get.back(); // close the dialog
-            getCourseReport(courseId, startDate.toIso8601String(), endDate.toIso8601String());},
-          child: Text("Generate", style: TextStyle(fontWeight: FontWeight.bold)),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          constraints: BoxConstraints(
+            maxWidth: 400,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Icon
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.green.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.summarize,
+                  size: 28,
+                  color: Colors.green,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Title
+              Text(
+                'Generate Report',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // Message
+              Text(
+                "Generate report from ${startDate.day}/${startDate.month}/${startDate.year} to ${endDate.day}/${endDate.month}/${endDate.year}?",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade700,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+
+              // Buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.back();
+                        getCourseReport(courseId, startDate.toIso8601String(), endDate.toIso8601String());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Get.theme.colorScheme.primary,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Generate',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ],
-    ),
-  );
+      ),
+    );
   }
 
   // Add Course Function
@@ -260,7 +405,8 @@ class CourseBySemesterIdController  extends GetxController{
       if (res['success'] == true) {
         coursesBySemesterId.value = (res['courses'] as List)
             .map((e) => CourseModel.fromJson(e))
-            .toList();
+            .toList()
+          ..sort((a, b) => a.courseName.toLowerCase().compareTo(b.courseName.toLowerCase()));
       } else {
         Get.snackbar('Error', res['message']?.toString() ?? 'Failed to fetch courses');
       }
